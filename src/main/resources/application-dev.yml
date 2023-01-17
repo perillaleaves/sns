@@ -3,7 +3,6 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://perillaleaves.cxvfbpskmkd3.ap-northeast-2.rds.amazonaws.com:3306/project
     username: admin
     password: 12341234
