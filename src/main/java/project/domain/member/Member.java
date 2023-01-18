@@ -3,14 +3,14 @@ package project.domain.member;
 import lombok.Builder;
 import lombok.Getter;
 import project.common.BaseEntity;
-import project.exception.APIError;
+import project.common.EncryptUtils;
 import project.request.SignupRequest;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.regex.Pattern;
+import java.security.NoSuchAlgorithmException;
 
 
 @Entity
@@ -44,35 +44,18 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-    public static Member signup(SignupRequest request) {
-        validate(request);
-
-        return Member.builder()
-                .profileImage(request.getProfileImage())
-                .email(request.getEmail())
-                .name(request.getName())
-                .nickName(request.getNickName())
-                .password(request.getPassword())
-                .build();
+    public static Member create(SignupRequest request) {
+        try {
+            return Member.builder()
+                    .profileImage(request.getProfileImage())
+                    .email(request.getEmail())
+                    .name(request.getName())
+                    .nickName(request.getNickName())
+                    .password(EncryptUtils.encrypt(request.getPassword()))
+                    .build();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    private static void validate(SignupRequest request) {
-        boolean email_validate = Pattern.matches("\\w+@\\w+\\.\\w+(\\.\\w+)?", request.getEmail());
-
-        if (!email_validate) {
-            throw new APIError("InvalidEmail", "이메일을 양식에 맞게 입력해주세요.");
-        }
-        if (2 > request.getName().length() && request.getName().length() > 10) {
-            throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
-        }
-        if (2 > request.getNickName().length() && request.getNickName().length() > 10) {
-            throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
-        }
-        if (5 > request.getPassword().length() && request.getPassword().length() > 10) {
-            throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
-        }
-
-    }
-
 
 }

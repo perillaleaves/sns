@@ -7,4 +7,7 @@ import project.domain.member.Member;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
+    boolean existsMemberByEmail(String email);
+    boolean existsMemberByNickName(String nickName);
+
 }

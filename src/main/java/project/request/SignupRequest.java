@@ -1,6 +1,7 @@
 package project.request;
 
 import lombok.Getter;
+import project.exception.APIError;
 
 @Getter
 public class SignupRequest {
