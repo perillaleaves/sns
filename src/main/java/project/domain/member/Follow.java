@@ -12,7 +12,10 @@ public class Follow {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member fromMember;
-    private Long toMember;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberId")
+    private Member toMember;
 
     private LocalDateTime createdAt;
 
@@ -24,7 +27,7 @@ public class Follow {
         return fromMember;
     }
 
-    public Long getToMember() {
+    public Member getToMember() {
         return toMember;
     }
 
