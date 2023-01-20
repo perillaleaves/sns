@@ -1,7 +1,8 @@
-package project.exception;
+package project.controller.advice;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import project.exception.APIError;
 import project.response.ErrorResponse;
 import project.response.Response;
 

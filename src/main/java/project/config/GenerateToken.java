@@ -1,13 +1,15 @@
 package project.config;
 
+import project.domain.member.Member;
+
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 
 public class GenerateToken {
 
-    public static String generatedToken(Long userId, String email) {
+    public static String generatedToken(Member memberId, String email) {
         String val = String.valueOf((int)(Math.random() * 1234567));
-        String str = userId + val + email;
+        String str = memberId + val + email;
         String stringToHex = getStringToHex(str);
         return stringToHex;
     }

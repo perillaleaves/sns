@@ -8,11 +8,10 @@ import project.common.BaseEntity;
 import project.config.EncryptUtils;
 import project.request.SignupRequest;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -26,14 +25,20 @@ public class Member extends BaseEntity {
     private Long id;
 
     private String profileImage;
+
     private String email;
     private String name;
     private String nickName;
     private String password;
+
     private String content;
+
     private Long postSize;
     private Long followSize;
     private Long followingSize;
+
+    @OneToMany(mappedBy = "memberId", cascade = CascadeType.ALL)
+    private List<UserToken> userTokens = new ArrayList<>();
 
     @Builder
     public Member(String profileImage, String email, String name, String nickName, String password) {

@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberAPIService {
+public class MemberApiService {
 
     private final MemberRepository memberRepository;
     private final TokenRepository tokenRepository;
@@ -31,19 +31,18 @@ public class MemberAPIService {
     }
 
     public String login(LoginAndTokenRequest request) throws NoSuchAlgorithmException {
-        Optional<Member> user = memberRepository.findByEmail(request.getEmail());
-        if (user.isEmpty()) {
+        Optional<Member> member = memberRepository.findByEmail(request.getEmail());
+        if (member.isEmpty()) {
             throw new APIError("InconsistencyLoginId", "아이디가 일치하지 않습니다.");
         }
-        if (!user.get().getPassword().equals(EncryptUtils.encrypt(request.getPassword()))) {
+        if (!member.get().getPassword().equals(EncryptUtils.encrypt(request.getPassword()))) {
             throw new APIError("InconsistencyPassword", "비밀번호가 일치하지 않습니다.");
         }
 
-        UserToken token = UserToken.create(user.get().getId(), request.getEmail());
+        UserToken token = UserToken.create(member.get(), request.getEmail());
         tokenRepository.save(token);
         return token.getAccessToken();
     }
-
 
     private void validate(SignupRequest request) {
         boolean email_validate = Pattern.matches("\\w+@\\w+\\.\\w+(\\.\\w+)?", request.getEmail());

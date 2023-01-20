@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.common.CreatedAtEntity;
 import project.config.GenerateToken;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -19,27 +17,23 @@ public class UserToken extends CreatedAtEntity {
     @Id @GeneratedValue
     @Column(name = "userTokenId")
     private Long id;
-    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberId")
+    private Member memberId;
+
     private String accessToken;
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
     @Builder
-    public UserToken(Long userId, String accessToken) {
-        this.userId = userId;
+    public UserToken(Member memberId, String accessToken) {
+        this.memberId = memberId;
         this.accessToken = accessToken;
     }
 
-    public static UserToken create(Long userId, String email) {
+    public static UserToken create(Member memberId, String email) {
         return UserToken.builder()
-                .userId(userId)
-                .accessToken(GenerateToken.generatedToken(userId, email))
+                .memberId(memberId)
+                .accessToken(GenerateToken.generatedToken(memberId, email))
                 .build();
     }
 

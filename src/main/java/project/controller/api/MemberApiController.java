@@ -1,18 +1,16 @@
 package project.controller.api;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.request.LoginAndTokenRequest;
 import project.request.LogoutAndTokenRequest;
 import project.request.SignupRequest;
 import project.response.Response;
 import project.response.ValidationResponse;
-import project.service.api.MemberService;
-import project.service.api.TokenService;
+import project.service.api.MemberApiService;
+import project.service.api.TokenApiService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
 
@@ -20,17 +18,15 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class MemberApiController {
 
-    private final MemberService memberService;
-    private final TokenService tokenService;
+    private final MemberApiService memberService;
+    private final TokenApiService tokenService;
 
-    // 1. 회원가입
     @PostMapping("/signup")
     public Response<ValidationResponse> signup(@RequestBody SignupRequest request) {
         memberService.create(request);
         return new Response<>(new ValidationResponse("SignUp", "회원가입"));
     }
 
-    // 2. 로그인
     @PostMapping("/login")
     public Response<ValidationResponse> login(@RequestBody LoginAndTokenRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
         String token = memberService.login(request);
@@ -38,10 +34,10 @@ public class MemberApiController {
         return new Response<>(new ValidationResponse("Login", "로그인"));
     }
 
-    // 3. 로그아웃
     @PostMapping("/logout")
-    public Response<ValidationResponse> logout(@RequestBody LogoutAndTokenRequest request) {
-        tokenService.deleteToken(request);
+    public Response<ValidationResponse> logout(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        tokenService.deleteToken(token);
         return new Response<>(new ValidationResponse("Logout", "로그아웃"));
     }
 }
