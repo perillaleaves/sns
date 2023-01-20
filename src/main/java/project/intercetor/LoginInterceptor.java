@@ -1,11 +1,9 @@
 package project.intercetor;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import project.domain.member.UserToken;
-import project.exception.APIError;
 import project.repository.TokenRepository;
 
 import javax.servlet.ServletException;
@@ -33,4 +31,5 @@ public class LoginInterceptor implements HandlerInterceptor {
         request.setAttribute("memberId", accessToken.get().getMemberId());
         return true;
     }
+
 }
