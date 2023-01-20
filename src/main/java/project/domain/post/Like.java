@@ -7,14 +7,13 @@ import project.common.CreatedAtEntity;
 import project.domain.member.Member;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like extends CreatedAtEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "likeId")
     private Long id;
 
