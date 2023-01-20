@@ -1,7 +1,7 @@
 package project.controller.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.service.query.TokenQueryService;
 
@@ -13,7 +13,7 @@ public class ErrorController {
 
     private final TokenQueryService tokenQueryService;
 
-    @PostMapping("/api/error")
+    @RequestMapping("/api/error")
     public void apiError(HttpServletRequest request) {
         tokenQueryService.certification(request);
     }
