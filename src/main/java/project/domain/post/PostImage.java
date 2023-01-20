@@ -1,10 +1,15 @@
 package project.domain.post;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostImage extends BaseEntity {
 
     @Id @GeneratedValue
@@ -17,19 +22,4 @@ public class PostImage extends BaseEntity {
     @JoinColumn(name = "postId")
     private Post post;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-
-    public PostImage() {
-    }
 }

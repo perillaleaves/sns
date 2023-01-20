@@ -1,13 +1,17 @@
 package project.domain.member;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import project.common.CreatedAtEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-public class Follow {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Follow extends CreatedAtEntity {
 
     @Id @GeneratedValue
     @Column(name = "followId")
@@ -21,8 +25,4 @@ public class Follow {
     @JoinColumn
     private Member toMember;
 
-    private LocalDateTime createdAt;
-
-    protected Follow() {
-    }
 }

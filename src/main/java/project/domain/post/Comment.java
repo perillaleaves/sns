@@ -1,11 +1,16 @@
 package project.domain.post;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
 import project.domain.member.Member;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
     @Id @GeneratedValue
@@ -22,22 +27,5 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "postId")
     private Post post;
 
-    public Long getId() {
-        return id;
-    }
 
-    public String getContent() {
-        return content;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public Comment() {
-    }
 }

@@ -1,5 +1,8 @@
 package project.domain.post;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
 import project.domain.member.Member;
 
@@ -8,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
     @Id @GeneratedValue
@@ -28,34 +33,4 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Long getCommentSize() {
-        return commentSize;
-    }
-
-    public Long getLikeSize() {
-        return likeSize;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public List<PostImage> getPostImages() {
-        return postImages;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public Post() {
-    }
 }

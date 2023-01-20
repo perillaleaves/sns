@@ -1,12 +1,18 @@
 package project.domain.post;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import project.common.CreatedAtEntity;
 import project.domain.member.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class Like {
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Like extends CreatedAtEntity {
 
     @Id @GeneratedValue
     @Column(name = "likeId")
@@ -20,24 +26,6 @@ public class Like {
     @JoinColumn(name = "postId")
     private Post post;
 
-    private LocalDateTime createdAt;
 
-    public Long getId() {
-        return id;
-    }
 
-    public Member getMember() {
-        return member;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public Like() {
-    }
 }
