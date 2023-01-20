@@ -1,9 +1,11 @@
 package project.domain.member;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
-import project.common.EncryptUtils;
+import project.config.EncryptUtils;
 import project.request.SignupRequest;
 
 import javax.persistence.Column;
@@ -15,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
     @Id
@@ -31,9 +34,6 @@ public class Member extends BaseEntity {
     private Long postSize;
     private Long followSize;
     private Long followingSize;
-
-    protected Member() {
-    }
 
     @Builder
     public Member(String profileImage, String email, String name, String nickName, String password) {
