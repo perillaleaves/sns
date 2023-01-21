@@ -1,14 +1,20 @@
 package project.domain.member;
 
+import lombok.Builder;
+import lombok.Getter;
 import project.common.BaseEntity;
+import project.common.EncryptUtils;
+import project.request.SignupRequest;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.security.NoSuchAlgorithmException;
 
 
 @Entity
+@Getter
 public class Member extends BaseEntity {
 
     @Id
@@ -19,52 +25,37 @@ public class Member extends BaseEntity {
     private String profileImage;
     private String email;
     private String name;
+    private String nickName;
     private String password;
     private String content;
     private Long postSize;
     private Long followSize;
     private Long followingSize;
 
-
-    public Long getId() {
-        return id;
+    protected Member() {
     }
 
-    public String getProfileImage() {
-        return profileImage;
+    @Builder
+    public Member(String profileImage, String email, String name, String nickName, String password) {
+        this.profileImage = profileImage;
+        this.email = email;
+        this.name = name;
+        this.nickName = nickName;
+        this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Long getPostSize() {
-        return postSize;
-    }
-
-    public Long getFollowSize() {
-        return followSize;
-    }
-
-    public Long getFollowingSize() {
-        return followingSize;
-    }
-
-
-
-    public Member() {
+    public static Member create(SignupRequest request) {
+        try {
+            return Member.builder()
+                    .profileImage(request.getProfileImage())
+                    .email(request.getEmail())
+                    .name(request.getName())
+                    .nickName(request.getNickName())
+                    .password(EncryptUtils.encrypt(request.getPassword()))
+                    .build();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
