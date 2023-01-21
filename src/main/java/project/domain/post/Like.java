@@ -32,7 +32,7 @@ public class Like extends CreatedAtEntity {
     public Like(Post post, User user) {
         this.post = post;
         this.user = user;
-        post.addPostLike(post.getLikeSize());
+        post.addPostLikeSize(post.getLikeSize());
     }
 
     public static Like addLike(Post post, HttpServletRequest httpServletRequest) {

@@ -35,7 +35,7 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostImage> postImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
@@ -69,12 +69,20 @@ public class Post extends BaseEntity {
         this.content = content;
     }
 
-    public void addPostLike(Long likeSize) {
+    public void addPostLikeSize(Long likeSize) {
         this.likeSize = ++likeSize;
     }
 
-    public void removePostLike(Long likeSize) {
+    public void removePostLikeSize(Long likeSize) {
         this.likeSize = --likeSize;
+    }
+
+    public void addCommentSize(Long commentSize) {
+        this.commentSize = ++commentSize;
+    }
+
+    public void removeCommentSize(Long commentSize) {
+        this.commentSize = --commentSize;
     }
 
 }

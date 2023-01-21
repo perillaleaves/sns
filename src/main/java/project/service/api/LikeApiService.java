@@ -6,10 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.domain.post.Like;
 import project.domain.post.Post;
 import project.domain.user.User;
-import project.domain.user.UserToken;
 import project.repository.LikeRepository;
 import project.repository.PostRepository;
-import project.repository.TokenRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -31,7 +29,7 @@ public class LikeApiService {
             Like like = Like.addLike(post, request);
             likeRepository.save(like);
         } else {
-            post.removePostLike(post.getLikeSize());
+            post.removePostLikeSize(post.getLikeSize());
             likeRepository.deleteById(findLike.get().getId());
         }
     }

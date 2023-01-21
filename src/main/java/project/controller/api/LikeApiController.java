@@ -17,10 +17,10 @@ public class LikeApiController {
 
     private final LikeApiService likeApiService;
 
-    @PostMapping("/post/{postId}/like")
-    public Response<ValidationResponse> like(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
+    @PostMapping("/post/{postId}/toggle")
+    public Response<ValidationResponse> likeToggle(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
         likeApiService.flipLike(postId, httpServletRequest);
-        return new Response<>(new ValidationResponse("Like", "좋아요"));
+        return new Response<>(new ValidationResponse("Toggle", "토글"));
     }
 
 }

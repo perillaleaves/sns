@@ -15,7 +15,7 @@ import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequiredArgsConstructor
-public class MemberApiController {
+public class UserApiController {
 
     private final UserApiService memberService;
     private final TokenApiService tokenService;
