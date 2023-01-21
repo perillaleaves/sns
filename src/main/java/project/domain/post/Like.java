@@ -1,43 +1,46 @@
 package project.domain.post;
 
-import project.domain.member.Member;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import project.common.CreatedAtEntity;
+import project.domain.user.User;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
 
+@Table(name = "likes")
 @Entity
-public class Like {
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Like extends CreatedAtEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "likeId")
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
-    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postId")
     private Post post;
 
-    private LocalDateTime createdAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
 
-    public Long getId() {
-        return id;
+    @Builder
+    public Like(Post post, User user) {
+        this.post = post;
+        this.user = user;
+        post.addPostLike(post.getLikeSize());
     }
 
-    public Member getMember() {
-        return member;
+    public static Like addLike(Post post, HttpServletRequest httpServletRequest) {
+        User userId = (User) httpServletRequest.getAttribute("userId");
+        return Like.builder()
+                .post(post)
+                .user(userId)
+                .build();
     }
 
-    public Post getPost() {
-        return post;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public Like() {
-    }
 }

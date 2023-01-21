@@ -1,4 +1,4 @@
-package project.common;
+package project.config;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

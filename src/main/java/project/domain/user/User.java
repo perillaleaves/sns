@@ -1,42 +1,47 @@
-package project.domain.member;
+package project.domain.user;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
-import project.common.EncryptUtils;
+import project.config.EncryptUtils;
 import project.request.SignupRequest;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
 @Getter
-public class Member extends BaseEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "memberId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userId")
     private Long id;
 
     private String profileImage;
+
     private String email;
     private String name;
     private String nickName;
     private String password;
+
     private String content;
+
     private Long postSize;
     private Long followSize;
     private Long followingSize;
 
-    protected Member() {
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserToken> userTokens = new ArrayList<>();
 
     @Builder
-    public Member(String profileImage, String email, String name, String nickName, String password) {
+    public User(String profileImage, String email, String name, String nickName, String password) {
         this.profileImage = profileImage;
         this.email = email;
         this.name = name;
@@ -44,9 +49,9 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-    public static Member create(SignupRequest request) {
+    public static User create(SignupRequest request) {
         try {
-            return Member.builder()
+            return User.builder()
                     .profileImage(request.getProfileImage())
                     .email(request.getEmail())
                     .name(request.getName())

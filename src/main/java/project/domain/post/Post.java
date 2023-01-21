@@ -1,26 +1,39 @@
 package project.domain.post;
 
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
-import project.domain.member.Member;
+import project.domain.user.User;
+import project.request.PostRequest;
 
 import javax.persistence.*;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "postId")
     private Long id;
 
     private String content;
+
     private Long commentSize;
     private Long likeSize;
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
-    private Member member;
+    @JoinColumn(name = "userId")
+    private User user;
 
     @OneToMany(mappedBy = "post")
     private List<PostImage> postImages = new ArrayList<>();
@@ -28,34 +41,40 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    public Long getId() {
-        return id;
+    @OneToMany(mappedBy = "post")
+    private List<Like> likes = new ArrayList<>();
+
+    @Builder
+    public Post(String content, Long commentSize, Long likeSize, User user, List<PostImage> postImages, List<Comment> comments, List<Like> likes) {
+        this.content = content;
+        this.commentSize = commentSize;
+        this.likeSize = likeSize;
+        this.user = user;
+        this.postImages = postImages;
+        this.comments = comments;
+        this.likes = likes;
     }
 
-    public String getContent() {
-        return content;
+    public static Post create(HttpServletRequest httpServletRequest, PostRequest request) {
+        User userId = (User) httpServletRequest.getAttribute("userId");
+        return Post.builder()
+                .content(request.getContent())
+                .commentSize(0L)
+                .likeSize(0L)
+                .user(userId)
+                .build();
     }
 
-    public Long getCommentSize() {
-        return commentSize;
+    public void updatePostContent(String content) {
+        this.content = content;
     }
 
-    public Long getLikeSize() {
-        return likeSize;
+    public void addPostLike(Long likeSize) {
+        this.likeSize = ++likeSize;
     }
 
-    public Member getMember() {
-        return member;
+    public void removePostLike(Long likeSize) {
+        this.likeSize = --likeSize;
     }
 
-    public List<PostImage> getPostImages() {
-        return postImages;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public Post() {
-    }
 }

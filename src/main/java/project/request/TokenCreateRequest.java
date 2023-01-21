@@ -6,12 +6,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SignupRequest {
+public class TokenCreateRequest {
 
-    private String profileImage;
-    private String email;
-    private String name;
-    private String nickName;
-    private String password;
+    private Long userId;
+    private String accessToken;
 
 }

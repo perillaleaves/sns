@@ -1,31 +1,27 @@
-package project.domain.post;
+package project.domain.user;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.common.BaseEntity;
-import project.domain.user.User;
+import project.common.CreatedAtEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment extends BaseEntity {
+public class Follow extends CreatedAtEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "commentId")
+    @Column(name = "followId")
     private Long id;
 
-    private String content;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private User fromUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId")
-    private Post post;
-
+    @JoinColumn
+    private User toUser;
 
 }
