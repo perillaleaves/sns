@@ -22,8 +22,8 @@ public class PostApiController {
     }
 
     @PutMapping("/post/{postId}")
-    public Response<ValidationResponse> update(@PathVariable("postId") Long postId, @RequestBody PostRequest request) {
-        postApiService.update(postId, request);
+    public Response<ValidationResponse> update(@PathVariable("postId") Long postId, @RequestBody PostRequest request, HttpServletRequest httpServletRequest) {
+        postApiService.update(postId, request, httpServletRequest);
         return new Response<>(new ValidationResponse("Fix", "수정 완료"));
     }
 

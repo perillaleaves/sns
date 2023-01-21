@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
-import project.domain.member.Member;
+import project.domain.user.User;
 import project.request.PostRequest;
 
 import javax.persistence.*;
@@ -32,8 +32,8 @@ public class Post extends BaseEntity {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
-    private Member member;
+    @JoinColumn(name = "userId")
+    private User user;
 
     @OneToMany(mappedBy = "post")
     private List<PostImage> postImages = new ArrayList<>();
@@ -41,17 +41,27 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<Like> likes = new ArrayList<>();
+
     @Builder
-    public Post(String content, Member member) {
+    public Post(String content, Long commentSize, Long likeSize, User user, List<PostImage> postImages, List<Comment> comments, List<Like> likes) {
         this.content = content;
-        this.member = member;
+        this.commentSize = commentSize;
+        this.likeSize = likeSize;
+        this.user = user;
+        this.postImages = postImages;
+        this.comments = comments;
+        this.likes = likes;
     }
 
     public static Post create(HttpServletRequest httpServletRequest, PostRequest request) {
-        Member memberId = (Member) httpServletRequest.getAttribute("memberId");
+        User userId = (User) httpServletRequest.getAttribute("userId");
         return Post.builder()
                 .content(request.getContent())
-                .member(memberId)
+                .commentSize(0L)
+                .likeSize(0L)
+                .user(userId)
                 .build();
     }
 
@@ -59,5 +69,12 @@ public class Post extends BaseEntity {
         this.content = content;
     }
 
+    public void addPostLike(Long likeSize) {
+        this.likeSize = ++likeSize;
+    }
+
+    public void removePostLike(Long likeSize) {
+        this.likeSize = --likeSize;
+    }
 
 }
