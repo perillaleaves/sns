@@ -1,7 +1,7 @@
 package project.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.domain.member.UserToken;
+import project.domain.user.UserToken;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package project.domain.member;
+package project.domain.user;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,11 +17,11 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "memberId")
+    @Column(name = "userId")
     private Long id;
 
     private String profileImage;
@@ -37,11 +37,11 @@ public class Member extends BaseEntity {
     private Long followSize;
     private Long followingSize;
 
-    @OneToMany(mappedBy = "memberId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserToken> userTokens = new ArrayList<>();
 
     @Builder
-    public Member(String profileImage, String email, String name, String nickName, String password) {
+    public User(String profileImage, String email, String name, String nickName, String password) {
         this.profileImage = profileImage;
         this.email = email;
         this.name = name;
@@ -49,9 +49,9 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-    public static Member create(SignupRequest request) {
+    public static User create(SignupRequest request) {
         try {
-            return Member.builder()
+            return User.builder()
                     .profileImage(request.getProfileImage())
                     .email(request.getEmail())
                     .name(request.getName())

@@ -3,11 +3,10 @@ package project.controller.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import project.request.LoginAndTokenRequest;
-import project.request.LogoutAndTokenRequest;
 import project.request.SignupRequest;
 import project.response.Response;
 import project.response.ValidationResponse;
-import project.service.api.MemberApiService;
+import project.service.api.UserApiService;
 import project.service.api.TokenApiService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class MemberApiController {
 
-    private final MemberApiService memberService;
+    private final UserApiService memberService;
     private final TokenApiService tokenService;
 
     @PostMapping("/signup")

@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.config.EncryptUtils;
-import project.domain.member.Member;
-import project.domain.member.UserToken;
+import project.domain.user.User;
+import project.domain.user.UserToken;
 import project.exception.APIError;
-import project.repository.MemberRepository;
+import project.repository.UserRepository;
 import project.repository.TokenRepository;
 import project.request.LoginAndTokenRequest;
 import project.request.SignupRequest;
@@ -19,27 +19,27 @@ import java.util.regex.Pattern;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberApiService {
+public class UserApiService {
 
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
 
     public void create(SignupRequest request) {
         validate(request);
-        Member member = Member.create(request);
-        memberRepository.save(member);
+        User user = User.create(request);
+        userRepository.save(user);
     }
 
     public String login(LoginAndTokenRequest request) throws NoSuchAlgorithmException {
-        Optional<Member> member = memberRepository.findByEmail(request.getEmail());
-        if (member.isEmpty()) {
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        if (user.isEmpty()) {
             throw new APIError("InconsistencyLoginId", "아이디가 일치하지 않습니다.");
         }
-        if (!member.get().getPassword().equals(EncryptUtils.encrypt(request.getPassword()))) {
+        if (!user.get().getPassword().equals(EncryptUtils.encrypt(request.getPassword()))) {
             throw new APIError("InconsistencyPassword", "비밀번호가 일치하지 않습니다.");
         }
 
-        UserToken token = UserToken.create(member.get(), request.getEmail());
+        UserToken token = UserToken.create(user.get(), request.getEmail());
         tokenRepository.save(token);
         return token.getAccessToken();
     }
@@ -61,10 +61,10 @@ public class MemberApiService {
             throw new APIError("InvalidPassword", "패스워드를 5자 이상 10자 이하로 입력해주세요.");
         }
 
-        if (memberRepository.existsMemberByEmail(request.getEmail())) {
+        if (userRepository.existsMemberByEmail(request.getEmail())) {
             throw new APIError("DuplicatedEmail", "중복된 이메일입니다.");
         }
-        if (memberRepository.existsMemberByNickName(request.getNickName())) {
+        if (userRepository.existsMemberByNickName(request.getNickName())) {
             throw new APIError("DuplicatedNickName" ,"중복된 닉네임입니다.");
         }
 

@@ -3,7 +3,7 @@ package project.intercetor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import project.domain.member.UserToken;
+import project.domain.user.UserToken;
 import project.repository.TokenRepository;
 
 import javax.servlet.ServletException;
@@ -28,7 +28,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        request.setAttribute("memberId", accessToken.get().getMemberId());
+        request.setAttribute("userId", accessToken.get().getUser());
         return true;
     }
 

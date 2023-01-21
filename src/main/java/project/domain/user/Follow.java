@@ -1,4 +1,4 @@
-package project.domain.member;
+package project.domain.user;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import project.common.CreatedAtEntity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,10 +18,10 @@ public class Follow extends CreatedAtEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private Member fromMember;
+    private User fromUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private Member toMember;
+    private User toUser;
 
 }

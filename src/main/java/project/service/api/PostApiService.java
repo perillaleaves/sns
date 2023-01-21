@@ -3,12 +3,15 @@ package project.service.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.domain.user.UserToken;
 import project.domain.post.Post;
 import project.exception.APIError;
 import project.repository.PostRepository;
+import project.repository.TokenRepository;
 import project.request.PostRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PostApiService {
 
     private final PostRepository postRepository;
+    private final TokenRepository tokenRepository;
 
     public void create(HttpServletRequest httpServletRequest, PostRequest request) {
         validation(request);
@@ -23,10 +27,17 @@ public class PostApiService {
         postRepository.save(post);
     }
 
-    public void update(Long postId, PostRequest request) {
+    public void update(Long postId, PostRequest request, HttpServletRequest httpServletRequest) {
         validation(request);
-        Post findPost = postRepository.findById(postId).orElse(null);
-        findPost.updatePostContent(request.getContent());
+        String token = httpServletRequest.getHeader("token");
+        Optional<UserToken> accessToken = tokenRepository.findByAccessToken(token);
+
+        Optional<Post> findPost = postRepository.findById(postId);
+        if (!findPost.get().getUser().equals(accessToken.get().getUser())) {
+            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
+        }
+
+        findPost.get().updatePostContent(request.getContent());
     }
 
     private static void validation(PostRequest request) {
