@@ -52,5 +52,4 @@ public class Comment extends BaseEntity {
         this.content = content;
     }
 
-
 }

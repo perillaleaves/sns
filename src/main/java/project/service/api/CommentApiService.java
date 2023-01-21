@@ -25,8 +25,8 @@ public class CommentApiService {
     private final TokenRepository tokenRepository;
 
     public void create(Long postId, CommentRequest request, HttpServletRequest httpServletRequest) {
-        Optional<Post> post = postRepository.findById(postId);
-        Comment comment = Comment.create(post.get(), request, httpServletRequest);
+        Post post = postRepository.findById(postId).orElse(null);
+        Comment comment = Comment.create(post, request, httpServletRequest);
         commentRepository.save(comment);
     }
 
