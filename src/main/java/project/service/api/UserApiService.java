@@ -7,8 +7,8 @@ import project.config.EncryptUtils;
 import project.domain.user.User;
 import project.domain.user.UserToken;
 import project.exception.APIError;
-import project.repository.UserRepository;
 import project.repository.TokenRepository;
+import project.repository.UserRepository;
 import project.request.LoginAndTokenRequest;
 import project.request.SignupRequest;
 
@@ -65,7 +65,7 @@ public class UserApiService {
             throw new APIError("DuplicatedEmail", "중복된 이메일입니다.");
         }
         if (userRepository.existsMemberByNickName(request.getNickName())) {
-            throw new APIError("DuplicatedNickName" ,"중복된 닉네임입니다.");
+            throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
 
     }

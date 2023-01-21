@@ -16,7 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like extends CreatedAtEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "likeId")
     private Long id;
 

@@ -1,6 +1,6 @@
 package project.exception;
 
-public class APIError extends Error{
+public class APIError extends Error {
 
     private final String code;
 

@@ -23,7 +23,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String token = request.getHeader("token");
         Optional<UserToken> accessToken = tokenRepository.findByAccessToken(token);
 
-        if(accessToken.isEmpty()){
+        if (accessToken.isEmpty()) {
             request.getRequestDispatcher("/api/error").forward(request, response);
             return false;
         }

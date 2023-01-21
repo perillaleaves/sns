@@ -1,13 +1,15 @@
 package project.controller.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import project.request.LoginAndTokenRequest;
 import project.request.SignupRequest;
 import project.response.Response;
 import project.response.ValidationResponse;
-import project.service.api.UserApiService;
 import project.service.api.TokenApiService;
+import project.service.api.UserApiService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

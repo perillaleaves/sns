@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.domain.post.Comment;
 import project.domain.post.Post;
-import project.domain.user.User;
 import project.domain.user.UserToken;
 import project.exception.APIError;
 import project.repository.CommentRepository;

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
-public class BaseEntity extends CreatedAtEntity{
+public class BaseEntity extends CreatedAtEntity {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;

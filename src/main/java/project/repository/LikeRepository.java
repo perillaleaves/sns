@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    @EntityGraph(attributePaths = { "post", "user" })
+    @EntityGraph(attributePaths = {"post", "user"})
     Optional<Like> findByPostAndUser(Post post, User user);
 
 }
