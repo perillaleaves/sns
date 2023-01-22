@@ -21,10 +21,16 @@ public class CommentApiController {
         return new Response<>(new ValidationResponse("Create", "댓글 작성"));
     }
 
-    @PutMapping("/{commentId}/comment")
+    @PutMapping("/comment/{commentId}")
     public Response<ValidationResponse> update(@PathVariable("commentId") Long commentId, @RequestBody CommentRequest request, HttpServletRequest httpServletRequest) {
         commentApiService.update(commentId, request, httpServletRequest);
         return new Response<>(new ValidationResponse("Fix", "수정 완료"));
+    }
+
+    @DeleteMapping("/comment/{commentId}")
+    public Response<ValidationResponse> delete(@PathVariable("commentId") Long commentId, HttpServletRequest httpServletRequest) {
+        commentApiService.delete(commentId, httpServletRequest);
+        return new Response<>(new ValidationResponse("Delete", "댓글 삭제"));
     }
 
 }

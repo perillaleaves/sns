@@ -40,4 +40,16 @@ public class CommentApiService {
         comment.update(request.getContent());
     }
 
+    public void delete(Long commentId, HttpServletRequest httpServletRequest) {
+        String token = httpServletRequest.getHeader("token");
+        UserToken accessToken = tokenRepository.findByAccessToken(token).orElse(null);
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        if (!comment.getUser().equals(accessToken.getUser())) {
+            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
+        }
+        comment.getPost().removeCommentSize(comment.getPost().getCommentSize());
+        commentRepository.delete(comment);
+    }
+
+
 }

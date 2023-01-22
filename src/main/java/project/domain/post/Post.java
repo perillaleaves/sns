@@ -28,10 +28,6 @@ public class Post extends BaseEntity {
     private Long commentSize;
     private Long likeSize;
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
@@ -74,9 +70,7 @@ public class Post extends BaseEntity {
         this.likeSize = ++likeSize;
     }
 
-    public void removePostLikeSize(Long likeSize) {
-        this.likeSize = --likeSize;
-    }
+    public void removePostLikeSize(Long likeSize) { this.likeSize = --likeSize; }
 
     public void addCommentSize(Long commentSize) {
         this.commentSize = ++commentSize;
