@@ -29,16 +29,29 @@ public class PostApiService {
 
     public void update(Long postId, PostRequest request, HttpServletRequest httpServletRequest) {
         validation(request);
-        String token = httpServletRequest.getHeader("token");
-        Optional<UserToken> accessToken = tokenRepository.findByAccessToken(token);
 
-        Optional<Post> findPost = postRepository.findById(postId);
-        if (!findPost.get().getUser().equals(accessToken.get().getUser())) {
+        String token = httpServletRequest.getHeader("token");
+        UserToken accessToken = tokenRepository.findByAccessToken(token).orElse(null);
+        Post post = postRepository.findById(postId).orElse(null);
+        if (!post.getUser().equals(accessToken.getUser())) {
             throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
 
-        findPost.get().updatePostContent(request.getContent());
+        post.updatePostContent(request.getContent());
     }
+
+    public void delete(Long postId, HttpServletRequest httpServletRequest) {
+        String token = httpServletRequest.getHeader("token");
+        UserToken accessToken = tokenRepository.findByAccessToken(token).orElse(null);
+        Post post = postRepository.findById(postId).orElse(null);
+        if (!post.getUser().equals(accessToken.getUser())) {
+            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
+        }
+
+        postRepository.delete(post);
+    }
+
+
 
     private static void validation(PostRequest request) {
         if (request.getContent().isEmpty() || request.getContent().length() > 300) {

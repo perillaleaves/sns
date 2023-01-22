@@ -27,4 +27,9 @@ public class PostApiController {
         return new Response<>(new ValidationResponse("Fix", "수정 완료"));
     }
 
+    @DeleteMapping("post/{postId}")
+    public Response<ValidationResponse> delete(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
+        postApiService.delete(postId, httpServletRequest);
+        return new Response<>(new ValidationResponse("Delete", "게시글 삭제"));
+    }
 }
