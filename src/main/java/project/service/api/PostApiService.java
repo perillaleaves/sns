@@ -23,7 +23,11 @@ public class PostApiService {
 
     public void create(HttpServletRequest httpServletRequest, PostRequest request) {
         validation(request);
+        String token = httpServletRequest.getHeader("token");
+        UserToken accessToken = tokenRepository.findByAccessToken(token).orElse(null);
+
         Post post = Post.create(httpServletRequest, request);
+        accessToken.getUser().addPostSize(accessToken.getUser().getPostSize());
         postRepository.save(post);
     }
 
@@ -48,10 +52,9 @@ public class PostApiService {
             throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
 
+        accessToken.getUser().removePostSize(accessToken.getUser().getPostSize());
         postRepository.delete(post);
     }
-
-
 
     private static void validation(PostRequest request) {
         if (request.getContent().isEmpty() || request.getContent().length() > 300) {
