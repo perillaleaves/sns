@@ -5,10 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.common.CreatedAtEntity;
-import project.exception.APIError;
 
 import javax.persistence.*;
-import javax.servlet.http.HttpServletRequest;
 
 @Entity
 @Getter

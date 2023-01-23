@@ -13,7 +13,6 @@ import project.repository.TokenRepository;
 import project.request.CommentRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Service
 @Transactional

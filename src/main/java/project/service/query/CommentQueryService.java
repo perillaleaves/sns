@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.domain.post.Post;
-import project.repository.CommentRepository;
 import project.repository.PostRepository;
 import project.response.CommentResponse;
 import project.response.PostCommentResponse;

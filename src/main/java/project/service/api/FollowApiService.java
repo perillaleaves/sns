@@ -12,7 +12,6 @@ import project.repository.TokenRepository;
 import project.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Service
 @Transactional
