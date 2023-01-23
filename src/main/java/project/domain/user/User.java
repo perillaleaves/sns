@@ -87,4 +87,12 @@ public class User extends BaseEntity {
         this.followerSize = ++followerSize;
     }
 
+    public void removeFollowingSize(Long followingSize) {
+        this.followingSize = --followingSize;
+    }
+
+    public void removeFollowerSize(Long followerSize) {
+        this.followerSize = --followerSize;
+    }
+
 }
