@@ -12,15 +12,15 @@ public class CommentResponse {
 
     private Long commentId;
     private String userProfileImage;
-    private String userName;
+    private String nickName;
     private String commentContent;
 
     private LocalDateTime updatedAt;
 
-    public CommentResponse(Long commentId, String userProfileImage, String userName, String commentContent, LocalDateTime updatedAt) {
+    public CommentResponse(Long commentId, String userProfileImage, String nickName, String commentContent, LocalDateTime updatedAt) {
         this.commentId = commentId;
         this.userProfileImage = userProfileImage;
-        this.userName = userName;
+        this.nickName = nickName;
         this.commentContent = commentContent;
         this.updatedAt = updatedAt;
     }

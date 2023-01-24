@@ -15,7 +15,7 @@ public class PostDetailResponse {
     private Long postId;
     private Long userId;
     private String profileImage;
-    private String userName;
+    private String nickName;
 
     private List<PostImagesResponse> postImages = new ArrayList<>();
 
@@ -26,11 +26,11 @@ public class PostDetailResponse {
 
     private LocalDateTime updatedAt;
 
-    public PostDetailResponse(Long postId, Long userId, String profileImage, String userName, List<PostImagesResponse> postImages, String content, boolean isLike, Long likeSize, Long commentSize, LocalDateTime updatedAt) {
+    public PostDetailResponse(Long postId, Long userId, String profileImage, String nickName, List<PostImagesResponse> postImages, String content, boolean isLike, Long likeSize, Long commentSize, LocalDateTime updatedAt) {
         this.postId = postId;
         this.userId = userId;
         this.profileImage = profileImage;
-        this.userName = userName;
+        this.nickName = nickName;
         this.postImages = postImages;
         this.content = content;
         this.isLike = isLike;
