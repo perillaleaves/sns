@@ -44,4 +44,8 @@ public class Like extends CreatedAtEntity {
                 .build();
     }
 
+    public boolean isLikeOf(User user) {
+        return user.hasId(user.getId());
+    }
+
 }

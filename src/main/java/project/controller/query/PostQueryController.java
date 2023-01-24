@@ -9,6 +9,8 @@ import project.response.PostResponse;
 import project.response.Response;
 import project.service.query.PostQueryService;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequiredArgsConstructor
 public class PostQueryController {
@@ -16,8 +18,8 @@ public class PostQueryController {
     private final PostQueryService postQueryService;
 
     @GetMapping("/post/{postId}")
-    public Response<PostResponse> getPostDetail(@PathVariable("postId") Long postId) {
-        PostDetailResponse postDetail = postQueryService.findPostDetail(postId);
+    public Response<PostResponse> getPostDetail(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
+        PostDetailResponse postDetail = postQueryService.findPostDetail(postId, httpServletRequest);
         return new Response<>(new PostResponse(postDetail));
     }
 

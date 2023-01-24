@@ -95,4 +95,8 @@ public class User extends BaseEntity {
         this.followerSize = --followerSize;
     }
 
+    public boolean hasId(Long id) {
+        return this.id.equals(id);
+    }
+
 }
