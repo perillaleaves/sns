@@ -56,7 +56,7 @@ public class UserApiService {
             throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
         if (!accessToken.getUser().equals(user)) {
-            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
+            throw new APIError("NotRequest", "잘못된 요청입니다.");
         }
 
         user.editProfile(request);
