@@ -10,8 +10,10 @@ import project.exception.APIError;
 import project.repository.TokenRepository;
 import project.repository.UserRepository;
 import project.request.LoginAndTokenRequest;
+import project.request.ProfileEditRequest;
 import project.request.SignupRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -44,6 +46,22 @@ public class UserApiService {
         return token.getAccessToken();
     }
 
+    public void edit(String nickName, ProfileEditRequest request, HttpServletRequest httpServletRequest) {
+        editValidate(request);
+        String token = httpServletRequest.getHeader("token");
+        UserToken accessToken = tokenRepository.findByAccessToken(token).orElse(null);
+        User user = userRepository.findByNickName(nickName).orElse(null);
+
+        if (userRepository.existsMemberByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
+            throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
+        }
+        if (!accessToken.getUser().equals(user)) {
+            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
+        }
+
+        user.editProfile(request);
+    }
+
     private void validate(SignupRequest request) {
         boolean email_validate = Pattern.matches("\\w+@\\w+\\.\\w+(\\.\\w+)?", request.getEmail());
 
@@ -67,7 +85,18 @@ public class UserApiService {
         if (userRepository.existsMemberByNickName(request.getNickName())) {
             throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
+    }
 
+    private void editValidate(ProfileEditRequest request) {
+        if (2 > request.getUserName().length() || request.getUserName().length() > 10) {
+            throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
+        }
+        if (2 > request.getNickName().length() || request.getNickName().length() > 10) {
+            throw new APIError("InvalidNickName", "닉네임을 2자 이상 10자 이하로 입력해주세요.");
+        }
+        if (0 > request.getContent().length() || request.getContent().length() > 150) {
+            throw new APIError("InvalidContent", "소개를 150자 이하로 입력해주세요.");
+        }
     }
 
 }

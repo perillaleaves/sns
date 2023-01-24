@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
 import project.config.EncryptUtils;
+import project.request.ProfileEditRequest;
 import project.request.SignupRequest;
 
 import javax.persistence.*;
@@ -97,6 +98,12 @@ public class User extends BaseEntity {
 
     public boolean hasId(Long id) {
         return this.id.equals(id);
+    }
+
+    public void editProfile(ProfileEditRequest request) {
+        this.name = request.getUserName();
+        this.nickName = request.getNickName();
+        this.content = request.getContent();
     }
 
 }

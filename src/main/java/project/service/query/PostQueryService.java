@@ -27,7 +27,7 @@ public class PostQueryService {
         Post post = postRepository.findById(postId).orElse(null);
         boolean isLike = post.getLikes().stream().anyMatch(like -> like.isLikeOf(accessToken.getUser()));
 
-        return new PostDetailResponse(post.getId(), post.getUser().getId(), post.getUser().getProfileImage(), post.getUser().getName(),
+        return new PostDetailResponse(post.getId(), post.getUser().getId(), post.getUser().getProfileImage(), post.getUser().getNickName(),
                 post.getPostImages().stream().map(postImage -> new PostImagesResponse(postImage.getId(), postImage.getImageUrl())).collect(Collectors.toList()),
                 post.getContent(), isLike, post.getLikeSize(), post.getCommentSize(), post.getUpdatedAt());
     }
