@@ -41,10 +41,10 @@ public class Post extends BaseEntity {
     private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
+    private Set<Like> likes = new HashSet<>();
 
     @Builder
-    public Post(String content, Long commentSize, Long likeSize, User user, List<PostImage> postImages, Set<Comment> comments, List<Like> likes) {
+    public Post(String content, Long commentSize, Long likeSize, User user, List<PostImage> postImages, Set<Comment> comments, Set<Like> likes) {
         this.content = content;
         this.commentSize = commentSize;
         this.likeSize = likeSize;

@@ -25,7 +25,9 @@ public class User extends BaseEntity {
     @Column(name = "userId")
     private Long id;
 
-    private String profileImage;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userProfileImageId")
+    private UserProfileImage userProfileImage;
 
     private String email;
     private String name;
@@ -42,8 +44,8 @@ public class User extends BaseEntity {
     private List<UserToken> userTokens = new ArrayList<>();
 
     @Builder
-    public User(String profileImage, String email, String name, String nickName, String password, String content, Long postSize, Long followingSize, Long followerSize, List<UserToken> userTokens) {
-        this.profileImage = profileImage;
+    public User(UserProfileImage userProfileImage, String email, String name, String nickName, String password, String content, Long postSize, Long followingSize, Long followerSize, List<UserToken> userTokens) {
+        this.userProfileImage = userProfileImage;
         this.email = email;
         this.name = name;
         this.nickName = nickName;
@@ -58,7 +60,7 @@ public class User extends BaseEntity {
     public static User create(SignupRequest request) {
         try {
             return User.builder()
-                    .profileImage(request.getProfileImage())
+                    .userProfileImage(null)
                     .email(request.getEmail())
                     .name(request.getName())
                     .nickName(request.getNickName())

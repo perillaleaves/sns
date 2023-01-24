@@ -3,6 +3,7 @@ package project.response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.domain.user.UserProfileImage;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class PostDetailResponse {
 
     private Long postId;
     private Long userId;
-    private String profileImage;
+    private UserProfileImage profileImage;
     private String nickName;
 
     private List<PostImagesResponse> postImages = new ArrayList<>();
@@ -26,7 +27,7 @@ public class PostDetailResponse {
 
     private LocalDateTime updatedAt;
 
-    public PostDetailResponse(Long postId, Long userId, String profileImage, String nickName, List<PostImagesResponse> postImages, String content, boolean isLike, Long likeSize, Long commentSize, LocalDateTime updatedAt) {
+    public PostDetailResponse(Long postId, Long userId, UserProfileImage profileImage, String nickName, List<PostImagesResponse> postImages, String content, boolean isLike, Long likeSize, Long commentSize, LocalDateTime updatedAt) {
         this.postId = postId;
         this.userId = userId;
         this.profileImage = profileImage;
