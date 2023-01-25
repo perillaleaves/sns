@@ -28,7 +28,7 @@ public class Post extends BaseEntity {
     private String content;
 
     private Long commentSize;
-    private Long likeSize;
+    private Long postLikeSize;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
@@ -41,17 +41,17 @@ public class Post extends BaseEntity {
     private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Like> likes = new HashSet<>();
+    private Set<PostLike> PostLikes = new HashSet<>();
 
     @Builder
-    public Post(String content, Long commentSize, Long likeSize, User user, List<PostImage> postImages, Set<Comment> comments, Set<Like> likes) {
+    public Post(String content, Long commentSize, Long postLikeSize, User user, List<PostImage> postImages, Set<Comment> comments, Set<PostLike> PostLikes) {
         this.content = content;
         this.commentSize = commentSize;
-        this.likeSize = likeSize;
+        this.postLikeSize = postLikeSize;
         this.user = user;
         this.postImages = postImages;
         this.comments = comments;
-        this.likes = likes;
+        this.PostLikes = PostLikes;
     }
 
     public static Post create(HttpServletRequest httpServletRequest, PostRequest request) {
@@ -59,7 +59,7 @@ public class Post extends BaseEntity {
         return Post.builder()
                 .content(request.getContent())
                 .commentSize(0L)
-                .likeSize(0L)
+                .postLikeSize(0L)
                 .user(userId)
                 .build();
     }
@@ -69,11 +69,11 @@ public class Post extends BaseEntity {
     }
 
     public void addPostLikeSize(Long likeSize) {
-        this.likeSize = ++likeSize;
+        this.postLikeSize = ++likeSize;
     }
 
     public void removePostLikeSize(Long likeSize) {
-        this.likeSize = --likeSize;
+        this.postLikeSize = --likeSize;
     }
 
     public void addCommentSize(Long commentSize) {

@@ -22,12 +22,12 @@ public class PostDetailResponse {
 
     private String content;
     private boolean isLike;
-    private Long likeSize;
+    private Long postLikeSize;
     private Long commentSize;
 
     private LocalDateTime updatedAt;
 
-    public PostDetailResponse(Long postId, Long userId, UserProfileImage profileImage, String nickName, List<PostImagesResponse> postImages, String content, boolean isLike, Long likeSize, Long commentSize, LocalDateTime updatedAt) {
+    public PostDetailResponse(Long postId, Long userId, UserProfileImage profileImage, String nickName, List<PostImagesResponse> postImages, String content, boolean isLike, Long postLikeSize, Long commentSize, LocalDateTime updatedAt) {
         this.postId = postId;
         this.userId = userId;
         this.profileImage = profileImage;
@@ -35,7 +35,7 @@ public class PostDetailResponse {
         this.postImages = postImages;
         this.content = content;
         this.isLike = isLike;
-        this.likeSize = likeSize;
+        this.postLikeSize = postLikeSize;
         this.commentSize = commentSize;
         this.updatedAt = updatedAt;
     }

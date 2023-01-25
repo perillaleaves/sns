@@ -10,15 +10,15 @@ import project.domain.user.User;
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 
-@Table(name = "likes")
+@Table(name = "postLikes")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like extends CreatedAtEntity {
+public class PostLike extends CreatedAtEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "likeId")
+    @Column(name = "postLikeId")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,15 +30,15 @@ public class Like extends CreatedAtEntity {
     private User user;
 
     @Builder
-    public Like(Post post, User user) {
+    public PostLike(Post post, User user) {
         this.post = post;
         this.user = user;
-        post.addPostLikeSize(post.getLikeSize());
+        post.addPostLikeSize(post.getPostLikeSize());
     }
 
-    public static Like addLike(Post post, HttpServletRequest httpServletRequest) {
+    public static PostLike addLike(Post post, HttpServletRequest httpServletRequest) {
         User userId = (User) httpServletRequest.getAttribute("userId");
-        return Like.builder()
+        return PostLike.builder()
                 .post(post)
                 .user(userId)
                 .build();
