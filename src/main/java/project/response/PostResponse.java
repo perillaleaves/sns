@@ -13,4 +13,5 @@ public class PostResponse {
     public PostResponse(PostDetailResponse postDetailResponse) {
         this.postDetailResponse = postDetailResponse;
     }
+
 }
