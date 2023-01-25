@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.domain.post.Post;
 import project.domain.user.UserToken;
 import project.exception.APIError;
+import project.exception.AccessTokenNotFoundException;
+import project.exception.PostNotFoundException;
 import project.repository.PostRepository;
 import project.repository.TokenRepository;
 import project.request.PostRequest;
@@ -23,7 +25,8 @@ public class PostApiService {
     public void create(HttpServletRequest httpServletRequest, PostRequest request) {
         validation(request);
         String token = httpServletRequest.getHeader("token");
-        UserToken accessToken = tokenRepository.findByAccessToken(token).orElse(null);
+        UserToken accessToken = tokenRepository.findByAccessToken(token)
+                .orElseThrow(AccessTokenNotFoundException::new);
 
         Post post = Post.create(httpServletRequest, request);
         accessToken.getUser().addPostSize(accessToken.getUser().getPostSize());
@@ -32,10 +35,11 @@ public class PostApiService {
 
     public void update(Long postId, PostRequest request, HttpServletRequest httpServletRequest) {
         validation(request);
-
         String token = httpServletRequest.getHeader("token");
-        UserToken accessToken = tokenRepository.findByAccessToken(token).orElse(null);
-        Post post = postRepository.findById(postId).orElse(null);
+        UserToken accessToken = tokenRepository.findByAccessToken(token)
+                .orElseThrow(AccessTokenNotFoundException::new);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
         if (!post.getUser().equals(accessToken.getUser())) {
             throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
@@ -45,8 +49,10 @@ public class PostApiService {
 
     public void delete(Long postId, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("token");
-        UserToken accessToken = tokenRepository.findByAccessToken(token).orElse(null);
-        Post post = postRepository.findById(postId).orElse(null);
+        UserToken accessToken = tokenRepository.findByAccessToken(token)
+                .orElseThrow(AccessTokenNotFoundException::new);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
         if (!post.getUser().equals(accessToken.getUser())) {
             throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }

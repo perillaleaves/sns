@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.domain.post.Like;
 import project.domain.post.Post;
 import project.domain.user.User;
+import project.exception.PostNotFoundException;
 import project.repository.LikeRepository;
 import project.repository.PostRepository;
 
@@ -21,7 +22,8 @@ public class LikeApiService {
     private final PostRepository postRepository;
 
     public void flipLike(Long postId, HttpServletRequest request) {
-        Post post = postRepository.findById(postId).orElse(null);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
         User user = (User) request.getAttribute("userId");
         Optional<Like> findLike = likeRepository.findByPostAndUser(post, user);
 
