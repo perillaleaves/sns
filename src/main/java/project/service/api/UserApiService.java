@@ -48,19 +48,17 @@ public class UserApiService {
         return token.getAccessToken();
     }
 
-    public void edit(String nickName, ProfileEditRequest request, HttpServletRequest httpServletRequest) {
+    public void edit(String nickName, ProfileEditRequest request, String token) {
         editValidate(request);
-        String token = httpServletRequest.getHeader("token");
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
         User user = userRepository.findByNickName(nickName)
                 .orElseThrow(UserNotFoundException::new);
-
-        if (userRepository.existsMemberByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
-            throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
-        }
         if (!accessToken.getUser().equals(user)) {
             throw new APIError("NotRequest", "잘못된 요청입니다.");
+        }
+        if (userRepository.existsMemberByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
+            throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
 
         user.editProfile(request);
@@ -68,11 +66,9 @@ public class UserApiService {
 
     private void validate(SignupRequest request) {
         boolean email_validate = Pattern.matches("\\w+@\\w+\\.\\w+(\\.\\w+)?", request.getEmail());
-
         if (!email_validate) {
             throw new APIError("InvalidEmail", "이메일을 양식에 맞게 입력해주세요.");
         }
-
         if (2 > request.getName().length() || request.getName().length() > 10) {
             throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
         }

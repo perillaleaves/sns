@@ -43,7 +43,8 @@ public class UserApiController {
 
     @PutMapping("/{nickName}")
     public Response<ValidationResponse> profileEdit(@PathVariable("nickName") String nickName, @RequestBody ProfileEditRequest request, HttpServletRequest httpServletRequest) {
-        userApiService.edit(nickName, request, httpServletRequest);
+        String token = httpServletRequest.getHeader("token");
+        userApiService.edit(nickName, request, token);
         return new Response<>(new ValidationResponse("Fix", "수정 완료"));
     }
 
