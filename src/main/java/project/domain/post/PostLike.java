@@ -33,11 +33,11 @@ public class PostLike extends CreatedAtEntity {
     public PostLike(Post post, User user) {
         this.post = post;
         this.user = user;
-        post.addPostLikeSize(post.getPostLikeSize());
     }
 
     public static PostLike addLike(Post post, HttpServletRequest httpServletRequest) {
         User userId = (User) httpServletRequest.getAttribute("userId");
+        post.addPostLikeSize(post.getPostLikeSize());
         return PostLike.builder()
                 .post(post)
                 .user(userId)

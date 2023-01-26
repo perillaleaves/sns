@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @EntityGraph(attributePaths = {"postImages", "user", "comments", "postLikes"})
+    @EntityGraph(attributePaths = {"postImages", "user", "comments"})
     Optional<Post> findById(Long id);
 
 }

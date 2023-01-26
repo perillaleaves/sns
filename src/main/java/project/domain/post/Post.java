@@ -10,9 +10,7 @@ import project.request.PostRequest;
 
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -35,7 +33,7 @@ public class Post extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostImage> postImages = new ArrayList<>();
+    private Set<PostImage> postImages = new HashSet<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
@@ -44,7 +42,7 @@ public class Post extends BaseEntity {
     private Set<PostLike> PostLikes = new HashSet<>();
 
     @Builder
-    public Post(String content, Long commentSize, Long postLikeSize, User user, List<PostImage> postImages, Set<Comment> comments, Set<PostLike> PostLikes) {
+    public Post(String content, Long commentSize, Long postLikeSize, User user, Set<PostImage> postImages, Set<Comment> comments, Set<PostLike> PostLikes) {
         this.content = content;
         this.commentSize = commentSize;
         this.postLikeSize = postLikeSize;
