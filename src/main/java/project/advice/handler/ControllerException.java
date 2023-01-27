@@ -3,9 +3,8 @@ package project.advice.handler;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import project.advice.exception.*;
-import project.common.exception.APIError;
-import project.response.ErrorResponse;
-import project.response.Response;
+import project.common.response.ErrorResponse;
+import project.common.response.Response;
 
 @RestControllerAdvice
 public class ControllerException {

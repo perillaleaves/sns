@@ -3,10 +3,10 @@ package project.comment.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.advice.exception.PostNotFoundException;
 import project.comment.response.CommentResponse;
 import project.comment.response.PostCommentResponse;
 import project.post.domain.Post;
-import project.advice.exception.PostNotFoundException;
 import project.post.repository.PostRepository;
 
 import java.util.stream.Collectors;

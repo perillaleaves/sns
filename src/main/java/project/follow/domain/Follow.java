@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.common.domain.CreatedAtEntity;
+import project.common.CreatedAtEntity;
 import project.user.domain.User;
 
 import javax.persistence.*;

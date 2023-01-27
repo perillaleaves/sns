@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.common.domain.CreatedAtEntity;
-import project.config.GenerateToken;
+import project.common.CreatedAtEntity;
+import project.common.GenerateToken;
 import project.user.domain.User;
 
 import javax.persistence.*;

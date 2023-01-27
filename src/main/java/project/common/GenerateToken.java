@@ -1,4 +1,4 @@
-package project.config;
+package project.common;
 
 import project.user.domain.User;
 

@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import project.post.service.PostQueryService;
-import project.post.response.PostResponse;
+import project.common.response.Response;
 import project.post.response.PostDetailResponse;
-import project.response.Response;
+import project.post.response.PostResponse;
+import project.post.service.PostQueryService;
 
 import javax.servlet.http.HttpServletRequest;
 

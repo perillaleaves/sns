@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import project.token.repository.TokenRepository;
-import project.response.Response;
-import project.response.ValidationResponse;
+import project.common.response.Response;
+import project.common.response.ValidationResponse;
 import project.follow.service.FollowApiService;
+import project.token.repository.TokenRepository;
 
 import javax.servlet.http.HttpServletRequest;
 

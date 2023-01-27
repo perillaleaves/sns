@@ -3,7 +3,7 @@ package project.post.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.common.domain.BaseEntity;
+import project.common.BaseEntity;
 
 import javax.persistence.*;
 

@@ -2,10 +2,10 @@ package project.comment.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import project.comment.service.CommentApiService;
 import project.comment.request.CommentRequest;
-import project.response.Response;
-import project.response.ValidationResponse;
+import project.comment.service.CommentApiService;
+import project.common.response.Response;
+import project.common.response.ValidationResponse;
 
 import javax.servlet.http.HttpServletRequest;
 

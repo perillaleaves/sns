@@ -3,16 +3,16 @@ package project.comment.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.comment.repository.CommentRepository;
-import project.comment.request.CommentRequest;
-import project.comment.domain.Comment;
-import project.post.domain.Post;
-import project.token.domain.UserToken;
-import project.common.exception.APIError;
+import project.advice.exception.APIError;
 import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.CommentNotFoundException;
 import project.advice.exception.PostNotFoundException;
+import project.comment.domain.Comment;
+import project.comment.repository.CommentRepository;
+import project.comment.request.CommentRequest;
+import project.post.domain.Post;
 import project.post.repository.PostRepository;
+import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 
 @Service
@@ -35,6 +35,7 @@ public class CommentApiService {
                 .user(accessToken.getUser())
                 .post(post)
                 .build();
+        post.addCommentSize(post.getCommentSize());
         commentRepository.save(comment);
     }
 

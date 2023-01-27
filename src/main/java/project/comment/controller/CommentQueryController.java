@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.comment.response.CommentListResponse;
 import project.comment.response.PostCommentResponse;
 import project.comment.service.CommentQueryService;
-import project.response.Response;
+import project.common.response.Response;
 
 @RestController
 @RequiredArgsConstructor

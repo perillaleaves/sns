@@ -3,15 +3,15 @@ package project.postLike.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.post.domain.Post;
-import project.postLike.reposiotry.PostLikeRepository;
-import project.postLike.domain.PostLike;
-import project.token.domain.UserToken;
-import project.common.exception.APIError;
+import project.advice.exception.APIError;
 import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.PostLikeNotFoundException;
 import project.advice.exception.PostNotFoundException;
+import project.post.domain.Post;
 import project.post.repository.PostRepository;
+import project.postLike.domain.PostLike;
+import project.postLike.reposiotry.PostLikeRepository;
+import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 
 @Service

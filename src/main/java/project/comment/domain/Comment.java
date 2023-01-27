@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.common.domain.BaseEntity;
+import project.common.BaseEntity;
 import project.post.domain.Post;
 import project.user.domain.User;
 

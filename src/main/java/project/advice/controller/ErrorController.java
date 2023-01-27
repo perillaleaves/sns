@@ -1,4 +1,4 @@
-package project.config;
+package project.advice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;

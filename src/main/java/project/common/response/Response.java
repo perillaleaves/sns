@@ -1,4 +1,4 @@
-package project.response;
+package project.common.response;
 
 import lombok.Getter;
 

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.comment.domain.Comment;
-import project.common.domain.BaseEntity;
+import project.common.BaseEntity;
 import project.postLike.domain.PostLike;
 import project.user.domain.User;
 

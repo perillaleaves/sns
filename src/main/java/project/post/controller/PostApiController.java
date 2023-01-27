@@ -2,9 +2,9 @@ package project.post.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import project.common.response.Response;
+import project.common.response.ValidationResponse;
 import project.post.request.PostRequest;
-import project.response.Response;
-import project.response.ValidationResponse;
 import project.post.service.PostApiService;
 
 import javax.servlet.http.HttpServletRequest;

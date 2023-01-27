@@ -2,12 +2,12 @@ package project.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import project.common.response.Response;
+import project.common.response.ValidationResponse;
+import project.token.service.TokenApiService;
 import project.user.request.LoginRequest;
 import project.user.request.ProfileEditRequest;
 import project.user.request.SignupRequest;
-import project.response.Response;
-import project.response.ValidationResponse;
-import project.token.service.TokenApiService;
 import project.user.service.UserApiService;
 
 import javax.servlet.http.HttpServletRequest;

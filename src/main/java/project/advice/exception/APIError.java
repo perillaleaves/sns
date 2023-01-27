@@ -1,4 +1,4 @@
-package project.common.exception;
+package project.advice.exception;
 
 public class APIError extends Error {
 

@@ -3,13 +3,13 @@ package project.post.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.advice.exception.APIError;
+import project.advice.exception.AccessTokenNotFoundException;
+import project.advice.exception.PostNotFoundException;
 import project.post.domain.Post;
 import project.post.repository.PostRepository;
 import project.post.request.PostRequest;
 import project.token.domain.UserToken;
-import project.common.exception.APIError;
-import project.advice.exception.AccessTokenNotFoundException;
-import project.advice.exception.PostNotFoundException;
 import project.token.repository.TokenRepository;
 
 @Service
