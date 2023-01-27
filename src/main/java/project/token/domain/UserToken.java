@@ -32,12 +32,4 @@ public class UserToken extends CreatedAtEntity {
         this.accessToken = accessToken;
     }
 
-    public static UserToken create(User user, String email) {
-        return UserToken.builder()
-                .user(user)
-                .accessToken(GenerateToken.generatedToken(user, email))
-                .build();
-    }
-
-
 }

@@ -7,6 +7,7 @@ import project.advice.exception.APIError;
 import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.UserNotFoundException;
 import project.common.EncryptUtils;
+import project.common.GenerateToken;
 import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 import project.user.domain.User;
@@ -52,7 +53,10 @@ public class UserApiService {
             throw new APIError("InconsistencyPassword", "비밀번호가 일치하지 않습니다.");
         }
 
-        UserToken token = UserToken.create(user, request.getEmail());
+        UserToken token = UserToken.builder()
+                .user(user)
+                .accessToken(GenerateToken.generatedToken(user, request.getEmail()))
+                .build();
         tokenRepository.save(token);
         return token.getAccessToken();
     }
