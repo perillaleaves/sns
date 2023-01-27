@@ -1,6 +1,7 @@
 package project.controller.api;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +17,18 @@ public class PostLikeApiController {
 
     private final PostLikeApiService postLikeApiService;
 
-    @PostMapping("/post/{postId}/toggle")
-    public Response<ValidationResponse> likeToggle(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
-        postLikeApiService.flipLike(postId, httpServletRequest);
-        return new Response<>(new ValidationResponse("Toggle", "토글"));
+    @PostMapping("/{postId}/like")
+    public Response<ValidationResponse> like(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
+        String token = httpServletRequest.getHeader("token");
+        postLikeApiService.addLike(postId, token);
+        return new Response<>(new ValidationResponse("Like", "좋아요"));
+    }
+
+    @DeleteMapping("/{postId}/unlike")
+    public Response<ValidationResponse> unLike(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
+        String token = httpServletRequest.getHeader("token");
+        postLikeApiService.removeLike(postId, token);
+        return new Response<>(new ValidationResponse("UnLike", "좋아요 취소"));
     }
 
 }

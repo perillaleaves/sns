@@ -35,17 +35,17 @@ public class UserApiController {
     }
 
     @PostMapping("/logout")
-    public Response<ValidationResponse> logout(HttpServletRequest request) {
-        String token = request.getHeader("token");
+    public Response<ValidationResponse> logout(HttpServletRequest httpServletRequest) {
+        String token = httpServletRequest.getHeader("token");
         tokenService.deleteToken(token);
         return new Response<>(new ValidationResponse("Logout", "로그아웃"));
     }
 
-    @PutMapping("/{nickName}")
-    public Response<ValidationResponse> profileEdit(@PathVariable("nickName") String nickName, @RequestBody ProfileEditRequest request, HttpServletRequest httpServletRequest) {
+    @PutMapping("/user/{userId}")
+    public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestBody ProfileEditRequest request, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("token");
-        userApiService.edit(nickName, request, token);
-        return new Response<>(new ValidationResponse("Fix", "수정 완료"));
+        userApiService.edit(userId, request, token);
+        return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
 
 }

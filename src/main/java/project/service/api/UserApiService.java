@@ -15,7 +15,6 @@ import project.request.LoginAndTokenRequest;
 import project.request.ProfileEditRequest;
 import project.request.SignupRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
@@ -48,16 +47,16 @@ public class UserApiService {
         return token.getAccessToken();
     }
 
-    public void edit(String nickName, ProfileEditRequest request, String token) {
+    public void edit(Long userId, ProfileEditRequest request, String token) {
         editValidate(request);
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
-        User user = userRepository.findByNickName(nickName)
+        User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
         if (!accessToken.getUser().equals(user)) {
             throw new APIError("NotRequest", "잘못된 요청입니다.");
         }
-        if (userRepository.existsMemberByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
+        if (userRepository.existsUserByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
             throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
 
@@ -79,10 +78,10 @@ public class UserApiService {
             throw new APIError("InvalidPassword", "패스워드를 5자 이상 10자 이하로 입력해주세요.");
         }
 
-        if (userRepository.existsMemberByEmail(request.getEmail())) {
+        if (userRepository.existsUserByEmail(request.getEmail())) {
             throw new APIError("DuplicatedEmail", "중복된 이메일입니다.");
         }
-        if (userRepository.existsMemberByNickName(request.getNickName())) {
+        if (userRepository.existsUserByNickName(request.getNickName())) {
             throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
     }

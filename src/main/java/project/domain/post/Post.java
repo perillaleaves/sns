@@ -52,13 +52,12 @@ public class Post extends BaseEntity {
         this.PostLikes = PostLikes;
     }
 
-    public static Post create(HttpServletRequest httpServletRequest, PostRequest request) {
-        User userId = (User) httpServletRequest.getAttribute("userId");
+    public static Post create(User user, PostRequest request) {
         return Post.builder()
                 .content(request.getContent())
                 .commentSize(0L)
                 .postLikeSize(0L)
-                .user(userId)
+                .user(user)
                 .build();
     }
 

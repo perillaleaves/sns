@@ -8,7 +8,6 @@ import project.common.CreatedAtEntity;
 import project.domain.user.User;
 
 import javax.persistence.*;
-import javax.servlet.http.HttpServletRequest;
 
 @Table(name = "postLikes")
 @Entity
@@ -35,12 +34,10 @@ public class PostLike extends CreatedAtEntity {
         this.user = user;
     }
 
-    public static PostLike addLike(Post post, HttpServletRequest httpServletRequest) {
-        User userId = (User) httpServletRequest.getAttribute("userId");
-        post.addPostLikeSize(post.getPostLikeSize());
+    public static PostLike addLike(Post post, User user) {
         return PostLike.builder()
                 .post(post)
-                .user(userId)
+                .user(user)
                 .build();
     }
 

@@ -38,4 +38,10 @@ public class ControllerException {
     public Response<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException ce) {
         return new Response<>(new ErrorResponse(ce.getCode(), ce.getMessage()));
     }
+
+    @ExceptionHandler(PostLikeNotFoundException.class)
+    public Response<ErrorResponse> handlePostLikeNotFoundException(PostLikeNotFoundException ple) {
+        return new Response<>(new ErrorResponse(ple.getCode(), ple.getMessage()));
+    }
+
 }

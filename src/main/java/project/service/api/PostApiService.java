@@ -22,20 +22,18 @@ public class PostApiService {
     private final PostRepository postRepository;
     private final TokenRepository tokenRepository;
 
-    public void create(HttpServletRequest httpServletRequest, PostRequest request) {
+    public void create(PostRequest request, String token) {
         validation(request);
-        String token = httpServletRequest.getHeader("token");
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
 
-        Post post = Post.create(httpServletRequest, request);
+        Post post = Post.create(accessToken.getUser(), request);
         accessToken.getUser().addPostSize(accessToken.getUser().getPostSize());
         postRepository.save(post);
     }
 
-    public void update(Long postId, PostRequest request, HttpServletRequest httpServletRequest) {
+    public void update(Long postId, PostRequest request, String token) {
         validation(request);
-        String token = httpServletRequest.getHeader("token");
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
         Post post = postRepository.findById(postId)
@@ -47,8 +45,7 @@ public class PostApiService {
         post.updatePostContent(request.getContent());
     }
 
-    public void delete(Long postId, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
+    public void delete(Long postId, String token) {
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
         Post post = postRepository.findById(postId)

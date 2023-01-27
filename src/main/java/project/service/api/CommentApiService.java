@@ -15,8 +15,6 @@ import project.repository.PostRepository;
 import project.repository.TokenRepository;
 import project.request.CommentRequest;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -26,15 +24,18 @@ public class CommentApiService {
     private final PostRepository postRepository;
     private final TokenRepository tokenRepository;
 
-    public void create(Long postId, CommentRequest request, HttpServletRequest httpServletRequest) {
+    public void create(Long postId, CommentRequest request, String token) {
+        validation(request);
+        UserToken accessToken = tokenRepository.findByAccessToken(token)
+                .orElseThrow(AccessTokenNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        Comment comment = Comment.create(post, request, httpServletRequest);
+        Comment comment = Comment.create(post, request, accessToken.getUser());
         commentRepository.save(comment);
     }
 
-    public void update(Long commentId, CommentRequest request, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
+    public void update(Long commentId, CommentRequest request, String token) {
+        validation(request);
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
         Comment comment = commentRepository.findById(commentId)
@@ -45,8 +46,7 @@ public class CommentApiService {
         comment.update(request.getContent());
     }
 
-    public void delete(Long commentId, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
+    public void delete(Long commentId, String token) {
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
         Comment comment = commentRepository.findById(commentId)
@@ -58,5 +58,10 @@ public class CommentApiService {
         commentRepository.delete(comment);
     }
 
+    private static void validation(CommentRequest request) {
+        if (request.getContent().isEmpty() || request.getContent().length() > 300) {
+            throw new APIError("InvalidContent", "문구를 1자이상 300자이하로 입력해주세요.");
+        }
+    }
 
 }

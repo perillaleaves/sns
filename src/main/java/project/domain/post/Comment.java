@@ -38,12 +38,11 @@ public class Comment extends BaseEntity {
         this.post = post;
     }
 
-    public static Comment create(Post post, CommentRequest request, HttpServletRequest httpServletRequest) {
-        User userId = (User) httpServletRequest.getAttribute("userId");
+    public static Comment create(Post post, CommentRequest request, User user) {
         post.addCommentSize(post.getCommentSize());
         return Comment.builder()
                 .content(request.getContent())
-                .user(userId)
+                .user(user)
                 .post(post)
                 .build();
     }
