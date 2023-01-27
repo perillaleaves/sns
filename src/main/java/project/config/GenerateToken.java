@@ -1,6 +1,6 @@
 package project.config;
 
-import project.domain.user.User;
+import project.user.domain.User;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;

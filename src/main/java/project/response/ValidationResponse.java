@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class ValidationResponse {
 
-    private String code;
+    private final String code;
 
-    private String message;
+    private final String message;
 
     public ValidationResponse(String code, String message) {
         this.code = code;
