@@ -1,19 +1,18 @@
 package project.postLike.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import project.common.CreatedAtEntity;
 import project.post.domain.Post;
 import project.user.domain.User;
 
 import javax.persistence.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "postLikes")
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLike extends CreatedAtEntity {
 
     @Id
@@ -28,15 +27,5 @@ public class PostLike extends CreatedAtEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
-
-    @Builder
-    public PostLike(Post post, User user) {
-        this.post = post;
-        this.user = user;
-    }
-
-    public boolean isLikeOf(User user) {
-        return user.hasId(user.getId());
-    }
 
 }

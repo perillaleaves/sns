@@ -1,9 +1,6 @@
 package project.user.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import project.common.BaseEntity;
 import project.token.domain.UserToken;
 import project.user.request.ProfileEditRequest;
@@ -13,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Builder
+@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,21 +40,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserToken> userTokens = new ArrayList<>();
 
-    @Builder
-    public User(Long id, UserProfileImage userProfileImage, String email, String name, String nickName, String password, String content, Long postSize, Long followingSize, Long followerSize, List<UserToken> userTokens) {
-        this.id = id;
-        this.userProfileImage = userProfileImage;
-        this.email = email;
-        this.name = name;
-        this.nickName = nickName;
-        this.password = password;
-        this.content = content;
-        this.postSize = postSize;
-        this.followingSize = followingSize;
-        this.followerSize = followerSize;
-        this.userTokens = userTokens;
-    }
-
     public void addPostSize(Long postSize) {
         this.postSize = ++postSize;
     }
@@ -78,10 +62,6 @@ public class User extends BaseEntity {
 
     public void removeFollowerSize(Long followerSize) {
         this.followerSize = --followerSize;
-    }
-
-    public boolean hasId(Long id) {
-        return this.id.equals(id);
     }
 
     public void editProfile(ProfileEditRequest request) {

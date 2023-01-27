@@ -1,14 +1,13 @@
 package project.follow.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import project.common.CreatedAtEntity;
 import project.user.domain.User;
 
 import javax.persistence.*;
 
+@Builder
+@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,11 +25,5 @@ public class Follow extends CreatedAtEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private User toUser;
-
-    @Builder
-    public Follow(User fromUser, User toUser) {
-        this.fromUser = fromUser;
-        this.toUser = toUser;
-    }
 
 }

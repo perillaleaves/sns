@@ -1,9 +1,6 @@
 package project.post.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import project.comment.domain.Comment;
 import project.common.BaseEntity;
 import project.postLike.domain.PostLike;
@@ -13,6 +10,8 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
+@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,17 +39,6 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostLike> PostLikes = new HashSet<>();
-
-    @Builder
-    public Post(String content, Long commentSize, Long postLikeSize, User user, Set<PostImage> postImages, Set<Comment> comments, Set<PostLike> PostLikes) {
-        this.content = content;
-        this.commentSize = commentSize;
-        this.postLikeSize = postLikeSize;
-        this.user = user;
-        this.postImages = postImages;
-        this.comments = comments;
-        this.PostLikes = PostLikes;
-    }
 
     public void updatePostContent(String content) {
         this.content = content;

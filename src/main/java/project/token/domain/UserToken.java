@@ -1,15 +1,13 @@
 package project.token.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import project.common.CreatedAtEntity;
-import project.common.GenerateToken;
 import project.user.domain.User;
 
 import javax.persistence.*;
 
+@Builder
+@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,11 +23,5 @@ public class UserToken extends CreatedAtEntity {
     private User user;
 
     private String accessToken;
-
-    @Builder
-    public UserToken(User user, String accessToken) {
-        this.user = user;
-        this.accessToken = accessToken;
-    }
 
 }
