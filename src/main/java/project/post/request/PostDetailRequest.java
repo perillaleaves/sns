@@ -1,9 +1,10 @@
-package project.post.response;
+package project.post.request;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.post.response.PostImagesResponse;
 import project.user.domain.UserProfileImage;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostDetailResponse {
+public class PostDetailRequest {
 
     private Long postId;
     private Long userId;
@@ -29,8 +30,7 @@ public class PostDetailResponse {
     private LocalDateTime updatedAt;
 
     @Builder
-    public PostDetailResponse(Long postId, Long userId, UserProfileImage profileImage, String nickName, List<PostImagesResponse> postImages, String content, boolean isLike, Long postLikeSize, Long commentSize, LocalDateTime updatedAt) {
-        this.postId = postId;
+    public PostDetailRequest(Long postId, Long userId, UserProfileImage profileImage, String nickName, List<PostImagesResponse> postImages, String content, boolean isLike, Long postLikeSize, Long commentSize, LocalDateTime updatedAt) {
         this.userId = userId;
         this.profileImage = profileImage;
         this.nickName = nickName;
