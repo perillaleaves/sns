@@ -11,15 +11,14 @@ import java.time.LocalDateTime;
 public class CommentResponse {
 
     private Long commentId;
-    private String userProfileImage;
+//    private String userProfileImage;
     private String nickName;
     private String commentContent;
 
     private LocalDateTime updatedAt;
 
-    public CommentResponse(Long commentId, String userProfileImage, String nickName, String commentContent, LocalDateTime updatedAt) {
+    public CommentResponse(Long commentId, String nickName, String commentContent, LocalDateTime updatedAt) {
         this.commentId = commentId;
-        this.userProfileImage = userProfileImage;
         this.nickName = nickName;
         this.commentContent = commentContent;
         this.updatedAt = updatedAt;

@@ -17,7 +17,6 @@ public class GenerateTestService {
 
     private final UserApiService userApiService;
     private final PostApiService postApiService;
-    private final TokenRepository tokenRepository;
 
     public void generate() {
 //        try {

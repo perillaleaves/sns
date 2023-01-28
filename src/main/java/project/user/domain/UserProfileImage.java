@@ -17,10 +17,9 @@ public class UserProfileImage {
     @Column(name = "userProfileImageId")
     private Long id;
 
-    @OneToOne(mappedBy = "userProfileImage", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userProfileImage", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private User user;
 
     private String userProfileImageURL;
-
 
 }

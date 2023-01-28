@@ -25,16 +25,16 @@ public class PostQueryService {
     private final TokenRepository tokenRepository;
     private final PostLikeRepository postLikeRepository;
 
-    public PostDetailResponse findPostDetail(Long postId, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
+    public PostDetailResponse findPostDetail(Long postId, String token) {
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         boolean isLike = postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), accessToken.getUser().getId());
 
-        return new PostDetailResponse(post.getId(), post.getUser().getId(), post.getUser().getUserProfileImage(), post.getUser().getNickName(),
-                post.getPostImages().stream().map(postImage -> new PostImagesResponse(postImage.getId(), postImage.getImageUrl())).collect(Collectors.toList()),
+        return new PostDetailResponse(post.getId(), post.getUser().getId(), post.getUser().getNickName(),
+//                post.getPostImages().stream()
+//                        .map(postImage -> new PostImagesResponse(postImage.getId(), postImage.getImageUrl())).collect(Collectors.toList()),
                 post.getContent(), isLike, post.getPostLikeSize(), post.getCommentSize(), post.getUpdatedAt());
     }
 

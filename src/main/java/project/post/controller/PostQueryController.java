@@ -19,7 +19,8 @@ public class PostQueryController {
 
     @GetMapping("/post/{postId}")
     public Response<PostResponse> getPostDetail(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
-        PostDetailResponse postDetail = postQueryService.findPostDetail(postId, httpServletRequest);
+        String token = httpServletRequest.getHeader("token");
+        PostDetailResponse postDetail = postQueryService.findPostDetail(postId, token);
         return new Response<>(new PostResponse(postDetail));
     }
 

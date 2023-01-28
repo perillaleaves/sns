@@ -6,6 +6,8 @@ import project.post.domain.Post;
 import project.user.domain.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -20,6 +22,8 @@ public class Comment extends BaseEntity {
     private Long id;
 
     private String content;
+
+    private Long commentLikeSize;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
