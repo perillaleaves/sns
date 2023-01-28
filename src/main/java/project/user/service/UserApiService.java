@@ -1,6 +1,5 @@
 package project.user.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.APIError;
@@ -20,11 +19,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
 @Service
-@RequiredArgsConstructor
 public class UserApiService {
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+
+    public UserApiService(UserRepository userRepository, TokenRepository tokenRepository) {
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+    }
 
     @Transactional
     public void create(SignupRequest request) throws NoSuchAlgorithmException {

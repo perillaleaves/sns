@@ -1,6 +1,5 @@
 package project.advice.interceptor;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import project.token.domain.UserToken;
@@ -13,10 +12,13 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Component
-@RequiredArgsConstructor
 public class LoginInterceptor implements HandlerInterceptor {
 
     private final TokenRepository tokenRepository;
+
+    public LoginInterceptor(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException, IOException {

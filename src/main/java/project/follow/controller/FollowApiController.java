@@ -1,6 +1,5 @@
 package project.follow.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,11 +12,15 @@ import project.token.repository.TokenRepository;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequiredArgsConstructor
 public class FollowApiController {
 
     private final FollowApiService followApiService;
     private final TokenRepository tokenRepository;
+
+    public FollowApiController(FollowApiService followApiService, TokenRepository tokenRepository) {
+        this.followApiService = followApiService;
+        this.tokenRepository = tokenRepository;
+    }
 
     @PostMapping("/{userId}/follow")
     public Response<ValidationResponse> follow(@PathVariable("userId") Long userId, HttpServletRequest httpServletRequest) {

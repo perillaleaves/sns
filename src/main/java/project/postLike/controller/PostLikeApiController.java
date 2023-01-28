@@ -1,6 +1,5 @@
 package project.postLike.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,10 +11,13 @@ import project.postLike.service.PostLikeApiService;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequiredArgsConstructor
 public class PostLikeApiController {
 
     private final PostLikeApiService postLikeApiService;
+
+    public PostLikeApiController(PostLikeApiService postLikeApiService) {
+        this.postLikeApiService = postLikeApiService;
+    }
 
     @PostMapping("/{postId}/like")
     public Response<ValidationResponse> like(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {

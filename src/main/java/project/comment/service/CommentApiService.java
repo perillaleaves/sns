@@ -1,6 +1,5 @@
 package project.comment.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.APIError;
@@ -17,12 +16,17 @@ import project.token.repository.TokenRepository;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class CommentApiService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final TokenRepository tokenRepository;
+
+    public CommentApiService(CommentRepository commentRepository, PostRepository postRepository, TokenRepository tokenRepository) {
+        this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
+        this.tokenRepository = tokenRepository;
+    }
 
     public void create(Long postId, CommentRequest request, String token) {
         validation(request);

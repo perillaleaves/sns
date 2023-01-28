@@ -6,11 +6,7 @@ import project.post.domain.Post;
 import project.user.domain.User;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
-@Builder
-@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,6 +28,15 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postId")
     private Post post;
+
+    @Builder
+    public Comment(Long id, String content, Long commentLikeSize, User user, Post post) {
+        this.id = id;
+        this.content = content;
+        this.commentLikeSize = commentLikeSize;
+        this.user = user;
+        this.post = post;
+    }
 
     public void update(String content) {
         this.content = content;

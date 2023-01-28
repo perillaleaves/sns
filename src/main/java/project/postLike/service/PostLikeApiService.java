@@ -1,6 +1,5 @@
 package project.postLike.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.APIError;
@@ -16,12 +15,17 @@ import project.token.repository.TokenRepository;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class PostLikeApiService {
 
     private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
     private final TokenRepository tokenRepository;
+
+    public PostLikeApiService(PostLikeRepository postLikeRepository, PostRepository postRepository, TokenRepository tokenRepository) {
+        this.postLikeRepository = postLikeRepository;
+        this.postRepository = postRepository;
+        this.tokenRepository = tokenRepository;
+    }
 
     public void addLike(Long postId, String token) {
         UserToken accessToken = tokenRepository.findByAccessToken(token)

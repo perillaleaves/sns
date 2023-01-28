@@ -1,22 +1,21 @@
 package project;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.post.request.PostRequest;
 import project.post.service.PostApiService;
-import project.token.repository.TokenRepository;
 import project.user.service.UserApiService;
-
-import java.security.NoSuchAlgorithmException;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class GenerateTestService {
 
     private final UserApiService userApiService;
     private final PostApiService postApiService;
+
+    public GenerateTestService(UserApiService userApiService, PostApiService postApiService) {
+        this.userApiService = userApiService;
+        this.postApiService = postApiService;
+    }
 
     public void generate() {
 //        try {

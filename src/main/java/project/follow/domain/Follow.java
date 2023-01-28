@@ -6,8 +6,6 @@ import project.user.domain.User;
 
 import javax.persistence.*;
 
-@Builder
-@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,4 +24,10 @@ public class Follow extends CreatedAtEntity {
     @JoinColumn
     private User toUser;
 
+    @Builder
+    public Follow(Long id, User fromUser, User toUser) {
+        this.id = id;
+        this.fromUser = fromUser;
+        this.toUser = toUser;
+    }
 }

@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import project.user.domain.UserProfileImage;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

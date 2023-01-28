@@ -1,6 +1,5 @@
 package project.follow.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.APIError;
@@ -18,12 +17,17 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class FollowApiService {
 
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+
+    public FollowApiService(FollowRepository followRepository, UserRepository userRepository, TokenRepository tokenRepository) {
+        this.followRepository = followRepository;
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+    }
 
     public void follow(Long userId, String token) {
         UserToken accessToken = tokenRepository.findByAccessToken(token)

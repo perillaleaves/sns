@@ -10,8 +10,6 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Builder
-@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,6 +37,18 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostLike> PostLikes = new HashSet<>();
+
+    @Builder
+    public Post(Long id, String content, Long commentSize, Long postLikeSize, User user, Set<PostImage> postImages, Set<Comment> comments, Set<PostLike> postLikes) {
+        this.id = id;
+        this.content = content;
+        this.commentSize = commentSize;
+        this.postLikeSize = postLikeSize;
+        this.user = user;
+        this.postImages = postImages;
+        this.comments = comments;
+        PostLikes = postLikes;
+    }
 
     public void updatePostContent(String content) {
         this.content = content;

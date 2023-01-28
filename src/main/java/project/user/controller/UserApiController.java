@@ -1,6 +1,5 @@
 package project.user.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import project.common.response.Response;
 import project.common.response.ValidationResponse;
@@ -15,11 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
-@RequiredArgsConstructor
 public class UserApiController {
 
     private final UserApiService userApiService;
     private final TokenApiService tokenService;
+
+    public UserApiController(UserApiService userApiService, TokenApiService tokenService) {
+        this.userApiService = userApiService;
+        this.tokenService = tokenService;
+    }
 
     @PostMapping("/signup")
     public Response<ValidationResponse> signup(@RequestBody SignupRequest request) throws NoSuchAlgorithmException {

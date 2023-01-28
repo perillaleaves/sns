@@ -1,6 +1,5 @@
 package project.comment.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import project.comment.request.CommentRequest;
 import project.comment.service.CommentApiService;
@@ -10,10 +9,13 @@ import project.common.response.ValidationResponse;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequiredArgsConstructor
 public class CommentApiController {
 
     private final CommentApiService commentApiService;
+
+    public CommentApiController(CommentApiService commentApiService) {
+        this.commentApiService = commentApiService;
+    }
 
     @PostMapping("/{postId}/comment")
     public Response<ValidationResponse> create(@PathVariable("postId") Long postId, @RequestBody CommentRequest request, HttpServletRequest httpServletRequest) {

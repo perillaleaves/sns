@@ -7,8 +7,6 @@ import project.user.domain.User;
 
 import javax.persistence.*;
 
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "postLikes")
 @Entity
@@ -28,4 +26,10 @@ public class PostLike extends CreatedAtEntity {
     @JoinColumn(name = "userId")
     private User user;
 
+    @Builder
+    public PostLike(Long id, Post post, User user) {
+        this.id = id;
+        this.post = post;
+        this.user = user;
+    }
 }

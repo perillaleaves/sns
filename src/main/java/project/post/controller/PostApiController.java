@@ -1,6 +1,5 @@
 package project.post.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import project.common.response.Response;
 import project.common.response.ValidationResponse;
@@ -10,10 +9,13 @@ import project.post.service.PostApiService;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequiredArgsConstructor
 public class PostApiController {
 
     private final PostApiService postApiService;
+
+    public PostApiController(PostApiService postApiService) {
+        this.postApiService = postApiService;
+    }
 
     @PostMapping("/post")
     public Response<ValidationResponse> create(@RequestBody PostRequest request, HttpServletRequest httpServletRequest) {

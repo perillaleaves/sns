@@ -6,8 +6,6 @@ import project.user.domain.User;
 
 import javax.persistence.*;
 
-@Builder
-@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,4 +22,10 @@ public class UserToken extends CreatedAtEntity {
 
     private String accessToken;
 
+    @Builder
+    public UserToken(Long id, User user, String accessToken) {
+        this.id = id;
+        this.user = user;
+        this.accessToken = accessToken;
+    }
 }

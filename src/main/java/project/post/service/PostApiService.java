@@ -1,6 +1,5 @@
 package project.post.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.APIError;
@@ -14,11 +13,15 @@ import project.token.repository.TokenRepository;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class PostApiService {
 
     private final PostRepository postRepository;
     private final TokenRepository tokenRepository;
+
+    public PostApiService(PostRepository postRepository, TokenRepository tokenRepository) {
+        this.postRepository = postRepository;
+        this.tokenRepository = tokenRepository;
+    }
 
     public void create(PostRequest request, String token) {
         validation(request);

@@ -5,8 +5,6 @@ import project.common.BaseEntity;
 
 import javax.persistence.*;
 
-@Builder
-@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,4 +21,10 @@ public class PostImage extends BaseEntity {
     @JoinColumn(name = "postId")
     private Post post;
 
+    @Builder
+    public PostImage(Long id, String imageUrl, Post post) {
+        this.id = id;
+        this.imageUrl = imageUrl;
+        this.post = post;
+    }
 }
