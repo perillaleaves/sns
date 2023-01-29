@@ -8,8 +8,13 @@ import project.advice.exception.PostNotFoundException;
 import project.post.domain.Post;
 import project.post.repository.PostRepository;
 import project.post.request.PostRequest;
+import project.postImages.domain.PostImage;
+import project.postImages.repository.PostImageRepository;
 import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -17,14 +22,19 @@ public class PostApiService {
 
     private final PostRepository postRepository;
     private final TokenRepository tokenRepository;
+    private final PostImageRepository postImageRepository;
 
-    public PostApiService(PostRepository postRepository, TokenRepository tokenRepository) {
+    public PostApiService(PostRepository postRepository, TokenRepository tokenRepository,
+                          PostImageRepository postImageRepository) {
         this.postRepository = postRepository;
         this.tokenRepository = tokenRepository;
+        this.postImageRepository = postImageRepository;
     }
 
-    public void create(PostRequest request, String token) {
+    public void create(PostRequest request, String token, List<String> imgPaths) {
+        postBlankCheck(imgPaths);
         validation(request);
+
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
 
@@ -36,6 +46,16 @@ public class PostApiService {
                 .build();
         accessToken.getUser().addPostSize(accessToken.getUser().getPostSize());
         postRepository.save(post);
+
+        List<String> imgList = new ArrayList<>();
+        for (String imgUrl : imgPaths) {
+            PostImage postImage = PostImage.builder()
+                    .postImageUrl(imgUrl)
+                    .post(post)
+                    .build();
+            postImageRepository.save(postImage);
+            imgList.add(postImage.getPostImageUrl());
+        }
     }
 
     public void update(Long postId, PostRequest request, String token) {
@@ -70,5 +90,10 @@ public class PostApiService {
         }
     }
 
+    private void postBlankCheck(List<String> imgPaths) {
+        if(imgPaths == null || imgPaths.isEmpty()){
+            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
+        }
+    }
 
 }

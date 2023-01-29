@@ -1,7 +1,9 @@
-package project.post.domain;
+package project.postImages.domain;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 import project.common.BaseEntity;
+import project.post.domain.Post;
 
 import javax.persistence.*;
 
@@ -15,16 +17,17 @@ public class PostImage extends BaseEntity {
     @Column(name = "postImageId")
     private Long id;
 
-    private String imageUrl;
+    private String postImageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
     private Post post;
 
     @Builder
-    public PostImage(Long id, String imageUrl, Post post) {
+    public PostImage(Long id, String postImageUrl, Post post) {
         this.id = id;
-        this.imageUrl = imageUrl;
+        this.postImageUrl = postImageUrl;
         this.post = post;
     }
+
 }

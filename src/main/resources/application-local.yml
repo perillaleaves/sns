@@ -10,7 +10,7 @@ spring:
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -23,3 +23,7 @@ logging:
     org:
       hibernate:
         type: trace
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
