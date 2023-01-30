@@ -39,10 +39,17 @@ public class UserApiService {
     }
 
     @Transactional
-    public void create(SignupRequest request, MultipartFile imgPaths, String dirName) throws NoSuchAlgorithmException, IOException {
+    public void create(SignupRequest request, MultipartFile file, String dirName) throws NoSuchAlgorithmException, IOException {
         validate(request);
+
+        String imgPaths = s3Service.upload(file, dirName);
+        UserProfileImage userProfileImage = UserProfileImage.builder()
+                .userProfileImageURL(imgPaths)
+                .build();
+        userProfileRepository.save(userProfileImage);
+
         User user = User.builder()
-                .userProfileImage(null)
+                .userProfileImage(userProfileImage)
                 .email(request.getEmail())
                 .name(request.getName())
                 .nickName(request.getNickName())
@@ -52,13 +59,6 @@ public class UserApiService {
                 .followingSize(0L)
                 .build();
         userRepository.save(user);
-
-        String upload = s3Service.upload(imgPaths, dirName);
-        UserProfileImage userProfileImage = UserProfileImage.builder()
-                .userProfileImageURL(upload)
-                .user(user)
-                .build();
-        userProfileRepository.save(userProfileImage);
     }
 
     @Transactional

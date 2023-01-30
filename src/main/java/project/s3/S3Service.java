@@ -26,19 +26,18 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)
+    public String upload(MultipartFile file, String dirName) throws IOException {
+        File uploadFile = convert(file)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File 전환 실패"));
         return upload(uploadFile, dirName);
     }
 
     private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + uploadFile.getName();
+        String fileName = dirName + "/" + uploadFile.getPath();
         String uploadImageUrl = putS3(uploadFile, fileName);
 
         removeNewFile(uploadFile);
-
-        return uploadImageUrl;
+        return fileName;
     }
 
     private String putS3(File uploadFile, String fileName) {
