@@ -11,7 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,6 +34,15 @@ public class S3Service {
         File uploadFile = convert(file)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File 전환 실패"));
         return upload(uploadFile, dirName);
+    }
+
+    public List<String> multiUpload(List<MultipartFile> files, String dirName) throws IOException {
+        List<String> fileList = new ArrayList<>();
+        List<File> convertFiles = multiConvert(files);
+        for (File convertFile : convertFiles) {
+            fileList.add(upload(convertFile, dirName));
+        }
+        return fileList;
     }
 
     private String upload(File uploadFile, String dirName) {
@@ -61,6 +74,20 @@ public class S3Service {
             return Optional.of(convertFile);
         }
         return Optional.empty();
+    }
+
+    private List<File> multiConvert(List<MultipartFile> file) throws IOException {
+        List<File> fileList = file.stream().map(f -> new File(f.getOriginalFilename())).collect(Collectors.toList());
+        List<File> convertFiles = new ArrayList<>();
+        for (File files : fileList) {
+            if (files.createNewFile()) {
+                try (FileOutputStream fos = new FileOutputStream(files)) {
+                    fos.write(files.getPath().getBytes());
+                }
+            }
+            convertFiles.add(files);
+        }
+        return convertFiles;
     }
 
 }

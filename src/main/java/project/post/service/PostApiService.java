@@ -16,6 +16,7 @@ import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @Service
@@ -35,7 +36,7 @@ public class PostApiService {
         this.s3Service = s3Service;
     }
 
-    public void create(PostRequest request, String token, MultipartFile imgPaths, String dirName) throws IOException {
+    public void create(PostRequest request, String token, List<MultipartFile> imgPaths, String dirName) throws IOException {
         postBlankCheck(imgPaths);
         validation(request);
 
@@ -51,12 +52,14 @@ public class PostApiService {
         accessToken.getUser().addPostSize(accessToken.getUser().getPostSize());
         postRepository.save(post);
 
-        String upload = s3Service.upload(imgPaths, dirName);
-        PostImage postImage = PostImage.builder()
-                .postImageUrl(upload)
-                .post(post)
-                .build();
-        postImageRepository.save(postImage);
+        List<String> upload = s3Service.multiUpload(imgPaths, dirName);
+        for (String img : upload) {
+            PostImage postImage = PostImage.builder()
+                    .postImageUrl(img)
+                    .post(post)
+                    .build();
+            postImageRepository.save(postImage);
+        }
     }
 
     public void update(Long postId, PostRequest request, String token) {
@@ -91,7 +94,7 @@ public class PostApiService {
         }
     }
 
-    private void postBlankCheck(MultipartFile imgPaths) {
+    private void postBlankCheck(List<MultipartFile> imgPaths) {
         if (imgPaths == null || imgPaths.isEmpty()) {
             throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
         }

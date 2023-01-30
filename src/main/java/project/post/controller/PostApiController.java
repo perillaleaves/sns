@@ -10,6 +10,7 @@ import project.post.service.PostApiService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class PostApiController {
@@ -23,7 +24,7 @@ public class PostApiController {
     }
 
     @PostMapping("/post")
-    public Response<ValidationResponse> create(@RequestParam(value = "image") MultipartFile images, PostRequest request, HttpServletRequest httpServletRequest) throws IOException {
+    public Response<ValidationResponse> create(@RequestParam(value = "image") List<MultipartFile> images, PostRequest request, HttpServletRequest httpServletRequest) throws IOException {
         String token = httpServletRequest.getHeader("token");
         postApiService.create(request, token, images, "images");
         return new Response<>(new ValidationResponse("Create", "게시글 작성"));
