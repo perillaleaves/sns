@@ -1,6 +1,7 @@
 package project.user.controller;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import project.common.response.Response;
 import project.common.response.ValidationResponse;
 import project.token.service.TokenApiService;
@@ -11,6 +12,7 @@ import project.user.service.UserApiService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
@@ -25,8 +27,8 @@ public class UserApiController {
     }
 
     @PostMapping("/signup")
-    public Response<ValidationResponse> signup(@RequestBody SignupRequest request) throws NoSuchAlgorithmException {
-        userApiService.create(request);
+    public Response<ValidationResponse> signup(@RequestParam(value = "image") MultipartFile images, SignupRequest request) throws NoSuchAlgorithmException, IOException {
+        userApiService.create(request, images, "profile");
         return new Response<>(new ValidationResponse("SignUp", "회원가입"));
     }
 

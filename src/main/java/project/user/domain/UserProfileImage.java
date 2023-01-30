@@ -17,15 +17,15 @@ public class UserProfileImage {
     @Column(name = "userProfileImageId")
     private Long id;
 
+    private String userProfileImageURL;
+
     @OneToOne(mappedBy = "userProfileImage", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private User user;
 
-    private String userProfileImageURL;
-
     @Builder
-    public UserProfileImage(Long id, User user, String userProfileImageURL) {
+    public UserProfileImage(Long id, String userProfileImageURL, User user) {
         this.id = id;
-        this.user = user;
         this.userProfileImageURL = userProfileImageURL;
+        this.user = user;
     }
 }

@@ -2,19 +2,24 @@ package project.user.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import project.advice.exception.APIError;
 import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.UserNotFoundException;
 import project.common.EncryptUtils;
 import project.common.GenerateToken;
+import project.s3.S3Service;
 import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 import project.user.domain.User;
+import project.user.domain.UserProfileImage;
+import project.user.repository.UserProfileRepository;
 import project.user.repository.UserRepository;
 import project.user.request.LoginRequest;
 import project.user.request.ProfileEditRequest;
 import project.user.request.SignupRequest;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
@@ -23,14 +28,18 @@ public class UserApiService {
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final UserProfileRepository userProfileRepository;
+    private final S3Service s3Service;
 
-    public UserApiService(UserRepository userRepository, TokenRepository tokenRepository) {
+    public UserApiService(UserRepository userRepository, TokenRepository tokenRepository, UserProfileRepository userProfileRepository, S3Service s3Service) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
+        this.userProfileRepository = userProfileRepository;
+        this.s3Service = s3Service;
     }
 
     @Transactional
-    public void create(SignupRequest request) throws NoSuchAlgorithmException {
+    public void create(SignupRequest request, MultipartFile imgPaths, String dirName) throws NoSuchAlgorithmException, IOException {
         validate(request);
         User user = User.builder()
                 .userProfileImage(null)
@@ -43,6 +52,13 @@ public class UserApiService {
                 .followingSize(0L)
                 .build();
         userRepository.save(user);
+
+        String upload = s3Service.upload(imgPaths, dirName);
+        UserProfileImage userProfileImage = UserProfileImage.builder()
+                .userProfileImageURL(upload)
+                .user(user)
+                .build();
+        userProfileRepository.save(userProfileImage);
     }
 
     @Transactional
