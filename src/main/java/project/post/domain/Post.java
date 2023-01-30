@@ -3,7 +3,6 @@ package project.post.domain;
 import lombok.*;
 import project.comment.domain.Comment;
 import project.common.BaseEntity;
-import project.postImages.domain.PostImage;
 import project.postLike.domain.PostLike;
 import project.user.domain.User;
 

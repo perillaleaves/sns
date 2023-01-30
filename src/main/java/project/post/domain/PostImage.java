@@ -1,4 +1,4 @@
-package project.postImages.domain;
+package project.post.domain;
 
 import lombok.*;
 import project.common.BaseEntity;
