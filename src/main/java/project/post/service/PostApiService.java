@@ -2,6 +2,7 @@ package project.post.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import project.advice.exception.APIError;
 import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.PostNotFoundException;
@@ -10,11 +11,12 @@ import project.post.repository.PostRepository;
 import project.post.request.PostRequest;
 import project.postImages.domain.PostImage;
 import project.postImages.repository.PostImageRepository;
+import project.s3.S3Service;
 import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+
 
 @Service
 @Transactional
@@ -23,15 +25,17 @@ public class PostApiService {
     private final PostRepository postRepository;
     private final TokenRepository tokenRepository;
     private final PostImageRepository postImageRepository;
+    private final S3Service s3Service;
 
     public PostApiService(PostRepository postRepository, TokenRepository tokenRepository,
-                          PostImageRepository postImageRepository) {
+                          PostImageRepository postImageRepository, S3Service s3Service) {
         this.postRepository = postRepository;
         this.tokenRepository = tokenRepository;
         this.postImageRepository = postImageRepository;
+        this.s3Service = s3Service;
     }
 
-    public void create(PostRequest request, String token, List<String> imgPaths) {
+    public void create(PostRequest request, String token, MultipartFile imgPaths, String dirName) throws IOException {
         postBlankCheck(imgPaths);
         validation(request);
 
@@ -47,15 +51,12 @@ public class PostApiService {
         accessToken.getUser().addPostSize(accessToken.getUser().getPostSize());
         postRepository.save(post);
 
-        List<String> imgList = new ArrayList<>();
-        for (String imgUrl : imgPaths) {
-            PostImage postImage = PostImage.builder()
-                    .postImageUrl(imgUrl)
-                    .post(post)
-                    .build();
-            postImageRepository.save(postImage);
-            imgList.add(postImage.getPostImageUrl());
-        }
+        String upload = s3Service.upload(imgPaths, dirName);
+        PostImage postImage = PostImage.builder()
+                .postImageUrl(upload)
+                .post(post)
+                .build();
+        postImageRepository.save(postImage);
     }
 
     public void update(Long postId, PostRequest request, String token) {
@@ -90,8 +91,8 @@ public class PostApiService {
         }
     }
 
-    private void postBlankCheck(List<String> imgPaths) {
-        if(imgPaths == null || imgPaths.isEmpty()){
+    private void postBlankCheck(MultipartFile imgPaths) {
+        if (imgPaths == null || imgPaths.isEmpty()) {
             throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
         }
     }

@@ -1,4 +1,4 @@
-package project.config;
+package project.s3;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -20,14 +20,6 @@ public class S3Config {
 
     @Value("${cloud.aws.region.static}")
     private String region;
-
-    public static final String videoFolder = "video";
-
-    @Bean
-    public BasicAWSCredentials awsCredentials() {
-        BasicAWSCredentials awsCred = new BasicAWSCredentials(accessKey, secretKey);
-        return awsCred;
-    }
 
     @Bean
     public AmazonS3 amazonS3Client() {

@@ -4,29 +4,28 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.common.response.Response;
 import project.common.response.ValidationResponse;
-import project.config.S3Uploader;
+import project.s3.S3Service;
 import project.post.request.PostRequest;
 import project.post.service.PostApiService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.io.IOException;
 
 @RestController
 public class PostApiController {
 
     private final PostApiService postApiService;
-    private final S3Uploader s3Uploader;
+    private final S3Service s3Service;
 
-    public PostApiController(PostApiService postApiService, S3Uploader s3Uploader) {
+    public PostApiController(PostApiService postApiService, S3Service s3Service) {
         this.postApiService = postApiService;
-        this.s3Uploader = s3Uploader;
+        this.s3Service = s3Service;
     }
 
     @PostMapping("/post")
-    public Response<ValidationResponse> create(@RequestParam(value = "image") List<MultipartFile> images, PostRequest request, HttpServletRequest httpServletRequest) {
+    public Response<ValidationResponse> create(@RequestParam(value = "image") MultipartFile images, PostRequest request, HttpServletRequest httpServletRequest) throws IOException {
         String token = httpServletRequest.getHeader("token");
-        List<String> imgPaths = s3Uploader.upload(images);
-        postApiService.create(request, token, imgPaths);
+        postApiService.create(request, token, images, "images");
         return new Response<>(new ValidationResponse("Create", "게시글 작성"));
     }
 
