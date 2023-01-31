@@ -29,7 +29,7 @@ public class CommentQueryService {
         return new PostCommentResponse(post.getId(),
                 "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + post.getUser().getUserProfileImage().getUserProfileImageURL(),
                 post.getUser().getNickName(),
-                post.getContent(),
+                post.getContent(), post.getUpdatedAt(),
                 post.getComments().stream()
                         .map(comment -> new CommentResponse(comment.getId(),
                                 "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + comment.getUser().getUserProfileImage().getUserProfileImageURL(),

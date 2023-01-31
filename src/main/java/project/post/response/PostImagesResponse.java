@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 public class PostImagesResponse {
 
     private Long postImageId;
-    private String imageUrl;
+    private String postImageUrl;
 
-    public PostImagesResponse(Long postImageId, String imageUrl) {
+    public PostImagesResponse(Long postImageId, String postImageUrl) {
         this.postImageId = postImageId;
-        this.imageUrl = imageUrl;
+        this.postImageUrl = postImageUrl;
     }
 }
