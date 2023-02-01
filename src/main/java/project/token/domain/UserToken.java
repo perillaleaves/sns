@@ -1,6 +1,9 @@
 package project.token.domain;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.common.CreatedAtEntity;
 import project.user.domain.User;
 

@@ -1,6 +1,9 @@
 package project.user.domain;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
 import project.token.domain.UserToken;
 import project.user.request.ProfileEditRequest;

@@ -1,8 +1,10 @@
 package project.post.domain;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
-import project.post.domain.Post;
 
 import javax.persistence.*;
 

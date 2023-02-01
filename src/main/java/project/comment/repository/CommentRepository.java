@@ -5,4 +5,6 @@ import project.comment.domain.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
+    Boolean existsCommentByIdAndUserId(Long id, Long userId);
+
 }

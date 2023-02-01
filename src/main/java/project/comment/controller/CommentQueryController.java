@@ -8,6 +8,8 @@ import project.comment.response.PostCommentResponse;
 import project.comment.service.CommentQueryService;
 import project.common.response.Response;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class CommentQueryController {
 
@@ -18,8 +20,9 @@ public class CommentQueryController {
     }
 
     @GetMapping("/post/{postId}/comments")
-    public Response<CommentListResponse> getComments(@PathVariable("postId") Long postId) {
-        PostCommentResponse commentsByPost = commentQueryService.findCommentsByPost(postId);
+    public Response<CommentListResponse> getComments(@PathVariable("postId") Long postId, HttpServletRequest request) {
+        String token = request.getHeader("token");
+        PostCommentResponse commentsByPost = commentQueryService.findCommentsByPost(postId, token);
         return new Response<>(new CommentListResponse(commentsByPost));
     }
 

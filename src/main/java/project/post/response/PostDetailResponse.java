@@ -3,7 +3,6 @@ package project.post.response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.user.domain.UserProfileImage;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
