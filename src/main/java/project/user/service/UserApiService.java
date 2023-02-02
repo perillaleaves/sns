@@ -65,24 +65,20 @@ public class UserApiService {
     public String login(LoginRequest request) throws NoSuchAlgorithmException {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(UserNotFoundException::new);
-        if (!user.getEmail().equals(request.getEmail())) {
-            throw new APIError("InconsistencyLoginId", "아이디가 일치하지 않습니다.");
-        }
-        if (!user.getPassword().equals(EncryptUtils.encrypt(request.getPassword()))) {
-            throw new APIError("InconsistencyPassword", "비밀번호가 일치하지 않습니다.");
-        }
+        loginValidate(request, user);
 
         UserToken token = UserToken.builder()
                 .user(user)
                 .accessToken(GenerateToken.generatedToken(user, request.getEmail()))
                 .build();
         tokenRepository.save(token);
+
         return token.getAccessToken();
     }
 
     @Transactional
     public void edit(Long userId, ProfileEditRequest request, String token) {
-        editValidate(request);
+        editInputValidate(request);
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
         User user = userRepository.findById(userId)
@@ -121,7 +117,16 @@ public class UserApiService {
         }
     }
 
-    private void editValidate(ProfileEditRequest request) {
+    private static void loginValidate(LoginRequest request, User user) throws NoSuchAlgorithmException {
+        if (!user.getEmail().equals(request.getEmail())) {
+            throw new APIError("InconsistencyLoginId", "아이디가 일치하지 않습니다.");
+        }
+        if (!user.getPassword().equals(EncryptUtils.encrypt(request.getPassword()))) {
+            throw new APIError("InconsistencyPassword", "비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    private void editInputValidate(ProfileEditRequest request) {
         if (2 > request.getUserName().length() || request.getUserName().length() > 10) {
             throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
         }
