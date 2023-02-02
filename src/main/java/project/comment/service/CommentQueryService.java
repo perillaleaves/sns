@@ -4,14 +4,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.PostNotFoundException;
+import project.comment.domain.Comment;
 import project.comment.repository.CommentRepository;
 import project.comment.response.CommentResponse;
-import project.comment.response.PostCommentResponse;
+import project.comment.response.PostAndCommentsResponse;
 import project.post.domain.Post;
 import project.post.repository.PostRepository;
+import project.post.response.PostSummaryResponse;
 import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,20 +31,26 @@ public class CommentQueryService {
         this.tokenRepository = tokenRepository;
     }
 
-    public PostCommentResponse findCommentsByPost(Long postId, String token) {
+    public PostAndCommentsResponse findCommentsByPost(Long postId, String token) {
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        return new PostCommentResponse(post.getId(),
+        PostSummaryResponse postSummaryResponse = new PostSummaryResponse(post.getId(),
                 "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + post.getUser().getUserProfileImage().getUserProfileImageURL(),
-                post.getUser().getNickName(), post.getContent(), post.getUpdatedAt(),
-                post.getComments().stream()
-                        .map(comment -> new CommentResponse(comment.getId(),
-                                "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + comment.getUser().getUserProfileImage().getUserProfileImageURL(),
-                                comment.getUser().getNickName(),
-                                comment.getContent(), commentRepository.existsCommentByIdAndUserId(comment.getId(), accessToken.getUser().getId()),
-                                comment.getUpdatedAt())).collect(Collectors.toSet()));
+                post.getUser().getNickName(), post.getContent(), post.getUpdatedAt());
+
+        List<Comment> comments = commentRepository.findAllByPostId(postId);
+        List<CommentResponse> commentResponses = comments.stream()
+                .map(c -> new CommentResponse(c.getId(),
+                        "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + c.getUser().getUserProfileImage().getUserProfileImageURL(),
+                        c.getUser().getNickName(),
+                        c.getContent(),
+                        commentRepository.existsCommentByIdAndUserId(c.getId(), accessToken.getUser().getId()),
+                        c.getUpdatedAt())).collect(Collectors.toList());
+
+        return new PostAndCommentsResponse(postSummaryResponse, commentResponses);
     }
 
 }

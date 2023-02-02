@@ -26,4 +26,4 @@ logging:
     com:
       amazonaws:
         util:
-          EC2MetadataUtils: error
+          EC2MetadataUtils: ERROR

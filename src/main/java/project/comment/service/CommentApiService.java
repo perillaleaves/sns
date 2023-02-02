@@ -34,6 +34,7 @@ public class CommentApiService {
                 .orElseThrow(AccessTokenNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        
         Comment comment = Comment.builder()
                 .content(request.getContent())
                 .user(accessToken.getUser())

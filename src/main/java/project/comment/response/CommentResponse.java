@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentResponse {
@@ -26,4 +25,5 @@ public class CommentResponse {
         this.isCommentDelete = isCommentDelete;
         this.updatedAt = updatedAt;
     }
+
 }

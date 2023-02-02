@@ -1,0 +1,23 @@
+package project.comment.response;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import project.post.response.PostSummaryResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class PostAndCommentsResponse {
+
+    private PostSummaryResponse postSummaryResponse;
+
+    private List<CommentResponse> commentResponses = new ArrayList<>();
+
+    public PostAndCommentsResponse(PostSummaryResponse postSummaryResponse, List<CommentResponse> commentResponses) {
+        this.postSummaryResponse = postSummaryResponse;
+        this.commentResponses = commentResponses;
+    }
+}

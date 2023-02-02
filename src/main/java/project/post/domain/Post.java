@@ -10,7 +10,9 @@ import project.postLike.domain.PostLike;
 import project.user.domain.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -33,16 +35,16 @@ public class Post extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PostImage> postImages = new HashSet<>();
+    private List<PostImage> postImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments = new HashSet<>();
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PostLike> PostLikes = new HashSet<>();
+    private List<PostLike> PostLikes = new ArrayList<>();
 
     @Builder
-    public Post(Long id, String content, Long commentSize, Long postLikeSize, User user, Set<PostImage> postImages, Set<Comment> comments, Set<PostLike> postLikes) {
+    public Post(Long id, String content, Long commentSize, Long postLikeSize, User user, List<PostImage> postImages, List<Comment> comments, List<PostLike> postLikes) {
         this.id = id;
         this.content = content;
         this.commentSize = commentSize;
@@ -50,7 +52,7 @@ public class Post extends BaseEntity {
         this.user = user;
         this.postImages = postImages;
         this.comments = comments;
-        PostLikes = postLikes;
+        this.PostLikes = postLikes;
     }
 
     public void updatePostContent(String content) {
