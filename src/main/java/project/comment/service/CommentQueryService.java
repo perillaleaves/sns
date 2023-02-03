@@ -13,6 +13,7 @@ import project.post.repository.PostRepository;
 import project.post.response.PostSummaryResponse;
 import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
+import project.user.response.UserSimpleResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +35,10 @@ public class CommentQueryService {
     public PostAndCommentsResponse findCommentsByPost(Long postId, String token) {
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
+        UserSimpleResponse userSimpleResponse = new UserSimpleResponse(
+                accessToken.getUser().getId(),
+                "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + accessToken.getUser().getUserProfileImage().getUserProfileImageURL(),
+                accessToken.getUser().getNickName());
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -50,7 +55,7 @@ public class CommentQueryService {
                         commentRepository.existsCommentByIdAndUserId(c.getId(), accessToken.getUser().getId()),
                         c.getUpdatedAt())).collect(Collectors.toList());
 
-        return new PostAndCommentsResponse(postSummaryResponse, commentResponses);
+        return new PostAndCommentsResponse(userSimpleResponse, postSummaryResponse, commentResponses);
     }
 
 }
