@@ -94,4 +94,8 @@ public class S3Service {
         amazonS3Client.deleteObject(bucket, key);
     }
 
+    public void fileListDelete(List<String> keys) {
+        keys.forEach(key -> amazonS3Client.deleteObject(bucket, key));
+    }
+
 }

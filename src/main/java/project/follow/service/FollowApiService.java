@@ -34,13 +34,7 @@ public class FollowApiService {
                 .orElseThrow(AccessTokenNotFoundException::new);
         User toUser = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        if (accessToken.getUser().equals(toUser)) {
-            throw new APIError("NotRequest", "잘못된 요청입니다.");
-        }
-        Optional<Follow> findFollow = followRepository.findByFromUserIdAndToUserId(accessToken.getUser().getId(), toUser.getId());
-        if (findFollow.isPresent()) {
-            throw new APIError("AlreadyExist", "이미 존재합니다");
-        }
+        requestAndExistValidate(accessToken, toUser);
 
         Follow follow = Follow.builder()
                 .fromUser(accessToken.getUser())
@@ -60,6 +54,16 @@ public class FollowApiService {
         follow.getFromUser().removeFollowingSize(follow.getFromUser().getFollowingSize());
         follow.getToUser().removeFollowerSize(follow.getToUser().getFollowerSize());
         followRepository.delete(follow);
+    }
+
+    private void requestAndExistValidate(UserToken accessToken, User toUser) {
+        if (accessToken.getUser().equals(toUser)) {
+            throw new APIError("NotRequest", "잘못된 요청입니다.");
+        }
+        Optional<Follow> findFollow = followRepository.findByFromUserIdAndToUserId(accessToken.getUser().getId(), toUser.getId());
+        if (findFollow.isPresent()) {
+            throw new APIError("AlreadyExist", "이미 존재합니다");
+        }
     }
 
 }

@@ -21,7 +21,6 @@ import project.user.request.SignupRequest;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.regex.Pattern;
 
 @Service

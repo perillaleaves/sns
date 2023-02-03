@@ -68,9 +68,7 @@ public class PostApiService {
                 .orElseThrow(AccessTokenNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        if (!post.getUser().equals(accessToken.getUser())) {
-            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
-        }
+        loginValidate(accessToken, post);
 
         post.updatePostContent(request.getContent());
     }
@@ -80,12 +78,16 @@ public class PostApiService {
                 .orElseThrow(AccessTokenNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        if (!post.getUser().equals(accessToken.getUser())) {
-            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
-        }
+        loginValidate(accessToken, post);
 
         accessToken.getUser().removePostSize(accessToken.getUser().getPostSize());
         postRepository.delete(post);
+    }
+
+    private void postBlankCheck(List<MultipartFile> imgPaths) {
+        if (imgPaths == null || imgPaths.isEmpty()) {
+            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
+        }
     }
 
     private static void validation(PostRequest request) {
@@ -94,9 +96,9 @@ public class PostApiService {
         }
     }
 
-    private void postBlankCheck(List<MultipartFile> imgPaths) {
-        if (imgPaths == null || imgPaths.isEmpty()) {
-            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
+    private static void loginValidate(UserToken accessToken, Post post) {
+        if (!post.getUser().equals(accessToken.getUser())) {
+            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
     }
 

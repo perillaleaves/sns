@@ -32,9 +32,7 @@ public class PostLikeApiService {
                 .orElseThrow(AccessTokenNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        if (postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), accessToken.getUser().getId())) {
-            throw new APIError("AlreadyExist", "이미 존재합니다");
-        }
+        existValidate(accessToken, post);
 
         PostLike postLike = PostLike.builder()
                 .post(post)
@@ -52,6 +50,12 @@ public class PostLikeApiService {
 
         postLike.getPost().removePostLikeSize(postLike.getPost().getPostLikeSize());
         postLikeRepository.delete(postLike);
+    }
+
+    private void existValidate(UserToken accessToken, Post post) {
+        if (postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), accessToken.getUser().getId())) {
+            throw new APIError("AlreadyExist", "이미 존재합니다");
+        }
     }
 
 }

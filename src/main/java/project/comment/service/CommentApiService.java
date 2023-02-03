@@ -50,9 +50,8 @@ public class CommentApiService {
                 .orElseThrow(AccessTokenNotFoundException::new);
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        if (!comment.getUser().equals(accessToken.getUser())) {
-            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
-        }
+        loginValidate(accessToken, comment);
+
         comment.update(request.getContent());
     }
 
@@ -61,9 +60,8 @@ public class CommentApiService {
                 .orElseThrow(AccessTokenNotFoundException::new);
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        if (!comment.getUser().equals(accessToken.getUser())) {
-            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
-        }
+        loginValidate(accessToken, comment);
+
         comment.getPost().removeCommentSize(comment.getPost().getCommentSize());
         commentRepository.delete(comment);
     }
@@ -71,6 +69,12 @@ public class CommentApiService {
     private static void validation(CommentRequest request) {
         if (request.getContent().isEmpty() || request.getContent().length() > 300) {
             throw new APIError("InvalidContent", "문구를 1자이상 300자이하로 입력해주세요.");
+        }
+    }
+
+    private static void loginValidate(UserToken accessToken, Comment comment) {
+        if (!comment.getUser().equals(accessToken.getUser())) {
+            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
     }
 
