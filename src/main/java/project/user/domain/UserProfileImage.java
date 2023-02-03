@@ -28,4 +28,8 @@ public class UserProfileImage {
         this.userProfileImageURL = userProfileImageURL;
         this.user = user;
     }
+
+    public void userProfileImageModify(String userProfileImageURL) {
+        this.userProfileImageURL = userProfileImageURL;
+    }
 }

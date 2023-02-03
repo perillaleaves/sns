@@ -47,9 +47,9 @@ public class UserApiController {
     }
 
     @PutMapping("/user/{userId}")
-    public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestBody ProfileEditRequest request, HttpServletRequest httpServletRequest) {
+    public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile file, ProfileEditRequest request, HttpServletRequest httpServletRequest) throws IOException {
         String token = httpServletRequest.getHeader("token");
-        userApiService.edit(userId, request, token);
+        userApiService.edit(userId, request, token, file, "profile");
         return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
 

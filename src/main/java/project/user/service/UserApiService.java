@@ -21,6 +21,7 @@ import project.user.request.SignupRequest;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Service
@@ -40,6 +41,7 @@ public class UserApiService {
 
     @Transactional
     public void create(SignupRequest request, MultipartFile file, String dirName) throws NoSuchAlgorithmException, IOException {
+        postBlankCheck(file);
         validate(request);
 
         String imgPaths = s3Service.upload(file, dirName);
@@ -77,20 +79,25 @@ public class UserApiService {
     }
 
     @Transactional
-    public void edit(Long userId, ProfileEditRequest request, String token) {
+    public void edit(Long userId, ProfileEditRequest request, String token, MultipartFile file, String dirName) throws IOException {
         editInputValidate(request);
         UserToken accessToken = tokenRepository.findByAccessToken(token)
                 .orElseThrow(AccessTokenNotFoundException::new);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        if (!accessToken.getUser().equals(user)) {
-            throw new APIError("NotRequest", "잘못된 요청입니다.");
-        }
-        if (userRepository.existsUserByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
-            throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
-        }
+        editValidate(request, accessToken, user);
 
+        s3Service.fileDelete(user.getUserProfileImage().getUserProfileImageURL());
+        String imgPaths = s3Service.upload(file, dirName);
+        user.getUserProfileImage().userProfileImageModify(imgPaths);
         user.editProfile(request);
+    }
+
+    private void postBlankCheck(MultipartFile imgPaths) {
+        if (imgPaths == null || imgPaths.isEmpty()) {
+            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
+        }
     }
 
     private void validate(SignupRequest request) {
@@ -135,6 +142,15 @@ public class UserApiService {
         }
         if (request.getContent().isEmpty() || request.getContent().length() > 150) {
             throw new APIError("InvalidContent", "소개를 150자 이하로 입력해주세요.");
+        }
+    }
+
+    private void editValidate(ProfileEditRequest request, UserToken accessToken, User user) {
+        if (!accessToken.getUser().equals(user)) {
+            throw new APIError("NotRequest", "잘못된 요청입니다.");
+        }
+        if (userRepository.existsUserByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
+            throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
     }
 

@@ -1,6 +1,7 @@
 package project.s3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -87,6 +88,10 @@ public class S3Service {
             convertFiles.add(files);
         }
         return convertFiles;
+    }
+
+    public void fileDelete(String key) {
+        amazonS3Client.deleteObject(bucket, key);
     }
 
 }

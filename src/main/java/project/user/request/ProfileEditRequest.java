@@ -12,4 +12,9 @@ public class ProfileEditRequest {
     private String nickName;
     private String content;
 
+    public ProfileEditRequest(String userName, String nickName, String content) {
+        this.userName = userName;
+        this.nickName = nickName;
+        this.content = content;
+    }
 }
