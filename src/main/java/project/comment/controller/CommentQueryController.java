@@ -21,8 +21,8 @@ public class CommentQueryController {
 
     @GetMapping("/post/{postId}/comments")
     public Response<CommentListResponse> getComments(@PathVariable("postId") Long postId, HttpServletRequest request) {
-        String token = request.getHeader("token");
-        PostAndCommentsResponse commentList = commentQueryService.findCommentsByPost(postId, token);
+        Long userId = (Long) request.getAttribute("userId");
+        PostAndCommentsResponse commentList = commentQueryService.findCommentsByPost(postId, userId);
         return new Response<>(new CommentListResponse(commentList));
     }
 

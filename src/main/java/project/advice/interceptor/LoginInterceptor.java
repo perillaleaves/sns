@@ -30,7 +30,8 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        request.setAttribute("userId", accessToken.get().getUser());
+        request.setAttribute("user", accessToken.get().getUser());
+        request.setAttribute("userId", accessToken.get().getUser().getId());
         return true;
     }
 

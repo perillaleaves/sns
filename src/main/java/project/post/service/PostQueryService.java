@@ -2,15 +2,15 @@ package project.post.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.PostNotFoundException;
+import project.advice.exception.UserNotFoundException;
 import project.post.domain.Post;
 import project.post.repository.PostRepository;
 import project.post.response.PostDetailResponse;
 import project.post.response.PostImagesResponse;
 import project.postLike.reposiotry.PostLikeRepository;
-import project.token.domain.UserToken;
-import project.token.repository.TokenRepository;
+import project.user.domain.User;
+import project.user.repository.UserRepository;
 
 import java.util.stream.Collectors;
 
@@ -19,22 +19,22 @@ import java.util.stream.Collectors;
 public class PostQueryService {
 
     private final PostRepository postRepository;
-    private final TokenRepository tokenRepository;
     private final PostLikeRepository postLikeRepository;
+    private final UserRepository userRepository;
 
-    public PostQueryService(PostRepository postRepository, TokenRepository tokenRepository, PostLikeRepository postLikeRepository) {
+    public PostQueryService(PostRepository postRepository, PostLikeRepository postLikeRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
-        this.tokenRepository = tokenRepository;
+        this.userRepository = userRepository;
         this.postLikeRepository = postLikeRepository;
     }
 
-    public PostDetailResponse findPostDetail(Long postId, String token) {
-        UserToken accessToken = tokenRepository.findByAccessToken(token)
-                .orElseThrow(AccessTokenNotFoundException::new);
+    public PostDetailResponse findPostDetail(Long postId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        boolean isLike = postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), accessToken.getUser().getId());
-        boolean isPostEdit = postRepository.existsPostByIdAndUserId(post.getId(), accessToken.getUser().getId());
+        boolean isLike = postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), user.getId());
+        boolean isPostEdit = postRepository.existsPostByIdAndUserId(post.getId(), user.getId());
 
         return new PostDetailResponse(post.getId(), post.getUser().getId(),
                 "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + post.getUser().getUserProfileImage().getUserProfileImageURL(),

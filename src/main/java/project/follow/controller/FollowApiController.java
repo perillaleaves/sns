@@ -23,16 +23,16 @@ public class FollowApiController {
     }
 
     @PostMapping("/{userId}/follow")
-    public Response<ValidationResponse> follow(@PathVariable("userId") Long userId, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
-        followApiService.follow(userId, token);
+    public Response<ValidationResponse> follow(@PathVariable("userId") Long toUserId, HttpServletRequest httpServletRequest) {
+        Long fromUserId = (Long) httpServletRequest.getAttribute("userId");
+        followApiService.follow(fromUserId, toUserId);
         return new Response<>(new ValidationResponse("Follow", "팔로우 요청"));
     }
 
     @DeleteMapping("{userId}/unfollow")
-    public Response<ValidationResponse> unfollow(@PathVariable("userId") Long userId, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
-        followApiService.unfollow(token, userId);
+    public Response<ValidationResponse> unfollow(@PathVariable("userId") Long toUserId, HttpServletRequest httpServletRequest) {
+        Long fromUserId = (Long) httpServletRequest.getAttribute("userId");
+        followApiService.unfollow(fromUserId, toUserId);
         return new Response<>(new ValidationResponse("UnFollow", "언팔로우"));
     }
 

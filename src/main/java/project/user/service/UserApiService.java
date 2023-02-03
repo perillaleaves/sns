@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.advice.exception.APIError;
-import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.UserNotFoundException;
 import project.common.EncryptUtils;
 import project.common.GenerateToken;
@@ -78,19 +77,18 @@ public class UserApiService {
     }
 
     @Transactional
-    public void edit(Long userId, ProfileEditRequest request, String token, MultipartFile file, String dirName) throws IOException {
+    public void edit(Long userId, ProfileEditRequest request, Long loginUserId, MultipartFile file, String dirName) throws IOException {
         editInputValidate(request);
-        UserToken accessToken = tokenRepository.findByAccessToken(token)
-                .orElseThrow(AccessTokenNotFoundException::new);
-
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(loginUserId)
                 .orElseThrow(UserNotFoundException::new);
-        editValidate(request, accessToken, user);
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        editValidate(request, user, findUser);
 
-        s3Service.fileDelete(user.getUserProfileImage().getUserProfileImageURL());
+        s3Service.fileDelete(findUser.getUserProfileImage().getUserProfileImageURL());
         String imgPaths = s3Service.upload(file, dirName);
-        user.getUserProfileImage().userProfileImageModify(imgPaths);
-        user.editProfile(request);
+        findUser.getUserProfileImage().userProfileImageModify(imgPaths);
+        findUser.editProfile(request);
     }
 
     private void postBlankCheck(MultipartFile imgPaths) {
@@ -144,11 +142,11 @@ public class UserApiService {
         }
     }
 
-    private void editValidate(ProfileEditRequest request, UserToken accessToken, User user) {
-        if (!accessToken.getUser().equals(user)) {
+    private void editValidate(ProfileEditRequest request, User user, User findUser) {
+        if (!user.equals(findUser)) {
             throw new APIError("NotRequest", "잘못된 요청입니다.");
         }
-        if (userRepository.existsUserByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
+        if (userRepository.existsUserByNickName(request.getNickName()) && !findUser.getNickName().equals(request.getNickName())) {
             throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
     }

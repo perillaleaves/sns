@@ -2,8 +2,8 @@ package project.comment.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.PostNotFoundException;
+import project.advice.exception.UserNotFoundException;
 import project.comment.domain.Comment;
 import project.comment.repository.CommentRepository;
 import project.comment.response.CommentResponse;
@@ -11,8 +11,8 @@ import project.comment.response.PostAndCommentsResponse;
 import project.post.domain.Post;
 import project.post.repository.PostRepository;
 import project.post.response.PostSummaryResponse;
-import project.token.domain.UserToken;
-import project.token.repository.TokenRepository;
+import project.user.domain.User;
+import project.user.repository.UserRepository;
 import project.user.response.UserSimpleResponse;
 
 import java.util.List;
@@ -24,21 +24,21 @@ public class CommentQueryService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final TokenRepository tokenRepository;
+    private final UserRepository userRepository;
 
-    public CommentQueryService(PostRepository postRepository, CommentRepository commentRepository, TokenRepository tokenRepository) {
+    public CommentQueryService(PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
-        this.tokenRepository = tokenRepository;
+        this.userRepository = userRepository;
     }
 
-    public PostAndCommentsResponse findCommentsByPost(Long postId, String token) {
-        UserToken accessToken = tokenRepository.findByAccessToken(token)
-                .orElseThrow(AccessTokenNotFoundException::new);
+    public PostAndCommentsResponse findCommentsByPost(Long postId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
         UserSimpleResponse userSimpleResponse = new UserSimpleResponse(
-                accessToken.getUser().getId(),
-                "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + accessToken.getUser().getUserProfileImage().getUserProfileImageURL(),
-                accessToken.getUser().getNickName());
+                user.getId(),
+                "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + user.getUserProfileImage().getUserProfileImageURL(),
+                user.getNickName());
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -52,7 +52,7 @@ public class CommentQueryService {
                         "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + c.getUser().getUserProfileImage().getUserProfileImageURL(),
                         c.getUser().getNickName(),
                         c.getContent(),
-                        commentRepository.existsCommentByIdAndUserId(c.getId(), accessToken.getUser().getId()),
+                        commentRepository.existsCommentByIdAndUserId(c.getId(), user.getId()),
                         c.getUpdatedAt())).collect(Collectors.toList());
 
         return new PostAndCommentsResponse(userSimpleResponse, postSummaryResponse, commentResponses);
