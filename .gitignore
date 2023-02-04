@@ -10,6 +10,10 @@ HELP.md
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
+**/src/main/resources/application.yml
+**/src/main/resources/application-local.yml
+**/src/main/resources/application-dev.yml
+**/src/main/resources/application-aws.yml
 !**/src/test/**/build/
 
 # User-specific stuff

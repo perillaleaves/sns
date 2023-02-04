@@ -14,15 +14,15 @@ public class CommentResponse {
     private String userProfileImage;
     private String nickName;
     private String commentContent;
-    private Boolean isCommentDelete;
+    private Boolean isCommentOwner;
     private LocalDateTime updatedAt;
 
-    public CommentResponse(Long commentId, String userProfileImage, String nickName, String commentContent, Boolean isCommentDelete, LocalDateTime updatedAt) {
+    public CommentResponse(Long commentId, String userProfileImage, String nickName, String commentContent, Boolean isCommentOwner, LocalDateTime updatedAt) {
         this.commentId = commentId;
         this.userProfileImage = userProfileImage;
         this.nickName = nickName;
         this.commentContent = commentContent;
-        this.isCommentDelete = isCommentDelete;
+        this.isCommentOwner = isCommentOwner;
         this.updatedAt = updatedAt;
     }
 
