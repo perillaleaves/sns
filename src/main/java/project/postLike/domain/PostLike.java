@@ -10,10 +10,10 @@ import project.user.domain.User;
 
 import javax.persistence.*;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "postLikes")
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLike extends CreatedAtEntity {
 
     @Id
@@ -30,13 +30,9 @@ public class PostLike extends CreatedAtEntity {
     private User user;
 
     @Builder
-    public PostLike(Post post, User user) {
+    public PostLike(Long id, Post post, User user) {
+        this.id = id;
         this.post = post;
         this.user = user;
     }
-
-    public boolean isLikeOf(User user) {
-        return user.hasId(user.getId());
-    }
-
 }

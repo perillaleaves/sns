@@ -6,3 +6,14 @@
 + sns 프로젝트를 인스타그램 참조 후 기획 및 설계
 + 개발기간 : 2023.01.16 - 2023.01.31 (약 2주)
 + 깃 주소 : https://github.com/perillaleaves/sns-backend
+
+### Lombok Library
+***
+### Login Interceptor
+***
+### Exception/Error Handling 
+***
+### 이미지 AWS S3
+***
+### Login 토큰 기반 인증 방식
+***

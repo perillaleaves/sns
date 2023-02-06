@@ -1,6 +1,7 @@
 package project.user.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,10 +17,19 @@ public class UserProfileImage {
     @Column(name = "userProfileImageId")
     private Long id;
 
-    @OneToOne(mappedBy = "userProfileImage", cascade = CascadeType.ALL)
-    private User user;
-
     private String userProfileImageURL;
 
+    @OneToOne(mappedBy = "userProfileImage", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User user;
 
+    @Builder
+    public UserProfileImage(Long id, String userProfileImageURL, User user) {
+        this.id = id;
+        this.userProfileImageURL = userProfileImageURL;
+        this.user = user;
+    }
+
+    public void userProfileImageModify(String userProfileImageURL) {
+        this.userProfileImageURL = userProfileImageURL;
+    }
 }

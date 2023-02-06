@@ -1,35 +1,55 @@
 package project.user.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import project.advice.exception.APIError;
-import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.UserNotFoundException;
 import project.common.EncryptUtils;
+import project.common.GenerateToken;
+import project.s3.S3Service;
 import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 import project.user.domain.User;
+import project.user.domain.UserProfileImage;
+import project.user.repository.UserProfileRepository;
 import project.user.repository.UserRepository;
 import project.user.request.LoginRequest;
 import project.user.request.ProfileEditRequest;
 import project.user.request.SignupRequest;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
 @Service
-@RequiredArgsConstructor
 public class UserApiService {
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final UserProfileRepository userProfileRepository;
+    private final S3Service s3Service;
+
+    public UserApiService(UserRepository userRepository, TokenRepository tokenRepository, UserProfileRepository userProfileRepository, S3Service s3Service) {
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.userProfileRepository = userProfileRepository;
+        this.s3Service = s3Service;
+    }
 
     @Transactional
-    public void create(SignupRequest request) throws NoSuchAlgorithmException {
+    public void create(SignupRequest request, MultipartFile file, String dirName) throws NoSuchAlgorithmException, IOException {
+        postBlankCheck(file);
         validate(request);
+
+        String imgPaths = s3Service.upload(file, dirName);
+        UserProfileImage userProfileImage = UserProfileImage.builder()
+                .userProfileImageURL(imgPaths)
+                .build();
+        userProfileRepository.save(userProfileImage);
+
         User user = User.builder()
-                .userProfileImage(null)
+                .userProfileImage(userProfileImage)
                 .email(request.getEmail())
                 .name(request.getName())
                 .nickName(request.getNickName())
@@ -45,33 +65,36 @@ public class UserApiService {
     public String login(LoginRequest request) throws NoSuchAlgorithmException {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(UserNotFoundException::new);
-        if (!user.getEmail().equals(request.getEmail())) {
-            throw new APIError("InconsistencyLoginId", "아이디가 일치하지 않습니다.");
-        }
-        if (!user.getPassword().equals(EncryptUtils.encrypt(request.getPassword()))) {
-            throw new APIError("InconsistencyPassword", "비밀번호가 일치하지 않습니다.");
-        }
+        loginValidate(request, user);
 
-        UserToken token = UserToken.create(user, request.getEmail());
+        UserToken token = UserToken.builder()
+                .user(user)
+                .accessToken(GenerateToken.generatedToken(user, request.getEmail()))
+                .build();
         tokenRepository.save(token);
+
         return token.getAccessToken();
     }
 
     @Transactional
-    public void edit(Long userId, ProfileEditRequest request, String token) {
-        editValidate(request);
-        UserToken accessToken = tokenRepository.findByAccessToken(token)
-                .orElseThrow(AccessTokenNotFoundException::new);
-        User user = userRepository.findById(userId)
+    public void edit(Long userId, ProfileEditRequest request, Long loginUserId, MultipartFile file, String dirName) throws IOException {
+        editInputValidate(request);
+        User user = userRepository.findById(loginUserId)
                 .orElseThrow(UserNotFoundException::new);
-        if (!accessToken.getUser().equals(user)) {
-            throw new APIError("NotRequest", "잘못된 요청입니다.");
-        }
-        if (userRepository.existsUserByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
-            throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
-        }
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        editValidate(request, user, findUser);
 
-        user.editProfile(request);
+        s3Service.fileDelete(findUser.getUserProfileImage().getUserProfileImageURL());
+        String imgPaths = s3Service.upload(file, dirName);
+        findUser.getUserProfileImage().userProfileImageModify(imgPaths);
+        findUser.editProfile(request);
+    }
+
+    private void postBlankCheck(MultipartFile imgPaths) {
+        if (imgPaths == null || imgPaths.isEmpty()) {
+            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
+        }
     }
 
     private void validate(SignupRequest request) {
@@ -98,7 +121,16 @@ public class UserApiService {
         }
     }
 
-    private void editValidate(ProfileEditRequest request) {
+    private static void loginValidate(LoginRequest request, User user) throws NoSuchAlgorithmException {
+        if (!user.getEmail().equals(request.getEmail())) {
+            throw new APIError("InconsistencyLoginId", "아이디가 일치하지 않습니다.");
+        }
+        if (!user.getPassword().equals(EncryptUtils.encrypt(request.getPassword()))) {
+            throw new APIError("InconsistencyPassword", "비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    private void editInputValidate(ProfileEditRequest request) {
         if (2 > request.getUserName().length() || request.getUserName().length() > 10) {
             throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
         }
@@ -107,6 +139,15 @@ public class UserApiService {
         }
         if (request.getContent().isEmpty() || request.getContent().length() > 150) {
             throw new APIError("InvalidContent", "소개를 150자 이하로 입력해주세요.");
+        }
+    }
+
+    private void editValidate(ProfileEditRequest request, User user, User findUser) {
+        if (!user.equals(findUser)) {
+            throw new APIError("NotRequest", "잘못된 요청입니다.");
+        }
+        if (userRepository.existsUserByNickName(request.getNickName()) && !findUser.getNickName().equals(request.getNickName())) {
+            throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
     }
 

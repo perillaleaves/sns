@@ -1,6 +1,5 @@
 package project.follow.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,23 +12,27 @@ import project.token.repository.TokenRepository;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequiredArgsConstructor
 public class FollowApiController {
 
     private final FollowApiService followApiService;
     private final TokenRepository tokenRepository;
 
+    public FollowApiController(FollowApiService followApiService, TokenRepository tokenRepository) {
+        this.followApiService = followApiService;
+        this.tokenRepository = tokenRepository;
+    }
+
     @PostMapping("/{userId}/follow")
-    public Response<ValidationResponse> follow(@PathVariable("userId") Long userId, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
-        followApiService.follow(userId, token);
+    public Response<ValidationResponse> follow(@PathVariable("userId") Long toUserId, HttpServletRequest httpServletRequest) {
+        Long fromUserId = (Long) httpServletRequest.getAttribute("userId");
+        followApiService.follow(fromUserId, toUserId);
         return new Response<>(new ValidationResponse("Follow", "팔로우 요청"));
     }
 
     @DeleteMapping("{userId}/unfollow")
-    public Response<ValidationResponse> unfollow(@PathVariable("userId") Long userId, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
-        followApiService.unfollow(token, userId);
+    public Response<ValidationResponse> unfollow(@PathVariable("userId") Long toUserId, HttpServletRequest httpServletRequest) {
+        Long fromUserId = (Long) httpServletRequest.getAttribute("userId");
+        followApiService.unfollow(fromUserId, toUserId);
         return new Response<>(new ValidationResponse("UnFollow", "언팔로우"));
     }
 

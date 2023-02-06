@@ -12,7 +12,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -78,10 +77,6 @@ public class User extends BaseEntity {
 
     public void removeFollowerSize(Long followerSize) {
         this.followerSize = --followerSize;
-    }
-
-    public boolean hasId(Long id) {
-        return this.id.equals(id);
     }
 
     public void editProfile(ProfileEditRequest request) {

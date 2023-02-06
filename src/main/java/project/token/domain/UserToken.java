@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.common.CreatedAtEntity;
-import project.common.GenerateToken;
 import project.user.domain.User;
 
 import javax.persistence.*;
@@ -27,17 +26,9 @@ public class UserToken extends CreatedAtEntity {
     private String accessToken;
 
     @Builder
-    public UserToken(User user, String accessToken) {
+    public UserToken(Long id, User user, String accessToken) {
+        this.id = id;
         this.user = user;
         this.accessToken = accessToken;
     }
-
-    public static UserToken create(User user, String email) {
-        return UserToken.builder()
-                .user(user)
-                .accessToken(GenerateToken.generatedToken(user, email))
-                .build();
-    }
-
-
 }

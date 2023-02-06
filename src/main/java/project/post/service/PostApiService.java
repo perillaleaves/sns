@@ -1,64 +1,89 @@
 package project.post.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import project.advice.exception.APIError;
-import project.advice.exception.AccessTokenNotFoundException;
 import project.advice.exception.PostNotFoundException;
+import project.advice.exception.UserNotFoundException;
 import project.post.domain.Post;
+import project.post.domain.PostImage;
+import project.post.repository.PostImageRepository;
 import project.post.repository.PostRepository;
 import project.post.request.PostRequest;
-import project.token.domain.UserToken;
-import project.token.repository.TokenRepository;
+import project.s3.S3Service;
+import project.user.domain.User;
+import project.user.repository.UserRepository;
+
+import java.io.IOException;
+import java.util.List;
+
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class PostApiService {
 
     private final PostRepository postRepository;
-    private final TokenRepository tokenRepository;
+    private final PostImageRepository postImageRepository;
+    private final UserRepository userRepository;
+    private final S3Service s3Service;
 
-    public void create(PostRequest request, String token) {
+    public PostApiService(PostRepository postRepository, PostImageRepository postImageRepository, UserRepository userRepository, S3Service s3Service) {
+        this.postRepository = postRepository;
+        this.postImageRepository = postImageRepository;
+        this.userRepository = userRepository;
+        this.s3Service = s3Service;
+    }
+
+    public void create(PostRequest request, Long userId, List<MultipartFile> imgPaths, String dirName) throws IOException {
+        postBlankCheck(imgPaths);
         validation(request);
-        UserToken accessToken = tokenRepository.findByAccessToken(token)
-                .orElseThrow(AccessTokenNotFoundException::new);
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
 
         Post post = Post.builder()
                 .content(request.getContent())
                 .commentSize(0L)
                 .postLikeSize(0L)
-                .user(accessToken.getUser())
+                .user(user)
                 .build();
-        accessToken.getUser().addPostSize(accessToken.getUser().getPostSize());
+        user.addPostSize(user.getPostSize());
         postRepository.save(post);
+
+        List<String> upload = s3Service.multiUpload(imgPaths, dirName);
+        for (String img : upload) {
+            PostImage postImage = PostImage.builder()
+                    .postImageUrl(img)
+                    .post(post)
+                    .build();
+            postImageRepository.save(postImage);
+        }
     }
 
-    public void update(Long postId, PostRequest request, String token) {
+    public void update(Long postId, PostRequest request, Long userId) {
         validation(request);
-        UserToken accessToken = tokenRepository.findByAccessToken(token)
-                .orElseThrow(AccessTokenNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        if (!post.getUser().equals(accessToken.getUser())) {
-            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
-        }
+        loginValidate(userId, post);
 
         post.updatePostContent(request.getContent());
     }
 
-    public void delete(Long postId, String token) {
-        UserToken accessToken = tokenRepository.findByAccessToken(token)
-                .orElseThrow(AccessTokenNotFoundException::new);
+    public void delete(Long postId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        if (!post.getUser().equals(accessToken.getUser())) {
-            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
-        }
+        loginValidate(userId, post);
 
-        accessToken.getUser().removePostSize(accessToken.getUser().getPostSize());
+        user.removePostSize(user.getPostSize());
         postRepository.delete(post);
+    }
+
+    private void postBlankCheck(List<MultipartFile> imgPaths) {
+        if (imgPaths == null || imgPaths.isEmpty()) {
+            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
+        }
     }
 
     private static void validation(PostRequest request) {
@@ -67,5 +92,10 @@ public class PostApiService {
         }
     }
 
+    private static void loginValidate(Long userId, Post post) {
+        if (!post.getUser().getId().equals(userId)) {
+            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
+        }
+    }
 
 }

@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentListResponse {
 
-    private PostCommentResponse postCommentResponse;
+    private PostAndCommentsResponse postAndCommentsResponse;
 
-    public CommentListResponse(PostCommentResponse postCommentResponse) {
-        this.postCommentResponse = postCommentResponse;
+    public CommentListResponse(PostAndCommentsResponse postAndCommentsResponse) {
+        this.postAndCommentsResponse = postAndCommentsResponse;
     }
 }

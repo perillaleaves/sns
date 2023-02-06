@@ -1,28 +1,26 @@
-package project.comment.response;
+package project.post.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostCommentResponse {
+public class PostSummaryResponse {
 
     private Long postId;
     private String userProfileImage;
     private String nickName;
     private String postContent;
+    private LocalDateTime updatedAt;
 
-    private List<CommentResponse> commentResponses = new ArrayList<>();
-
-    public PostCommentResponse(Long postId, String userProfileImage, String nickName, String postContent, List<CommentResponse> commentResponses) {
+    public PostSummaryResponse(Long postId, String userProfileImage, String nickName, String postContent, LocalDateTime updatedAt) {
         this.postId = postId;
         this.userProfileImage = userProfileImage;
         this.nickName = nickName;
         this.postContent = postContent;
-        this.commentResponses = commentResponses;
+        this.updatedAt = updatedAt;
     }
 }

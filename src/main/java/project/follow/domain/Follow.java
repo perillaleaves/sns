@@ -28,9 +28,9 @@ public class Follow extends CreatedAtEntity {
     private User toUser;
 
     @Builder
-    public Follow(User fromUser, User toUser) {
+    public Follow(Long id, User fromUser, User toUser) {
+        this.id = id;
         this.fromUser = fromUser;
         this.toUser = toUser;
     }
-
 }

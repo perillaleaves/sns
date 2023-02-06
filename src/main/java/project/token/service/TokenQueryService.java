@@ -1,6 +1,5 @@
 package project.token.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.APIError;
@@ -9,11 +8,14 @@ import project.token.repository.TokenRepository;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TokenQueryService {
 
     private final TokenRepository tokenRepository;
+
+    public TokenQueryService(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
 
     public void certification(HttpServletRequest request) {
         String token = request.getHeader("token");
