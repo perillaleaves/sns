@@ -3,6 +3,8 @@ package project.user.response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Slice;
+import project.post.domain.Post;
 import project.post.dto.PostListDto;
 
 import java.util.List;
@@ -12,10 +14,10 @@ import java.util.List;
 public class ProfileResponse {
 
     private UserDetailResponse userDetailResponse;
-    private List<PostListDto> postListDto;
+    private List<PostListDto> postSlice;
 
-    public ProfileResponse(UserDetailResponse userDetailResponse, List<PostListDto> postListDto) {
+    public ProfileResponse(UserDetailResponse userDetailResponse, List<PostListDto> postSlice) {
         this.userDetailResponse = userDetailResponse;
-        this.postListDto = postListDto;
+        this.postSlice = postSlice;
     }
 }
