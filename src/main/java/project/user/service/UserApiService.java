@@ -12,7 +12,7 @@ import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 import project.user.domain.User;
 import project.user.domain.UserProfileImage;
-import project.user.repository.UserProfileRepository;
+import project.user.repository.UserProfileImageRepository;
 import project.user.repository.UserRepository;
 import project.user.request.LoginRequest;
 import project.user.request.ProfileEditRequest;
@@ -27,13 +27,13 @@ public class UserApiService {
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
-    private final UserProfileRepository userProfileRepository;
+    private final UserProfileImageRepository userProfileImageRepository;
     private final S3Service s3Service;
 
-    public UserApiService(UserRepository userRepository, TokenRepository tokenRepository, UserProfileRepository userProfileRepository, S3Service s3Service) {
+    public UserApiService(UserRepository userRepository, TokenRepository tokenRepository, UserProfileImageRepository userProfileImageRepository, S3Service s3Service) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
-        this.userProfileRepository = userProfileRepository;
+        this.userProfileImageRepository = userProfileImageRepository;
         this.s3Service = s3Service;
     }
 
@@ -46,7 +46,7 @@ public class UserApiService {
         UserProfileImage userProfileImage = UserProfileImage.builder()
                 .userProfileImageURL(imgPaths)
                 .build();
-        userProfileRepository.save(userProfileImage);
+        userProfileImageRepository.save(userProfileImage);
 
         User user = User.builder()
                 .userProfileImage(userProfileImage)

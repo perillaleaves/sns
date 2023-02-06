@@ -44,8 +44,8 @@ public class FollowApiService {
         Follow follow = followRepository.findByFromUserIdAndToUserId(fromUserId, toUserId)
                 .orElseThrow(FollowNotFoundException::new);
 
-        follow.getFromUser().removeFollowingSize(follow.getFromUser().getFollowingSize());
-        follow.getToUser().removeFollowerSize(follow.getToUser().getFollowerSize());
+        follow.getFromUser().decreaseFollowingSize(follow.getFromUser().getFollowingSize());
+        follow.getToUser().decreaseFollowerSize(follow.getToUser().getFollowerSize());
         followRepository.delete(follow);
     }
 

@@ -29,12 +29,10 @@ public class PostQueryService {
     }
 
     public PostDetailResponse findPostDetail(Long postId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        boolean isLike = postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), user.getId());
-        boolean isPostEdit = postRepository.existsPostByIdAndUserId(post.getId(), user.getId());
+        boolean isLike = postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), userId);
+        boolean isPostEdit = postRepository.existsPostByIdAndUserId(post.getId(), userId);
 
         return new PostDetailResponse(post.getId(), post.getUser().getId(),
                 "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + post.getUser().getUserProfileImage().getUserProfileImageURL(),

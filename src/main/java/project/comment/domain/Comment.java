@@ -9,6 +9,8 @@ import project.post.domain.Post;
 import project.user.domain.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,13 +34,21 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "postId")
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parentId")
+    private Comment parent;
+
+//    @Builder.Default
+//    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+//    private List<Comment> child = new ArrayList<>();
+
     @Builder
-    public Comment(Long id, String content, Long commentLikeSize, User user, Post post) {
-        this.id = id;
+    public Comment(String content, Long commentLikeSize, User user, Post post, Comment parent) {
         this.content = content;
         this.commentLikeSize = commentLikeSize;
         this.user = user;
         this.post = post;
+        this.parent = parent;
     }
 
     public void update(String content) {

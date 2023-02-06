@@ -21,3 +21,15 @@ server:
       cookie:
         http-only: true
         same-site: none
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA2S7SZK4JTF6Q7J6P
+      secret-key: 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
+    s3:
+      bucket: mullae.com
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

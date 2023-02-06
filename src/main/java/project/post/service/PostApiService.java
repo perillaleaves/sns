@@ -76,7 +76,7 @@ public class PostApiService {
                 .orElseThrow(PostNotFoundException::new);
         loginValidate(userId, post);
 
-        user.removePostSize(user.getPostSize());
+        user.decreasePostSize(user.getPostSize());
         postRepository.delete(post);
     }
 

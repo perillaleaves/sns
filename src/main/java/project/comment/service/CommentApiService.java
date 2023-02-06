@@ -29,11 +29,21 @@ public class CommentApiService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
+//        Comment parent = null;
+//        if (request.getParentId() != null) {
+//            parent = commentRepository.findByParentId(request.getParentId())
+//                    .orElseThrow(CommentNotFoundException::new);
+//            if (parent.getPost().getId() != request.getPostId()) {
+//                throw new APIError("Not found", "");
+//            }
+//        }
+
         Comment comment = Comment.builder()
                 .content(request.getContent())
                 .user(user)
                 .post(post)
                 .build();
+
         post.addCommentSize(post.getCommentSize());
         commentRepository.save(comment);
     }
