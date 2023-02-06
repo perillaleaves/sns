@@ -30,13 +30,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.5'
 
     implementation 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
     runtimeOnly 'com.mysql:mysql-connector-j:8.0.31'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.5'
 
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
@@ -50,16 +50,15 @@ querydsl {
     jpa = true
     querydslSourcesDir = querydslDir
 }
+
 sourceSets {
     main.java.srcDir querydslDir
 }
 
 configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
     querydsl.extendsFrom compileClasspath
 }
+
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
