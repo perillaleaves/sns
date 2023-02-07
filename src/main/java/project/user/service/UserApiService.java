@@ -54,6 +54,7 @@ public class UserApiService {
                 .name(request.getName())
                 .nickName(request.getNickName())
                 .password(EncryptUtils.encrypt(request.getPassword()))
+                .content("")
                 .postSize(0L)
                 .followerSize(0L)
                 .followingSize(0L)

@@ -16,7 +16,11 @@ import project.user.domain.User;
 import project.user.repository.UserRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -35,8 +39,7 @@ public class PostApiService {
         this.s3Service = s3Service;
     }
 
-    public void create(PostRequest request, Long userId, List<MultipartFile> imgPaths, String dirName) throws IOException {
-        postBlankCheck(imgPaths);
+    public void create(PostRequest request, Long userId, List<MultipartFile> files, String dirName) throws IOException {
         validation(request);
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
@@ -50,14 +53,39 @@ public class PostApiService {
         user.addPostSize(user.getPostSize());
         postRepository.save(post);
 
-        List<String> upload = s3Service.multiUpload(imgPaths, dirName);
-        for (String img : upload) {
-            PostImage postImage = PostImage.builder()
-                    .postImageUrl(img)
-                    .post(post)
-                    .build();
-            postImageRepository.save(postImage);
+        List<String> s3UploadList = new ArrayList<>(10);
+        List<String> strings = s3Service.multiUpload(files, dirName);
+        for (String img : strings) {
+            s3UploadList.add(img);
         }
+
+        s3UploadList.add(null);
+        s3UploadList.add(null);
+        s3UploadList.add(null);
+        s3UploadList.add(null);
+        s3UploadList.add(null);
+        s3UploadList.add(null);
+        s3UploadList.add(null);
+        s3UploadList.add(null);
+        s3UploadList.add(null);
+        s3UploadList.add(null);
+
+        PostImage postImage = PostImage.builder()
+                .postImageUrl1(s3UploadList.get(0))
+                .postImageUrl2(s3UploadList.get(1))
+                .postImageUrl3(s3UploadList.get(2))
+                .postImageUrl4(s3UploadList.get(3))
+                .postImageUrl5(s3UploadList.get(4))
+                .postImageUrl6(s3UploadList.get(5))
+                .postImageUrl7(s3UploadList.get(6))
+                .postImageUrl8(s3UploadList.get(7))
+                .postImageUrl9(s3UploadList.get(8))
+                .postImageUrl10(s3UploadList.get(9))
+                .post(post)
+                .build();
+        postImageRepository.save(postImage);
+
+
     }
 
     public void update(Long postId, PostRequest request, Long userId) {
@@ -78,12 +106,6 @@ public class PostApiService {
 
         user.decreasePostSize(user.getPostSize());
         postRepository.delete(post);
-    }
-
-    private void postBlankCheck(List<MultipartFile> imgPaths) {
-        if (imgPaths == null || imgPaths.isEmpty()) {
-            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
-        }
     }
 
     private static void validation(PostRequest request) {

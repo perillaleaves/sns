@@ -10,14 +10,14 @@ import project.user.domain.UserProfileImage;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignupRequest {
 
-    private UserProfileImage userProfileImageURL;
+    private String userProfileImageURL;
     private String email;
     private String name;
     private String nickName;
     private String password;
 
     @Builder
-    public SignupRequest(UserProfileImage userProfileImageURL, String email, String name, String nickName, String password) {
+    public SignupRequest(String userProfileImageURL, String email, String name, String nickName, String password) {
         this.userProfileImageURL = userProfileImageURL;
         this.email = email;
         this.name = name;

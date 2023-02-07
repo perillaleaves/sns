@@ -33,7 +33,7 @@ public class UserApiController {
     }
 
     @PostMapping("/login")
-    public Response<ValidationResponse> login(@RequestBody LoginRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
+    public Response<ValidationResponse> login(@RequestBody LoginRequest request, HttpServletResponse response, HttpServletRequest httpServletRequest) throws NoSuchAlgorithmException {
         String token = userApiService.login(request);
         response.setHeader("token", token);
         return new Response<>(new ValidationResponse("Login", "로그인"));

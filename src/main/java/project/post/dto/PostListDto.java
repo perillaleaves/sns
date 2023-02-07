@@ -8,9 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostListDto {
 
-    private Long postId;
+    private Long postImageId;
+    private String postImageUrl;
 
-    public PostListDto(Long postId) {
-        this.postId = postId;
+    public PostListDto(Long postImageId, String postImageUrl) {
+        this.postImageId = postImageId;
+        this.postImageUrl = postImageUrl;
     }
+
 }

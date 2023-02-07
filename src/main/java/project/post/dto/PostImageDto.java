@@ -1,6 +1,5 @@
 package project.post.dto;
 
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,13 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostImageDto {
 
-    private Long postId;
     private Long postImageId;
     private String postImageUrl;
 
-    @QueryProjection
-    public PostImageDto(Long postId, Long postImageId, String postImageUrl) {
-        this.postId = postId;
+    public PostImageDto(Long postImageId, String postImageUrl) {
         this.postImageId = postImageId;
         this.postImageUrl = postImageUrl;
     }

@@ -9,4 +9,5 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     Optional<Follow> findByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
 
+    Boolean existsFollowByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
 }

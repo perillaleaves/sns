@@ -5,7 +5,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.common.response.Response;
 import project.user.response.ProfileResponse;
@@ -24,14 +23,11 @@ public class UserQueryController {
     }
 
     @GetMapping("/user/{userId}")
-    public Response<UserProfileResponse> getUserProfile(
-            @PathVariable(name = "userId") Long userId,
-            @RequestParam(value = "idx", defaultValue = "0") Long idx,
-            @PageableDefault(size = 13, sort = "idx", direction = Sort.Direction.ASC) Pageable pageable,
-            HttpServletRequest httpServletRequest) {
+    public Response<UserProfileResponse> getUserProfile(@PathVariable(name = "userId") Long userId,
+                                                        @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable,
+                                                        HttpServletRequest httpServletRequest) {
         Long myId = (Long) httpServletRequest.getAttribute("userId");
-        ProfileResponse userProfile = userQueryService.findUserProfile(userId, myId, idx, pageable);
+        ProfileResponse userProfile = userQueryService.findUserProfile(userId, myId, pageable);
         return new Response<>(new UserProfileResponse(userProfile));
     }
-
 }
