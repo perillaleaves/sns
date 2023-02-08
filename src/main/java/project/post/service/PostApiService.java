@@ -17,10 +17,7 @@ import project.user.repository.UserRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -41,6 +38,7 @@ public class PostApiService {
 
     public void create(PostRequest request, Long userId, List<MultipartFile> files, String dirName) throws IOException {
         validation(request);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
@@ -50,12 +48,12 @@ public class PostApiService {
                 .postLikeSize(0L)
                 .user(user)
                 .build();
-        user.addPostSize(user.getPostSize());
+        user.increasePostSize(user.getPostSize());
         postRepository.save(post);
 
-        List<String> s3UploadList = new ArrayList<>(10);
-        List<String> strings = s3Service.multiUpload(files, dirName);
-        for (String img : strings) {
+        List<String> s3UploadList = new ArrayList<>();
+        List<String> imageUrls = s3Service.multiUpload(files, dirName);
+        for (String img : imageUrls) {
             s3UploadList.add(img);
         }
 
@@ -84,8 +82,6 @@ public class PostApiService {
                 .post(post)
                 .build();
         postImageRepository.save(postImage);
-
-
     }
 
     public void update(Long postId, PostRequest request, Long userId) {

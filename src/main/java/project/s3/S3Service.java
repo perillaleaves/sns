@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,19 +75,33 @@ public class S3Service {
         return Optional.empty();
     }
 
-    private List<File> multiConvert(List<MultipartFile> file) throws IOException {
-        List<File> fileList = file.stream().map(f -> new File(f.getOriginalFilename())).collect(Collectors.toList());
+    private List<File> multiConvert(List<MultipartFile> multipartFiles) throws IOException {
         List<File> convertFiles = new ArrayList<>();
-        for (File files : fileList) {
-            if (files.createNewFile()) {
-                try (FileOutputStream fos = new FileOutputStream(files)) {
-                    fos.write(files.getPath().getBytes());
+        for (MultipartFile file : multipartFiles) {
+            File convertFile = new File(file.getOriginalFilename());
+            if (convertFile.createNewFile()) {
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+                    fos.write(file.getBytes());
                 }
             }
-            convertFiles.add(files);
+            convertFiles.add(convertFile);
         }
         return convertFiles;
     }
+
+//    private List<File> multiConvert(List<MultipartFile> file) throws IOException {
+//        List<File> fileList = file.stream().map(f -> new File(f.getOriginalFilename())).collect(Collectors.toList());
+//        List<File> convertFiles = new ArrayList<>();
+//        for (File files : fileList) {
+//            if (files.createNewFile()) {
+//                try (FileOutputStream fos = new FileOutputStream(files)) {
+//                    fos.write(files.getBytes());
+//                }
+//            }
+//            convertFiles.add(files);
+//        }
+//        return convertFiles;
+//    }
 
     public void fileDelete(String key) {
         amazonS3Client.deleteObject(bucket, key);
@@ -96,10 +109,6 @@ public class S3Service {
 
     public void fileListDelete(List<String> keys) {
         keys.forEach(key -> amazonS3Client.deleteObject(bucket, key));
-    }
-
-    public String getThumbnailPath(String path) {
-        return amazonS3Client.getUrl(bucket, path).toString();
     }
 
 }

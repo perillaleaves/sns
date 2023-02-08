@@ -35,8 +35,8 @@ public class FollowApiService {
                 .fromUser(fromUser)
                 .toUser(toUser)
                 .build();
-        fromUser.addFollowingSize(fromUser.getFollowingSize());
-        toUser.addFollowerSize(toUser.getFollowerSize());
+        fromUser.increaseFollowingSize(fromUser.getFollowingSize());
+        toUser.increaseFollowerSize(toUser.getFollowerSize());
         followRepository.save(follow);
     }
 
