@@ -24,7 +24,7 @@ public class UserQueryController {
 
     @GetMapping("/user/{userId}")
     public Response<UserProfileResponse> getUserProfile(@PathVariable(name = "userId") Long userId,
-                                                        @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable,
+                                                        @PageableDefault(size = 12, direction = Sort.Direction.DESC) Pageable pageable,
                                                         HttpServletRequest httpServletRequest) {
         Long myId = (Long) httpServletRequest.getAttribute("userId");
         ProfileResponse userProfile = userQueryService.findUserProfile(userId, myId, pageable);

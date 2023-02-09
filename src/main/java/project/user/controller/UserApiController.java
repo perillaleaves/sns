@@ -8,6 +8,8 @@ import project.token.service.TokenApiService;
 import project.user.request.LoginRequest;
 import project.user.request.ProfileEditRequest;
 import project.user.request.SignupRequest;
+import project.user.response.LoginResponse;
+import project.user.response.UserLoginResponse;
 import project.user.service.UserApiService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,10 +35,10 @@ public class UserApiController {
     }
 
     @PostMapping("/login")
-    public Response<ValidationResponse> login(@RequestBody LoginRequest request, HttpServletResponse response, HttpServletRequest httpServletRequest) throws NoSuchAlgorithmException {
-        String token = userApiService.login(request);
-        response.setHeader("token", token);
-        return new Response<>(new ValidationResponse("Login", "로그인"));
+    public Response<LoginResponse> login(@RequestBody LoginRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
+        UserLoginResponse login = userApiService.login(request);
+        response.setHeader("token", login.getAccessToken());
+        return new Response<>(new LoginResponse(login));
     }
 
     @PostMapping("/logout")

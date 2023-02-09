@@ -17,6 +17,7 @@ import project.user.repository.UserRepository;
 import project.user.request.LoginRequest;
 import project.user.request.ProfileEditRequest;
 import project.user.request.SignupRequest;
+import project.user.response.UserLoginResponse;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -63,7 +64,7 @@ public class UserApiService {
     }
 
     @Transactional
-    public String login(LoginRequest request) throws NoSuchAlgorithmException {
+    public UserLoginResponse login(LoginRequest request) throws NoSuchAlgorithmException {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(UserNotFoundException::new);
         loginValidate(request, user);
@@ -74,7 +75,7 @@ public class UserApiService {
                 .build();
         tokenRepository.save(token);
 
-        return token.getAccessToken();
+        return new UserLoginResponse(user.getId(), token.getAccessToken());
     }
 
     @Transactional

@@ -7,8 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.UserNotFoundException;
 import project.follow.repository.FollowRepository;
 import project.post.domain.Post;
-import project.post.dto.PostImageDto;
-import project.post.dto.PostListDto;
+import project.user.response.UserPostListResponse;
 import project.post.repository.PostRepository;
 import project.user.domain.User;
 import project.user.repository.UserRepository;
@@ -48,8 +47,10 @@ public class UserQueryService {
                 followRepository.existsFollowByFromUserIdAndToUserId(userId, myId));
 
         Slice<Post> posts = postRepository.findByUserId(userId, pageable);
-        List<PostListDto> postSlice = posts.stream()
-                .map(p -> new PostListDto(p.getPostImage().getId(),
+        List<UserPostListResponse> postSlice = posts.stream()
+                .map(p -> new UserPostListResponse(
+                        p.getId(),
+                        p.getPostImage().getId(),
                         "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + p.getPostImage().getPostImageUrl1()))
                 .collect(Collectors.toList());
 

@@ -25,11 +25,11 @@ public class FollowApiService {
     }
 
     public void follow(Long fromUserId, Long toUserId) {
+        requestAndExistValidate(fromUserId, toUserId);
         User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(UserNotFoundException::new);
         User toUser = userRepository.findById(toUserId)
                 .orElseThrow(UserNotFoundException::new);
-        requestAndExistValidate(fromUserId, toUser);
 
         Follow follow = Follow.builder()
                 .fromUser(fromUser)
@@ -49,11 +49,11 @@ public class FollowApiService {
         followRepository.delete(follow);
     }
 
-    private void requestAndExistValidate(Long fromUserId, User toUser) {
-        if (fromUserId.equals(toUser.getId())) {
+    private void requestAndExistValidate(Long fromUserId, Long toUserId) {
+        if (fromUserId.equals(toUserId)) {
             throw new APIError("NotRequest", "잘못된 요청입니다.");
         }
-        Optional<Follow> findFollow = followRepository.findByFromUserIdAndToUserId(fromUserId, toUser.getId());
+        Optional<Follow> findFollow = followRepository.findByFromUserIdAndToUserId(fromUserId, toUserId);
         if (findFollow.isPresent()) {
             throw new APIError("AlreadyExist", "이미 존재합니다");
         }
