@@ -15,11 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 public class FollowApiController {
 
     private final FollowApiService followApiService;
-    private final TokenRepository tokenRepository;
 
-    public FollowApiController(FollowApiService followApiService, TokenRepository tokenRepository) {
+    public FollowApiController(FollowApiService followApiService) {
         this.followApiService = followApiService;
-        this.tokenRepository = tokenRepository;
     }
 
     @PostMapping("/{userId}/follow")

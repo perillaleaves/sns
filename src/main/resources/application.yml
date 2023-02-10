@@ -1,6 +1,7 @@
 spring:
   profiles:
     active: local
+    include: -aws
   servlet:
     multipart:
       max-file-size: 10MB
@@ -24,12 +25,11 @@ server:
 
 cloud:
   aws:
-    credentials:
-      access-key: AKIA2S7SZK4JTF6Q7J6P
-      secret-key: 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
     s3:
       bucket: mullae.com
     region:
       static: ap-northeast-2
     stack:
       auto: false
+    credentials:
+      instanceProfile: true

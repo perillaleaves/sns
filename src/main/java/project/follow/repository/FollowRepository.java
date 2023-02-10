@@ -15,9 +15,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     Boolean existsFollowByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
 
-    @Query("select f from Follow f where f.userId != :myId")
-    Slice<Follow> findByToUserId(Long toUserId, Long myId, Pageable pageable);
-
     List<Follow> findByFromUserId(Long froUserId);
 
 }
