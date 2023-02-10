@@ -7,9 +7,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import project.follow.domain.Follow;
-import project.follow.response.FollowingUserListResponse;
+import project.follow.response.following.FollowingUserListResponse;
 import project.follow.response.QFollowingUserListResponse;
-import project.user.domain.QUser;
 
 import javax.persistence.EntityManager;
 
@@ -35,7 +34,7 @@ public class FollowRepositoryImpl {
                         follow.fromUser.userProfileImage.userProfileImageURL,
                         follow.fromUser.name,
                         follow.fromUser.nickName,
-                        follow.fromUser.id.eq(myId)))
+                        follow.toUser.id.eq(myId)))
                 .from(follow)
                 .leftJoin(follow.fromUser, user)
                 .where(

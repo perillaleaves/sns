@@ -1,13 +1,12 @@
-package project.follow.response;
+package project.follow.response.following;
 
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FollowingUserListResponse {
+public class FollowingUserListDetaiResponse {
 
     private Long followId;
     private Long userId;
@@ -16,14 +15,12 @@ public class FollowingUserListResponse {
     private String nickName;
     private Boolean isFollowing;
 
-    @QueryProjection
-    public FollowingUserListResponse(Long followId, Long userId, String userProfileImageUrl, String userName, String nickName, Boolean isFollowing) {
+    public FollowingUserListDetaiResponse(Long followId, Long userId, String userProfileImageUrl, String userName, String nickName, Boolean isFollowing) {
         this.followId = followId;
         this.userId = userId;
-        this.userProfileImageUrl = "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + userProfileImageUrl;
+        this.userProfileImageUrl = userProfileImageUrl;
         this.userName = userName;
         this.nickName = nickName;
         this.isFollowing = isFollowing;
     }
-
 }
