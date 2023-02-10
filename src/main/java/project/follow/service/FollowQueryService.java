@@ -16,7 +16,6 @@ import project.follow.response.following.UserIsFollowingResponse;
 import project.user.domain.User;
 import project.user.repository.UserRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,7 @@ public class FollowQueryService {
                 "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + findUser.getUserProfileImage().getUserProfileImageURL(),
                 findUser.getName(),
                 findUser.getNickName(),
-                followRepository.existsFollowByFromUserIdAndToUserId(myId, userId));
+                followRepository.existsFollowByFromUserIdAndToUserId(userId, myId));
 
         Slice<FollowingUserListResponse> followingUserList = followRepositoryImpl.getFollowingUserList(userId, myId, pageable);
         List<FollowingUserListDetaiResponse> followingUserListDetail = followingUserList.stream()
@@ -78,7 +77,7 @@ public class FollowQueryService {
                         followRepository.existsFollowByFromUserIdAndToUserId(myId, f.getUserId())))
                 .collect(Collectors.toList());
 
-        return new FollowerListResponse(followerUserListDetail, followerUserList.hasNext());
+        return new FollowerListResponse(userIsFollowingResponse, followerUserListDetail, followerUserList.hasNext());
     }
 
 }

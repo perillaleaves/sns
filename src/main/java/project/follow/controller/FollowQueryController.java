@@ -29,7 +29,7 @@ public class FollowQueryController {
                                                         @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable,
                                                         HttpServletRequest httpServletRequest) {
         Long myId = (Long) httpServletRequest.getAttribute("userId");
-        FollowingListResponse followingList = followQueryService.findFollowingList(userId, myId , pageable);
+        FollowingListResponse followingList = followQueryService.findFollowingList(userId, myId, pageable);
         return new Response<>(new FollowingResponse(followingList));
     }
 
