@@ -7,11 +7,14 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import project.follow.domain.Follow;
+import project.follow.response.follower.FollowerUserListResponse;
+import project.follow.response.follower.QFollowerUserListResponse;
 import project.follow.response.following.FollowingUserListResponse;
-import project.follow.response.QFollowingUserListResponse;
+import project.follow.response.following.QFollowingUserListResponse;
 
 import javax.persistence.EntityManager;
 
+import java.util.Collection;
 import java.util.List;
 
 import static project.follow.domain.QFollow.follow;
@@ -50,6 +53,36 @@ public class FollowRepositoryImpl {
                 .where(
                         follow.toUser.id.eq(userId),
                         follow.fromUser.id.ne(myId)
+                );
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
+    }
+
+    public Slice<FollowerUserListResponse> getFollowerUserList(Long userId, Long myId, Pageable pageable) {
+        List<FollowerUserListResponse> content = queryFactory
+                .select(new QFollowerUserListResponse(
+                        follow.id,
+                        follow.toUser.id,
+                        follow.toUser.userProfileImage.userProfileImageURL,
+                        follow.toUser.name,
+                        follow.toUser.nickName,
+                        follow.fromUser.id.eq(myId)
+                ))
+                .from(follow)
+                .leftJoin(follow.toUser, user)
+                .where(
+                        follow.fromUser.id.eq(userId),
+                        follow.toUser.id.ne(myId)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Follow> countQuery = queryFactory
+                .selectFrom(follow)
+                .where(
+                        follow.fromUser.id.eq(userId),
+                        follow.toUser.id.ne(myId)
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);

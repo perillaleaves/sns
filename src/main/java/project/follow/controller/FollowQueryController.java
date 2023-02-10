@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import project.common.response.Response;
+import project.follow.response.follower.FollowerListResponse;
 import project.follow.response.follower.FollowerResponse;
 import project.follow.response.following.FollowingListResponse;
 import project.follow.response.following.FollowingResponse;
@@ -37,8 +38,8 @@ public class FollowQueryController {
                                                       @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable,
                                                       HttpServletRequest httpServletRequest) {
         Long myId = (Long) httpServletRequest.getAttribute("userId");
-        FollowingListResponse followingList = followQueryService.findFollowingList(userId, myId , pageable);
-        return new Response<>(new FollowerResponse(followingList));
+        FollowerListResponse followerList = followQueryService.findFollowerList(userId, myId, pageable);
+        return new Response<>(new FollowerResponse(followerList));
     }
 
 }
