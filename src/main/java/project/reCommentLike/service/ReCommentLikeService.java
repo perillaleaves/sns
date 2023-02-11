@@ -36,6 +36,14 @@ public class ReCommentLikeService {
         reCommentLikeRepository.save(reCommentLike);
     }
 
+    public void removeLike(Long reCommentId, User user) {
+        ReCommentLike reCommentLike = reCommentLikeRepository.findByReCommentIdAndUserId(reCommentId, user.getId())
+                .orElseThrow(ReCommentNotFoundException::new);
+
+        reCommentLike.getReComment().decreaseReCommentLikeSize(reCommentLike.getReComment().getReCommentLikeSize());
+        reCommentLikeRepository.delete(reCommentLike);
+    }
+
     private void existsValidate(Long reCommentId, User user) {
         if (reCommentLikeRepository.existsReCommentLikeByReCommentIdAndUserId(reCommentId, user.getId())) {
             throw new APIError("AlreadyExist", "이미 존재합니다");

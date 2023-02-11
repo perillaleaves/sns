@@ -55,4 +55,8 @@ public class ReComment extends BaseEntity {
         this.reCommentLikeSize = ++reCommentLikeSize;
     }
 
+    public void decreaseReCommentLikeSize(Long reCommentLikeSize) {
+        this.reCommentLikeSize = --reCommentLikeSize;
+    }
+
 }
