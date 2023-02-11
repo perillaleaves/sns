@@ -6,9 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.comment.domain.Comment;
 import project.common.BaseEntity;
+import project.postLike.domain.PostLike;
+import project.reCommentLike.domain.ReCommentLike;
 import project.user.domain.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,6 +36,9 @@ public class ReComment extends BaseEntity {
     @JoinColumn(name = "commentId")
     private Comment comment;
 
+    @OneToMany(mappedBy = "reComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReCommentLike> reCommentLikes = new ArrayList<>();
+
     @Builder
     public ReComment(String content, Long reCommentLikeSize, User user, Comment comment) {
         this.content = content;
@@ -42,6 +49,10 @@ public class ReComment extends BaseEntity {
 
     public void update(String content) {
         this.content = content;
+    }
+
+    public void increaseReCommentLikeSize(Long reCommentLikeSize) {
+        this.reCommentLikeSize = ++reCommentLikeSize;
     }
 
 }

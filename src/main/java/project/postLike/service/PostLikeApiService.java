@@ -24,9 +24,9 @@ public class PostLikeApiService {
     }
 
     public void addLike(Long postId, User user) {
+        existValidate(user, postId);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        existValidate(user, post);
 
         PostLike postLike = PostLike.builder()
                 .post(post)
@@ -44,8 +44,8 @@ public class PostLikeApiService {
         postLikeRepository.delete(postLike);
     }
 
-    private void existValidate(User user, Post post) {
-        if (postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), user.getId())) {
+    private void existValidate(User user, Long postId) {
+        if (postLikeRepository.existsPostLikeByPostIdAndUserId(postId, user.getId())) {
             throw new APIError("AlreadyExist", "이미 존재합니다");
         }
     }
