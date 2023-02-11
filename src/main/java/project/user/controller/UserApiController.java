@@ -50,8 +50,8 @@ public class UserApiController {
 
     @PutMapping("/user/{userId}")
     public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile file, ProfileEditRequest request, HttpServletRequest httpServletRequest) throws IOException {
-        Long user = (Long) httpServletRequest.getAttribute("userId");
-        userApiService.edit(userId, request, user, file, "profile");
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        userApiService.edit(userId, request, loginUserId, file, "profile");
         return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
 

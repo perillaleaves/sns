@@ -13,14 +13,14 @@ public class FollowerUserListDetailResponse {
     private String userProfileImageUrl;
     private String userName;
     private String nickName;
-    private Boolean isFollower;
+    private Boolean isFollowing;
 
-    public FollowerUserListDetailResponse(Long followId, Long userId, String userProfileImageUrl, String userName, String nickName, Boolean isFollower) {
+    public FollowerUserListDetailResponse(Long followId, Long userId, String userProfileImageUrl, String userName, String nickName, Boolean isFollowing) {
         this.followId = followId;
         this.userId = userId;
         this.userProfileImageUrl = userProfileImageUrl;
         this.userName = userName;
         this.nickName = nickName;
-        this.isFollower = isFollower;
+        this.isFollowing = isFollowing;
     }
 }

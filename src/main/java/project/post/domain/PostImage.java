@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.common.BaseEntity;
 
 import javax.persistence.*;
 
@@ -29,12 +28,11 @@ public class PostImage {
     private String postImageUrl9;
     private String postImageUrl10;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId")
+    @OneToOne(mappedBy = "postImage", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Post post;
 
     @Builder
-    public PostImage(Long id, String postImageUrl1, String postImageUrl2, String postImageUrl3, String postImageUrl4, String postImageUrl5, String postImageUrl6, String postImageUrl7, String postImageUrl8, String postImageUrl9, String postImageUrl10, Post post) {
+    public PostImage(Long id, String postImageUrl1, String postImageUrl2, String postImageUrl3, String postImageUrl4, String postImageUrl5, String postImageUrl6, String postImageUrl7, String postImageUrl8, String postImageUrl9, String postImageUrl10) {
         this.id = id;
         this.postImageUrl1 = postImageUrl1;
         this.postImageUrl2 = postImageUrl2;
@@ -46,6 +44,5 @@ public class PostImage {
         this.postImageUrl8 = postImageUrl8;
         this.postImageUrl9 = postImageUrl9;
         this.postImageUrl10 = postImageUrl10;
-        this.post = post;
     }
 }

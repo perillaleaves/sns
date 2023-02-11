@@ -1,5 +1,6 @@
 package project.follow.repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
@@ -13,8 +14,6 @@ import project.follow.response.following.FollowingUserListResponse;
 import project.follow.response.following.QFollowingUserListResponse;
 
 import javax.persistence.EntityManager;
-
-import java.util.Collection;
 import java.util.List;
 
 import static project.follow.domain.QFollow.follow;
@@ -45,7 +44,7 @@ public class FollowRepositoryImpl {
                         follow.fromUser.id.ne(myId)
                 )
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
 
         JPAQuery<Follow> countQuery = queryFactory
@@ -74,8 +73,9 @@ public class FollowRepositoryImpl {
                         follow.fromUser.id.eq(userId),
                         follow.toUser.id.ne(myId)
                 )
+                .orderBy(follow.id.desc())
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
 
         JPAQuery<Follow> countQuery = queryFactory
@@ -87,5 +87,13 @@ public class FollowRepositoryImpl {
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
     }
+
+//    private BooleanExpression ltPageNo(Long follow, Pageable pageable) {
+//        if (pageNo == null) {
+//            return null;
+//        }
+//
+//        return
+//    }
 
 }

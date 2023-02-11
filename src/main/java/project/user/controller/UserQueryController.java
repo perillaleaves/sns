@@ -30,4 +30,5 @@ public class UserQueryController {
         ProfileResponse userProfile = userQueryService.findUserProfile(userId, myId, pageable);
         return new Response<>(new UserProfileResponse(userProfile));
     }
+
 }

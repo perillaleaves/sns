@@ -29,7 +29,8 @@ public class PostQueryService {
         boolean isLike = postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), userId);
         boolean isPostEdit = postRepository.existsPostByIdAndUserId(post.getId(), userId);
 
-        return new PostDetailResponse(post.getId(), post.getUser().getId(),
+        return new PostDetailResponse(post.getId(),
+                post.getUser().getId(),
                 "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + post.getUser().getUserProfileImage().getUserProfileImageURL(),
                 post.getUser().getNickName(),
                 post.getContent(), isLike, post.getPostLikeSize(), post.getCommentSize(), isPostEdit, post.getUpdatedAt(),

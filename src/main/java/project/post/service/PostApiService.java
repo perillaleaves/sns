@@ -42,14 +42,6 @@ public class PostApiService {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
-        Post post = Post.builder()
-                .content(request.getContent())
-                .commentSize(0L)
-                .postLikeSize(0L)
-                .user(user)
-                .build();
-        user.increasePostSize(user.getPostSize());
-        postRepository.save(post);
 
         List<String> s3UploadList = new ArrayList<>();
         List<String> imageUrls = s3Service.multiUpload(files, dirName);
@@ -79,9 +71,18 @@ public class PostApiService {
                 .postImageUrl8(s3UploadList.get(7))
                 .postImageUrl9(s3UploadList.get(8))
                 .postImageUrl10(s3UploadList.get(9))
-                .post(post)
                 .build();
         postImageRepository.save(postImage);
+
+        Post post = Post.builder()
+                .content(request.getContent())
+                .commentSize(0L)
+                .postLikeSize(0L)
+                .user(user)
+                .postImage(postImage)
+                .build();
+        user.increasePostSize(user.getPostSize());
+        postRepository.save(post);
     }
 
     public void update(Long postId, PostRequest request, Long userId) {

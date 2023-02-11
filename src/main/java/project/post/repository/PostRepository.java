@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @EntityGraph(attributePaths = {"postImages", "user"})
+    @EntityGraph(attributePaths = {"postImage", "user"})
     Optional<Post> findById(Long id);
 
     boolean existsPostByIdAndUserId(Long id, Long userId);
