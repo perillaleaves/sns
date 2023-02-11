@@ -44,4 +44,9 @@ public class ControllerException {
         return new Response<>(new ErrorResponse(ple.getCode(), ple.getMessage()));
     }
 
+    @ExceptionHandler(ReCommentNotFoundException.class)
+    public Response<ErrorResponse> handleReCommentNotFoundException(ReCommentNotFoundException rce) {
+        return new Response<>(new ErrorResponse(rce.getCode(), rce.getMessage()));
+    }
+
 }

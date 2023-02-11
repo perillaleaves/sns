@@ -28,7 +28,8 @@ public class ReCommentApiController {
     @PutMapping("/recomment/{reCommentId}")
     public Response<ValidationResponse> update(@PathVariable("reCommentId") Long reCommentId, @RequestBody ReCommentRequest request, HttpServletRequest httpServletRequest) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
-        
+        reCommentApiService.update(reCommentId, request, userId);
         return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
+    
 }

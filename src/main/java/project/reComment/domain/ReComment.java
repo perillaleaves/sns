@@ -39,4 +39,8 @@ public class ReComment extends BaseEntity {
         this.user = user;
         this.comment = comment;
     }
+
+    public void update(String content) {
+        this.content = content;
+    }
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.APIError;
 import project.advice.exception.CommentNotFoundException;
+import project.advice.exception.ReCommentNotFoundException;
 import project.comment.domain.Comment;
 import project.comment.repository.CommentRepository;
 import project.reComment.domain.ReComment;
@@ -39,9 +40,25 @@ public class ReCommentApiService {
         reCommentRepository.save(reComment);
     }
 
+    public void update(Long reCommentId, ReCommentRequest request, Long userId) {
+        validation(request);
+        ReComment reComment = reCommentRepository.findById(reCommentId)
+                .orElseThrow(ReCommentNotFoundException::new);
+        loginValidate(userId, reComment);
+
+        reComment.update(request.getContent());
+    }
+
+
     private static void validation(ReCommentRequest request) {
         if (request.getContent().isEmpty() || request.getContent().length() > 300) {
             throw new APIError("InvalidContent", "문구를 1자이상 300자이하로 입력해주세요.");
+        }
+    }
+
+    private static void loginValidate(Long userId, ReComment reComment) {
+        if (!reComment.getUser().getId().equals(userId)) {
+            throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
     }
 
