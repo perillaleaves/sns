@@ -37,7 +37,7 @@ public class CommentApiService {
                 .post(post)
                 .build();
 
-        post.addCommentSize(post.getCommentSize());
+        post.increaseCommentSize(post.getCommentSize());
         commentRepository.save(comment);
     }
 
@@ -55,7 +55,7 @@ public class CommentApiService {
                 .orElseThrow(CommentNotFoundException::new);
         loginValidate(userId, comment);
 
-        comment.getPost().removeCommentSize(comment.getPost().getCommentSize());
+        comment.getPost().decreaseCommentSize(comment.getPost().getCommentSize());
         commentRepository.delete(comment);
     }
 

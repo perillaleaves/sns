@@ -32,7 +32,7 @@ public class PostLikeApiService {
                 .post(post)
                 .user(user)
                 .build();
-        post.addPostLikeSize(post.getPostLikeSize());
+        post.increasePostLikeSize(post.getPostLikeSize());
         postLikeRepository.save(postLike);
     }
 
@@ -40,7 +40,7 @@ public class PostLikeApiService {
         PostLike postLike = postLikeRepository.findByPostIdAndUserId(postId, user.getId())
                 .orElseThrow(PostLikeNotFoundException::new);
 
-        postLike.getPost().removePostLikeSize(postLike.getPost().getPostLikeSize());
+        postLike.getPost().decreasePostLikeSize(postLike.getPost().getPostLikeSize());
         postLikeRepository.delete(postLike);
     }
 

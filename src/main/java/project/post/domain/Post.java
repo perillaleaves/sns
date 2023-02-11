@@ -58,19 +58,19 @@ public class Post extends BaseEntity {
         this.content = content;
     }
 
-    public void addPostLikeSize(Long likeSize) {
+    public void increasePostLikeSize(Long likeSize) {
         this.postLikeSize = ++likeSize;
     }
 
-    public void removePostLikeSize(Long likeSize) {
+    public void decreasePostLikeSize(Long likeSize) {
         this.postLikeSize = --likeSize;
     }
 
-    public void addCommentSize(Long commentSize) {
+    public void increaseCommentSize(Long commentSize) {
         this.commentSize = ++commentSize;
     }
 
-    public void removeCommentSize(Long commentSize) {
+    public void decreaseCommentSize(Long commentSize) {
         this.commentSize = --commentSize;
     }
 

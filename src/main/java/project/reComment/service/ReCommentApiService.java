@@ -37,6 +37,7 @@ public class ReCommentApiService {
                 .build();
 
         comment.increaseReCommentSize(comment.getReCommentSize());
+        comment.getPost().increaseCommentSize(comment.getPost().getCommentSize());
         reCommentRepository.save(reComment);
     }
 
@@ -55,6 +56,7 @@ public class ReCommentApiService {
         loginValidate(userId, reComment);
 
         reComment.getComment().decreaseReCommentSize(reComment.getComment().getReCommentSize());
+        reComment.getComment().getPost().decreaseCommentSize(reComment.getComment().getPost().getCommentSize());
         reCommentRepository.delete(reComment);
     }
 
