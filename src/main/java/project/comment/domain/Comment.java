@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.common.BaseEntity;
 import project.post.domain.Post;
+import project.reComment.domain.ReComment;
 import project.user.domain.User;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class Comment extends BaseEntity {
     private String content;
 
     private Long commentLikeSize;
+    private Long reCommentSize;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
@@ -34,25 +36,25 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "postId")
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentId")
-    private Comment parent;
-
-//    @Builder.Default
-//    @OneToMany(mappedBy = "parent", orphanRemoval = true)
-//    private List<Comment> child = new ArrayList<>();
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReComment> reComments = new ArrayList<>();
 
     @Builder
-    public Comment(String content, Long commentLikeSize, User user, Post post, Comment parent) {
+    public Comment(Long id, String content, Long commentLikeSize, Long reCommentSize, User user, Post post, List<ReComment> reComments) {
+        this.id = id;
         this.content = content;
         this.commentLikeSize = commentLikeSize;
+        this.reCommentSize = reCommentSize;
         this.user = user;
         this.post = post;
-        this.parent = parent;
+        this.reComments = reComments;
     }
 
     public void update(String content) {
         this.content = content;
     }
 
+    public void increaseReCommentSize(Long reCommentSize) {
+        this.reCommentSize = ++reCommentSize;
+    }
 }

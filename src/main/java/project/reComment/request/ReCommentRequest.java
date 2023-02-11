@@ -1,4 +1,4 @@
-package project.comment.request;
+package project.reComment.request;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -6,10 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentRequest {
+public class ReCommentRequest {
 
     private String content;
 
-    private Long postId;
-
+    public ReCommentRequest(String content) {
+        this.content = content;
+    }
 }
