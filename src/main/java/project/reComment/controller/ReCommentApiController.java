@@ -31,5 +31,12 @@ public class ReCommentApiController {
         reCommentApiService.update(reCommentId, request, userId);
         return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
-    
+
+    @DeleteMapping("/recomment/{reCommentId}")
+    public Response<ValidationResponse> delete(@PathVariable("reCommentId") Long reCommentId, HttpServletRequest httpServletRequest) {
+        Long userId = (Long) httpServletRequest.getAttribute("userId");
+        reCommentApiService.delete(reCommentId, userId);
+        return new Response<>(new ValidationResponse("Delete", "댓글 삭제"));
+    }
+
 }

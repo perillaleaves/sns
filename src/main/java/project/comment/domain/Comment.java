@@ -57,4 +57,8 @@ public class Comment extends BaseEntity {
     public void increaseReCommentSize(Long reCommentSize) {
         this.reCommentSize = ++reCommentSize;
     }
+
+    public void decreaseReCommentSize(Long reCommentSize) {
+        this.reCommentSize = --reCommentSize;
+    }
 }

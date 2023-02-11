@@ -43,4 +43,5 @@ public class ReComment extends BaseEntity {
     public void update(String content) {
         this.content = content;
     }
+
 }

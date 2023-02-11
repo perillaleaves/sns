@@ -49,6 +49,15 @@ public class ReCommentApiService {
         reComment.update(request.getContent());
     }
 
+    public void delete(Long reCommentId, Long userId) {
+        ReComment reComment = reCommentRepository.findById(reCommentId)
+                .orElseThrow(ReCommentNotFoundException::new);
+        loginValidate(userId, reComment);
+
+        reComment.getComment().decreaseReCommentSize(reComment.getComment().getReCommentSize());
+        reCommentRepository.delete(reComment);
+    }
+
 
     private static void validation(ReCommentRequest request) {
         if (request.getContent().isEmpty() || request.getContent().length() > 300) {
