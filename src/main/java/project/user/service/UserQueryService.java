@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.UserNotFoundException;
 import project.follow.repository.FollowRepository;
 import project.post.domain.Post;
-import project.user.response.UserPostListResponse;
 import project.post.repository.PostRepository;
 import project.user.domain.User;
 import project.user.repository.UserRepository;
 import project.user.response.ProfileResponse;
 import project.user.response.UserDetailResponse;
+import project.user.response.UserPostListResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;

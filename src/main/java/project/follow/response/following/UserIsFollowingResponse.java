@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public class UserIsFollowingResponse {
 
-    private Long userId;
-    private String userProfileImageUrl;
-    private String userName;
-    private String nickName;
-    private Boolean isFollowing;
+    private final Long userId;
+    private final String userProfileImageUrl;
+    private final String userName;
+    private final String nickName;
+    private final Boolean isFollowing;
 
     public UserIsFollowingResponse(Long userId, String userProfileImageUrl, String userName, String nickName, Boolean isFollowing) {
         this.userId = userId;

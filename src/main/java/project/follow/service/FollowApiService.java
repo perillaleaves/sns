@@ -2,7 +2,7 @@ package project.follow.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.APIError;
+import project.advice.error.APIError;
 import project.advice.exception.FollowNotFoundException;
 import project.advice.exception.UserNotFoundException;
 import project.follow.domain.Follow;

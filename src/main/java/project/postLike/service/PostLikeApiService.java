@@ -2,7 +2,7 @@ package project.postLike.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.APIError;
+import project.advice.error.APIError;
 import project.advice.exception.PostLikeNotFoundException;
 import project.advice.exception.PostNotFoundException;
 import project.post.domain.Post;

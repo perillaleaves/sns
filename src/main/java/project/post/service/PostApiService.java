@@ -3,7 +3,7 @@ package project.post.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.advice.exception.APIError;
+import project.advice.error.APIError;
 import project.advice.exception.PostNotFoundException;
 import project.advice.exception.UserNotFoundException;
 import project.post.domain.Post;

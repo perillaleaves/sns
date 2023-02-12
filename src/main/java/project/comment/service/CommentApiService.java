@@ -2,7 +2,7 @@ package project.comment.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.APIError;
+import project.advice.error.APIError;
 import project.advice.exception.CommentNotFoundException;
 import project.advice.exception.PostNotFoundException;
 import project.comment.domain.Comment;

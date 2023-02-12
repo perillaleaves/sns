@@ -2,6 +2,7 @@ package project.advice.handler;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import project.advice.error.APIError;
 import project.advice.exception.*;
 import project.common.response.ErrorResponse;
 import project.common.response.Response;

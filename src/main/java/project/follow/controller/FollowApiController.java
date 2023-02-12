@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import project.common.response.Response;
 import project.common.response.ValidationResponse;
 import project.follow.service.FollowApiService;
-import project.token.repository.TokenRepository;
 
 import javax.servlet.http.HttpServletRequest;
 

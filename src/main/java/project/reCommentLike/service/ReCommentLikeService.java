@@ -2,7 +2,7 @@ package project.reCommentLike.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.APIError;
+import project.advice.error.APIError;
 import project.advice.exception.ReCommentLikeNotFoundException;
 import project.advice.exception.ReCommentNotFoundException;
 import project.reComment.domain.ReComment;
