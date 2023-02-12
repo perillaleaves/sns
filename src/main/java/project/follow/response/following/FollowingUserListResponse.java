@@ -14,16 +14,14 @@ public class FollowingUserListResponse {
     private String userProfileImageUrl;
     private String userName;
     private String nickName;
-    private Boolean isFollowing;
 
     @QueryProjection
-    public FollowingUserListResponse(Long followId, Long userId, String userProfileImageUrl, String userName, String nickName, Boolean isFollowing) {
+    public FollowingUserListResponse(Long followId, Long userId, String userProfileImageUrl, String userName, String nickName) {
         this.followId = followId;
         this.userId = userId;
         this.userProfileImageUrl = userProfileImageUrl;
         this.userName = userName;
         this.nickName = nickName;
-        this.isFollowing = isFollowing;
     }
 
 }

@@ -2,15 +2,12 @@ package project.comment.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.PostNotFoundException;
 import project.advice.exception.UserNotFoundException;
 import project.comment.domain.Comment;
 import project.comment.repository.CommentRepository;
 import project.comment.response.CommentResponse;
 import project.comment.response.PostAndCommentsResponse;
-import project.post.domain.Post;
 import project.post.repository.PostRepository;
-import project.post.response.PostSummaryResponse;
 import project.user.domain.User;
 import project.user.repository.UserRepository;
 import project.user.response.UserSimpleResponse;
@@ -40,12 +37,6 @@ public class CommentQueryService {
                 "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + user.getUserProfileImage().getUserProfileImageURL(),
                 user.getNickName());
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::new);
-        PostSummaryResponse postSummaryResponse = new PostSummaryResponse(post.getId(),
-                "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + post.getUser().getUserProfileImage().getUserProfileImageURL(),
-                post.getUser().getNickName(), post.getContent(), post.getUpdatedAt());
-
         List<Comment> comments = commentRepository.findAllByPostId(postId);
         List<CommentResponse> commentResponses = comments.stream()
                 .map(c -> new CommentResponse(c.getId(),
@@ -55,7 +46,7 @@ public class CommentQueryService {
                         commentRepository.existsCommentByIdAndUserId(c.getId(), user.getId()),
                         c.getUpdatedAt())).collect(Collectors.toList());
 
-        return new PostAndCommentsResponse(userSimpleResponse, postSummaryResponse, commentResponses);
+        return new PostAndCommentsResponse(userSimpleResponse, commentResponses);
     }
 
 }

@@ -34,8 +34,7 @@ public class FollowRepositoryImpl {
                         follow.fromUser.id,
                         follow.fromUser.userProfileImage.userProfileImageURL,
                         follow.fromUser.name,
-                        follow.fromUser.nickName,
-                        follow.toUser.id.eq(myId)))
+                        follow.fromUser.nickName))
                 .from(follow)
                 .leftJoin(follow.fromUser, user)
                 .where(
