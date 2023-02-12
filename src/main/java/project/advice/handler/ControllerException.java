@@ -49,4 +49,14 @@ public class ControllerException {
         return new Response<>(new ErrorResponse(rce.getCode(), rce.getMessage()));
     }
 
+    @ExceptionHandler(ReCommentLikeNotFoundException.class)
+    public Response<ErrorResponse> handleReCommentLikeNotFoundException(ReCommentLikeNotFoundException re) {
+        return new Response<>(new ErrorResponse(re.getCode(), re.getMessage()));
+    }
+
+    @ExceptionHandler(CommentLikeNotFoundException.class)
+    public Response<ErrorResponse> handleCommentLikeNotFoundException(CommentLikeNotFoundException ce) {
+        return new Response<>(new ErrorResponse(ce.getCode(), ce.getMessage()));
+    }
+
 }

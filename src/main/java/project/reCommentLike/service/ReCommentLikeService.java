@@ -3,6 +3,7 @@ package project.reCommentLike.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.APIError;
+import project.advice.exception.ReCommentLikeNotFoundException;
 import project.advice.exception.ReCommentNotFoundException;
 import project.reComment.domain.ReComment;
 import project.reComment.repository.ReCommentRepository;
@@ -38,7 +39,7 @@ public class ReCommentLikeService {
 
     public void removeLike(Long reCommentId, User user) {
         ReCommentLike reCommentLike = reCommentLikeRepository.findByReCommentIdAndUserId(reCommentId, user.getId())
-                .orElseThrow(ReCommentNotFoundException::new);
+                .orElseThrow(ReCommentLikeNotFoundException::new);
 
         reCommentLike.getReComment().decreaseReCommentLikeSize(reCommentLike.getReComment().getReCommentLikeSize());
         reCommentLikeRepository.delete(reCommentLike);

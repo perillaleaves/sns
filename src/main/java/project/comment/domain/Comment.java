@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.commentLike.domain.CommentLike;
 import project.common.BaseEntity;
 import project.post.domain.Post;
 import project.reComment.domain.ReComment;
@@ -37,17 +38,18 @@ public class Comment extends BaseEntity {
     private Post post;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> commentLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReComment> reComments = new ArrayList<>();
 
     @Builder
-    public Comment(Long id, String content, Long commentLikeSize, Long reCommentSize, User user, Post post, List<ReComment> reComments) {
-        this.id = id;
+    public Comment(String content, Long commentLikeSize, Long reCommentSize, User user, Post post) {
         this.content = content;
         this.commentLikeSize = commentLikeSize;
         this.reCommentSize = reCommentSize;
         this.user = user;
         this.post = post;
-        this.reComments = reComments;
     }
 
     public void update(String content) {
@@ -60,5 +62,13 @@ public class Comment extends BaseEntity {
 
     public void decreaseReCommentSize(Long reCommentSize) {
         this.reCommentSize = --reCommentSize;
+    }
+
+    public void increaseCommentLikeSize(Long commentLikeSize) {
+        this.commentLikeSize = ++commentLikeSize;
+    }
+
+    public void decreaseCommentLikeSize(Long commentLikeSize) {
+        this.commentLikeSize = --commentLikeSize;
     }
 }
