@@ -50,6 +50,8 @@ public class CommentQueryService {
                         c.getUserName(),
                         c.getNickName(),
                         c.getContent(),
+                        c.getReCommentSize(),
+                        c.getReCommentSize() > 0,
                         commentRepository.existsCommentByIdAndUserId(c.getCommentId(), userId),
                         c.getUpdatedAt()))
                 .collect(Collectors.toList());

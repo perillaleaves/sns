@@ -16,15 +16,18 @@ public class CommentSliceResponse {
     private String userName;
     private String nickName;
     private String content;
+    private Long reCommentSize;
     private LocalDateTime updatedAt;
 
     @QueryProjection
-    public CommentSliceResponse(Long commentId, String userProfileImageUrl, String userName, String nickName, String content, LocalDateTime updatedAt) {
+    public CommentSliceResponse(Long commentId, String userProfileImageUrl, String userName, String nickName, String content, Long reCommentSize, LocalDateTime updatedAt) {
         this.commentId = commentId;
         this.userProfileImageUrl = userProfileImageUrl;
         this.userName = userName;
         this.nickName = nickName;
         this.content = content;
+        this.reCommentSize = reCommentSize;
         this.updatedAt = updatedAt;
     }
+
 }

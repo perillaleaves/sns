@@ -33,6 +33,7 @@ public class CommentRepositoryImpl {
                         comment.user.name,
                         comment.user.nickName,
                         comment.content,
+                        comment.reCommentSize,
                         comment.updatedAt))
                 .from(comment)
                 .where(
