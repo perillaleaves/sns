@@ -52,6 +52,9 @@ public class PostRepositoryImpl {
                 .leftJoin(post.user, user)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
+                .orderBy(
+                        post.id.desc()
+                )
                 .fetch();
 
         JPAQuery<Post> countQuery = queryFactory

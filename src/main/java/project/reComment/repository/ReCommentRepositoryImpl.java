@@ -40,6 +40,9 @@ public class ReCommentRepositoryImpl {
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(
+                        reComment.id.desc()
+                )
                 .fetch();
 
         JPAQuery<ReComment> countQuery = queryFactory

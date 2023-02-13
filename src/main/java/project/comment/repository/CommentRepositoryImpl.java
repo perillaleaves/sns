@@ -40,6 +40,9 @@ public class CommentRepositoryImpl {
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(
+                        comment.id.desc()
+                )
                 .fetch();
 
         JPAQuery<Comment> countQuery = queryFactory

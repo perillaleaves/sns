@@ -73,7 +73,10 @@ public class FollowRepositoryImpl {
                 )
                 .orderBy(follow.id.desc())
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize())
+                .orderBy(
+                        follow.id.desc()
+                )
                 .fetch();
 
         JPAQuery<Follow> countQuery = queryFactory
