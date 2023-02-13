@@ -1,15 +1,17 @@
 package project.comment.service;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.UserNotFoundException;
-import project.comment.domain.Comment;
+import project.advice.exception.PostNotFoundException;
 import project.comment.repository.CommentRepository;
-import project.comment.response.CommentResponse;
-import project.comment.response.PostAndCommentsResponse;
+import project.comment.repository.CommentRepositoryImpl;
+import project.comment.response.CommentListDetailResponse;
+import project.comment.response.CommentSliceResponse;
+import project.comment.response.CommentListResponse;
+import project.post.domain.Post;
 import project.post.repository.PostRepository;
-import project.user.domain.User;
-import project.user.repository.UserRepository;
 import project.user.response.UserSimpleResponse;
 
 import java.util.List;
@@ -19,34 +21,40 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CommentQueryService {
 
-    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    private final CommentRepositoryImpl commentRepositoryImpl;
+    private final PostRepository postRepository;
 
-    public CommentQueryService(PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
+    public CommentQueryService(CommentRepository commentRepository, CommentRepositoryImpl commentRepositoryImpl, PostRepository postRepository) {
         this.commentRepository = commentRepository;
-        this.userRepository = userRepository;
+        this.commentRepositoryImpl = commentRepositoryImpl;
+        this.postRepository = postRepository;
     }
 
-    public PostAndCommentsResponse findCommentsByPost(Long postId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
+    String S3Url = "https://s3.ap-northeast-2.amazonaws.com/mullae.com/";
+
+    public CommentListResponse findCommentsByPost(Long postId, Long userId, Pageable pageable) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
         UserSimpleResponse userSimpleResponse = new UserSimpleResponse(
-                user.getId(),
-                "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + user.getUserProfileImage().getUserProfileImageURL(),
-                user.getNickName());
+                post.getUser().getId(),
+                S3Url + post.getUser().getUserProfileImage().getUserProfileImageURL(),
+                post.getUser().getName(),
+                post.getUser().getNickName());
 
-        List<Comment> comments = commentRepository.findAllByPostId(postId);
-        List<CommentResponse> commentResponses = comments.stream()
-                .map(c -> new CommentResponse(c.getId(),
-                        "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + c.getUser().getUserProfileImage().getUserProfileImageURL(),
-                        c.getUser().getNickName(),
+        Slice<CommentSliceResponse> commentList = commentRepositoryImpl.findCommentList(postId, pageable);
+        List<CommentListDetailResponse> commentDetailList = commentList.stream()
+                .map(c -> new CommentListDetailResponse(
+                        c.getCommentId(),
+                        S3Url + c.getUserProfileImageUrl(),
+                        c.getUserName(),
+                        c.getNickName(),
                         c.getContent(),
-                        commentRepository.existsCommentByIdAndUserId(c.getId(), user.getId()),
-                        c.getUpdatedAt())).collect(Collectors.toList());
+                        commentRepository.existsCommentByIdAndUserId(c.getCommentId(), userId),
+                        c.getUpdatedAt()))
+                .collect(Collectors.toList());
 
-        return new PostAndCommentsResponse(userSimpleResponse, commentResponses);
+        return new CommentListResponse(userSimpleResponse, commentDetailList, commentList.hasNext());
     }
 
 }

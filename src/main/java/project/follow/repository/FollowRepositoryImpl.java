@@ -86,12 +86,4 @@ public class FollowRepositoryImpl {
         return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
     }
 
-//    private BooleanExpression ltPageNo(Long follow, Pageable pageable) {
-//        if (pageNo == null) {
-//            return null;
-//        }
-//
-//        return
-//    }
-
 }
