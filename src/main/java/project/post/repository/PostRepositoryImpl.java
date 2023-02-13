@@ -12,10 +12,9 @@ import project.post.response.PostListResponse;
 import project.post.response.QPostListResponse;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
-import static project.post.domain.QPost.*;
+import static project.post.domain.QPost.post;
 import static project.user.domain.QUser.user;
 
 @Repository
@@ -27,7 +26,7 @@ public class PostRepositoryImpl {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Slice<PostListResponse> getPostList(Long userId, Pageable pageable) {
+    public Slice<PostListResponse> getPostList(Pageable pageable) {
         List<PostListResponse> content = queryFactory
                 .select(new QPostListResponse(
                         post.id,
@@ -46,6 +45,7 @@ public class PostRepositoryImpl {
                         post.postImage.postImageUrl9,
                         post.postImage.postImageUrl10,
                         post.content,
+                        post.postLikeSize,
                         post.commentSize,
                         post.updatedAt))
                 .from(post)

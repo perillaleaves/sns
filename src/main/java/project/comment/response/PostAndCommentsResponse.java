@@ -16,7 +16,7 @@ public class PostAndCommentsResponse {
 
     private List<CommentResponse> commentResponses = new ArrayList<>();
 
-    public PostAndCommentsResponse(UserSimpleResponse userSimpleResponse , List<CommentResponse> commentResponses) {
+    public PostAndCommentsResponse(UserSimpleResponse userSimpleResponse, List<CommentResponse> commentResponses) {
         this.userSimpleResponse = userSimpleResponse;
         this.commentResponses = commentResponses;
     }

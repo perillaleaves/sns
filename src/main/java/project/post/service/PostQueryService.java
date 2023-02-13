@@ -8,13 +8,12 @@ import project.advice.exception.PostNotFoundException;
 import project.post.domain.Post;
 import project.post.repository.PostRepository;
 import project.post.repository.PostRepositoryImpl;
+import project.post.response.NewsFeedListResponse;
 import project.post.response.PostDetailResponse;
 import project.post.response.PostListDetailResponse;
 import project.post.response.PostListResponse;
-import project.post.response.NewsFeedListResponse;
 import project.postLike.reposiotry.PostLikeRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +31,7 @@ public class PostQueryService {
         this.postRepositoryImpl = postRepositoryImpl;
     }
 
-    private String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullae.com/";
+    private final String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullae.com/";
 
     public PostDetailResponse findPostDetail(Long postId, Long userId) {
         Post post = postRepository.findById(postId)
@@ -61,7 +60,7 @@ public class PostQueryService {
     }
 
     public NewsFeedListResponse findPostList(Long userId, Pageable pageable) {
-        Slice<PostListResponse> postList = postRepositoryImpl.getPostList(userId, pageable);
+        Slice<PostListResponse> postList = postRepositoryImpl.getPostList(pageable);
         List<PostListDetailResponse> postListDetail = postList.stream()
                 .map(p -> new PostListDetailResponse(
                         p.getPostId(),
@@ -81,6 +80,7 @@ public class PostQueryService {
                         s3Url + p.getPostImageUrl10(),
                         postLikeRepository.existsPostLikeByPostIdAndUserId(p.getPostId(), userId),
                         p.getContent(),
+                        p.getPostLikeSize(),
                         p.getCommentSize(),
                         p.getUpdatedAt()))
                 .collect(Collectors.toList());

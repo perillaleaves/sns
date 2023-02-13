@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import project.common.response.Response;
+import project.post.response.NewsFeedListResponse;
 import project.post.response.NewsFeedResponse;
 import project.post.response.PostDetailResponse;
-import project.post.response.NewsFeedListResponse;
 import project.post.response.PostResponse;
 import project.post.service.PostQueryService;
 

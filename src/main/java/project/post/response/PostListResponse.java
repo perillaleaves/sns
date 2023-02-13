@@ -27,11 +27,12 @@ public class PostListResponse {
     private String postImageUrl9;
     private String postImageUrl10;
     private String content;
+    private Long postLikeSize;
     private Long commentSize;
     private LocalDateTime updatedAt;
 
     @QueryProjection
-    public PostListResponse(Long postId, Long userId, String userProfileImageUrl, String username, String nickName, String postImageUrl1, String postImageUrl2, String postImageUrl3, String postImageUrl4, String postImageUrl5, String postImageUrl6, String postImageUrl7, String postImageUrl8, String postImageUrl9, String postImageUrl10, String content, Long commentSize, LocalDateTime updatedAt) {
+    public PostListResponse(Long postId, Long userId, String userProfileImageUrl, String username, String nickName, String postImageUrl1, String postImageUrl2, String postImageUrl3, String postImageUrl4, String postImageUrl5, String postImageUrl6, String postImageUrl7, String postImageUrl8, String postImageUrl9, String postImageUrl10, String content, Long postLikeSize, Long commentSize, LocalDateTime updatedAt) {
         this.postId = postId;
         this.userId = userId;
         this.userProfileImageUrl = userProfileImageUrl;
@@ -48,6 +49,7 @@ public class PostListResponse {
         this.postImageUrl9 = postImageUrl9;
         this.postImageUrl10 = postImageUrl10;
         this.content = content;
+        this.postLikeSize = postLikeSize;
         this.commentSize = commentSize;
         this.updatedAt = updatedAt;
     }
