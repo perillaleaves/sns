@@ -1,5 +1,6 @@
 package project.reComment.repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +53,13 @@ public class ReCommentRepositoryImpl {
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
+    }
+
+    private BooleanExpression ltReCommentId(Long reCommentId) {
+        if (reCommentId == null) {
+            return null;
+        }
+        return reComment.id.lt(reCommentId);
     }
 
 }

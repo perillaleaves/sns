@@ -8,13 +8,15 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import project.post.domain.Post;
-import project.post.response.PostListResponse;
-import project.post.response.QPostListResponse;
+import project.post.domain.QPostImage;
+import project.post.response.*;
 
 import javax.persistence.EntityManager;
+import java.util.Collection;
 import java.util.List;
 
 import static project.post.domain.QPost.post;
+import static project.post.domain.QPostImage.postImage;
 import static project.user.domain.QUser.user;
 
 @Repository
@@ -63,12 +65,31 @@ public class PostRepositoryImpl {
         return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
     }
 
-    private BooleanExpression ltPostId(Long postId) {
-        return postId != null ? post.id.lt(postId) : null;
+    public Slice<ProfilePostListResponse> getProfilePostList(Long lastPostId, Long userId, Pageable pageable) {
+        List<ProfilePostListResponse> content = queryFactory
+                .select(new QProfilePostListResponse(
+                        post.id,
+                        post.postImage.id,
+                        post.postImage.postImageUrl1
+                ))
+                .from(post)
+                .leftJoin(post.postImage, postImage)
+                .where(
+                        ltPostId(lastPostId),
+                        post.user.id.eq(userId)
+                )
+                .orderBy(post.id.desc())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Post> countQuery = queryFactory
+                .selectFrom(post);
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
     }
 
-    private BooleanExpression userIdEq(Long userId) {
-        return userId != null ? user.id.eq(userId) : null;
+    private BooleanExpression ltPostId(Long postId) {
+        return postId != null ? post.id.lt(postId) : null;
     }
 
 }

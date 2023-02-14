@@ -8,12 +8,16 @@ import project.advice.exception.UserNotFoundException;
 import project.follow.repository.FollowRepository;
 import project.post.domain.Post;
 import project.post.repository.PostRepository;
+import project.post.repository.PostRepositoryImpl;
+import project.post.response.ProfilePostDetailListResponse;
+import project.post.response.ProfilePostListResponse;
 import project.user.domain.User;
 import project.user.repository.UserRepository;
 import project.user.response.ProfileResponse;
 import project.user.response.UserDetailResponse;
 import project.user.response.UserPostListResponse;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,16 +27,18 @@ public class UserQueryService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final PostRepositoryImpl postRepositoryImpl;
     private final FollowRepository followRepository;
     private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
 
-    public UserQueryService(UserRepository userRepository, PostRepository postRepository, FollowRepository followRepository) {
+    public UserQueryService(UserRepository userRepository, PostRepository postRepository, PostRepositoryImpl postRepositoryImpl, FollowRepository followRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.postRepositoryImpl = postRepositoryImpl;
         this.followRepository = followRepository;
     }
 
-    public ProfileResponse findUserProfile(Long userId, Long myId, Pageable pageable) {
+    public ProfileResponse findUserProfile(Long lastPostId, Long userId, Long myId, Pageable pageable) {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
         UserDetailResponse userDetailResponse = new UserDetailResponse(
@@ -47,15 +53,15 @@ public class UserQueryService {
                 userId.equals(myId),
                 followRepository.existsFollowByFromUserIdAndToUserId(userId, myId));
 
-        Slice<Post> posts = postRepository.findByUserId(userId, pageable);
-        List<UserPostListResponse> postSlice = posts.stream()
-                .map(p -> new UserPostListResponse(
-                        p.getId(),
-                        p.getPostImage().getId(),
-                        s3Url + p.getPostImage().getPostImageUrl1()))
+        Slice<ProfilePostListResponse> posts = postRepositoryImpl.getProfilePostList(lastPostId, userId, pageable);
+        List<ProfilePostDetailListResponse> postDetailResponse = posts.stream()
+                .map(p -> new ProfilePostDetailListResponse(
+                        p.getPostId(),
+                        p.getPostImageId(),
+                        s3Url + p.getPostImageUrl()))
                 .collect(Collectors.toList());
 
-        return new ProfileResponse(userDetailResponse, postSlice, posts.hasNext());
+        return new ProfileResponse(userDetailResponse, postDetailResponse, posts.hasNext());
     }
 
 }
