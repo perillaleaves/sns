@@ -24,6 +24,7 @@ public class UserQueryService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final FollowRepository followRepository;
+    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
 
     public UserQueryService(UserRepository userRepository, PostRepository postRepository, FollowRepository followRepository) {
         this.userRepository = userRepository;
@@ -36,7 +37,7 @@ public class UserQueryService {
                 .orElseThrow(UserNotFoundException::new);
         UserDetailResponse userDetailResponse = new UserDetailResponse(
                 findUser.getId(),
-                "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + findUser.getUserProfileImage().getUserProfileImageURL(),
+                s3Url + findUser.getUserProfileImage().getUserProfileImageURL(),
                 findUser.getName(),
                 findUser.getNickName(),
                 findUser.getContent(),
@@ -51,7 +52,7 @@ public class UserQueryService {
                 .map(p -> new UserPostListResponse(
                         p.getId(),
                         p.getPostImage().getId(),
-                        "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + p.getPostImage().getPostImageUrl1()))
+                        s3Url + p.getPostImage().getPostImageUrl1()))
                 .collect(Collectors.toList());
 
         return new ProfileResponse(userDetailResponse, postSlice, posts.hasNext());

@@ -25,6 +25,7 @@ public class FollowQueryService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
     private final FollowRepositoryImpl followRepositoryImpl;
+    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/post/";
 
     public FollowQueryService(UserRepository userRepository, FollowRepository followRepository, FollowRepositoryImpl followRepositoryImpl) {
         this.userRepository = userRepository;
@@ -37,7 +38,7 @@ public class FollowQueryService {
                 .orElseThrow(UserNotFoundException::new);
         UserIsFollowingResponse userIsFollowingResponse = new UserIsFollowingResponse(
                 findUser.getId(),
-                "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + findUser.getUserProfileImage().getUserProfileImageURL(),
+                s3Url + findUser.getUserProfileImage().getUserProfileImageURL(),
                 findUser.getName(),
                 findUser.getNickName(),
                 followRepository.existsFollowByFromUserIdAndToUserId(userId, myId));
@@ -47,7 +48,7 @@ public class FollowQueryService {
                 .map(f -> new FollowingUserListDetaiResponse(
                         f.getFollowId(),
                         f.getUserId(),
-                        "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + f.getUserProfileImageUrl(),
+                        s3Url + f.getUserProfileImageUrl(),
                         f.getUserName(),
                         f.getNickName(),
                         followRepository.existsFollowByFromUserIdAndToUserId(myId, f.getUserId())))

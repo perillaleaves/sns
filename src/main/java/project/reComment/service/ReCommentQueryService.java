@@ -17,7 +17,7 @@ public class ReCommentQueryService {
 
     private final ReCommentRepository reCommentRepository;
     private final ReCommentRepositoryImpl reCommentRepositoryImpl;
-    String S3Url = "https://s3.ap-northeast-2.amazonaws.com/mullae.com/";
+    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
 
     public ReCommentQueryService(ReCommentRepository reCommentRepository, ReCommentRepositoryImpl reCommentRepositoryImpl) {
         this.reCommentRepository = reCommentRepository;
@@ -29,7 +29,7 @@ public class ReCommentQueryService {
         List<ReCommentListDetailResponse> reCommentDetailList = reCommentList.stream()
                 .map(r -> new ReCommentListDetailResponse(
                         r.getReCommentId(),
-                        S3Url + r.getUserProfileImageUrl(),
+                        s3Url + r.getUserProfileImageUrl(),
                         r.getUserName(),
                         r.getNickName(),
                         r.getContent(),

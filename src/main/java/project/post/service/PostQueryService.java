@@ -24,14 +24,13 @@ public class PostQueryService {
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
     private final PostRepositoryImpl postRepositoryImpl;
+    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
 
     public PostQueryService(PostRepository postRepository, PostLikeRepository postLikeRepository, PostRepositoryImpl postRepositoryImpl) {
         this.postRepository = postRepository;
         this.postLikeRepository = postLikeRepository;
         this.postRepositoryImpl = postRepositoryImpl;
     }
-
-    private final String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullae.com/";
 
     public PostDetailResponse findPostDetail(Long postId, Long userId) {
         Post post = postRepository.findById(postId)

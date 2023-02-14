@@ -23,7 +23,7 @@ public class PostApiController {
     @PostMapping("/post")
     public Response<ValidationResponse> create(@RequestParam(value = "image") List<MultipartFile> images, PostRequest request, HttpServletRequest httpServletRequest) throws IOException {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
-        postApiService.create(request, userId, images, "images");
+        postApiService.create(request, userId, images, "post");
         return new Response<>(new ValidationResponse("Create", "게시글 작성"));
     }
 

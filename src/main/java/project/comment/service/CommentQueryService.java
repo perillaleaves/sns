@@ -8,8 +8,8 @@ import project.advice.exception.PostNotFoundException;
 import project.comment.repository.CommentRepository;
 import project.comment.repository.CommentRepositoryImpl;
 import project.comment.response.CommentListDetailResponse;
-import project.comment.response.CommentSliceResponse;
 import project.comment.response.CommentListResponse;
+import project.comment.response.CommentSliceResponse;
 import project.post.domain.Post;
 import project.post.repository.PostRepository;
 import project.user.response.UserSimpleResponse;
@@ -24,6 +24,7 @@ public class CommentQueryService {
     private final CommentRepository commentRepository;
     private final CommentRepositoryImpl commentRepositoryImpl;
     private final PostRepository postRepository;
+    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
 
     public CommentQueryService(CommentRepository commentRepository, CommentRepositoryImpl commentRepositoryImpl, PostRepository postRepository) {
         this.commentRepository = commentRepository;
@@ -31,14 +32,12 @@ public class CommentQueryService {
         this.postRepository = postRepository;
     }
 
-    String S3Url = "https://s3.ap-northeast-2.amazonaws.com/mullae.com/";
-
     public CommentListResponse findCommentsByPost(Long postId, Long userId, Pageable pageable) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         UserSimpleResponse userSimpleResponse = new UserSimpleResponse(
                 post.getUser().getId(),
-                S3Url + post.getUser().getUserProfileImage().getUserProfileImageURL(),
+                s3Url + post.getUser().getUserProfileImage().getUserProfileImageURL(),
                 post.getUser().getName(),
                 post.getUser().getNickName());
 
@@ -46,7 +45,7 @@ public class CommentQueryService {
         List<CommentListDetailResponse> commentDetailList = commentList.stream()
                 .map(c -> new CommentListDetailResponse(
                         c.getCommentId(),
-                        S3Url + c.getUserProfileImageUrl(),
+                        s3Url + c.getUserProfileImageUrl(),
                         c.getUserName(),
                         c.getNickName(),
                         c.getContent(),

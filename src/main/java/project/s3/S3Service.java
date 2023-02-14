@@ -45,7 +45,7 @@ public class S3Service {
 
     private String upload(File uploadFile, String dirName) {
         String fileName = dirName + "/" + uploadFile.getName();
-        String uploadImageUrl = putS3(uploadFile, fileName);
+        putS3(uploadFile, fileName);
 
         removeNewFile(uploadFile);
         return fileName;
@@ -87,20 +87,6 @@ public class S3Service {
         }
         return convertFiles;
     }
-
-//    private List<File> multiConvert(List<MultipartFile> file) throws IOException {
-//        List<File> fileList = file.stream().map(f -> new File(f.getOriginalFilename())).collect(Collectors.toList());
-//        List<File> convertFiles = new ArrayList<>();
-//        for (File files : fileList) {
-//            if (files.createNewFile()) {
-//                try (FileOutputStream fos = new FileOutputStream(files)) {
-//                    fos.write(files.getBytes());
-//                }
-//            }
-//            convertFiles.add(files);
-//        }
-//        return convertFiles;
-//    }
 
     public void fileDelete(String key) {
         amazonS3Client.deleteObject(bucket, key);

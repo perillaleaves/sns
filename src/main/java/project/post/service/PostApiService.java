@@ -42,7 +42,6 @@ public class PostApiService {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
-
         List<String> s3UploadList = new ArrayList<>();
         List<String> imageUrls = s3Service.multiUpload(files, dirName);
         for (String img : imageUrls) {
