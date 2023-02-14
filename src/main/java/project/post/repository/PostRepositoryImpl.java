@@ -65,7 +65,7 @@ public class PostRepositoryImpl {
         return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
     }
 
-    public Slice<ProfilePostListResponse> getProfilePostList(Long lastPostId, Long userId, Pageable pageable) {
+    public List<ProfilePostListResponse> getProfilePostList(Long lastPostId, Long userId, Pageable pageable) {
         List<ProfilePostListResponse> content = queryFactory
                 .select(new QProfilePostListResponse(
                         post.id,
@@ -82,10 +82,7 @@ public class PostRepositoryImpl {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Post> countQuery = queryFactory
-                .selectFrom(post);
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
+        return content;
     }
 
     private BooleanExpression ltPostId(Long postId) {

@@ -53,7 +53,7 @@ public class UserQueryService {
                 userId.equals(myId),
                 followRepository.existsFollowByFromUserIdAndToUserId(userId, myId));
 
-        Slice<ProfilePostListResponse> posts = postRepositoryImpl.getProfilePostList(lastPostId, userId, pageable);
+        List<ProfilePostListResponse> posts = postRepositoryImpl.getProfilePostList(lastPostId, userId, pageable);
         List<ProfilePostDetailListResponse> postDetailResponse = posts.stream()
                 .map(p -> new ProfilePostDetailListResponse(
                         p.getPostId(),
@@ -61,7 +61,12 @@ public class UserQueryService {
                         s3Url + p.getPostImageUrl()))
                 .collect(Collectors.toList());
 
-        return new ProfileResponse(userDetailResponse, postDetailResponse, posts.hasNext());
+        boolean hasNext = false;
+        if (postDetailResponse.size() >= pageable.getPageSize()) {
+            hasNext = true;
+        }
+
+        return new ProfileResponse(userDetailResponse, postDetailResponse, hasNext);
     }
 
 }
