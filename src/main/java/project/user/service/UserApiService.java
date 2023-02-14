@@ -74,20 +74,17 @@ public class UserApiService {
                 .accessToken(GenerateToken.generatedToken(user, request.getEmail()))
                 .build();
         tokenRepository.save(token);
-
         return new UserLoginResponse(user.getId(), token.getAccessToken());
     }
 
     @Transactional
-    public void edit(Long userId, ProfileEditRequest request, Long loginUserId, MultipartFile file, String dirName) throws IOException {
-        editInputValidate(request);
-        User user = userRepository.findById(loginUserId)
-                .orElseThrow(UserNotFoundException::new);
+    public void edit(Long userId, Long loginUserId, ProfileEditRequest request, MultipartFile file, String dirName) throws IOException {
+        editInputValidate(userId, loginUserId, request);
         User findUser = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        editValidate(request, user, findUser);
+        editValidate(request, findUser);
 
-        s3Service.fileDelete(findUser.getUserProfileImage().getUserProfileImageURL());
+//        s3Service.fileDelete(findUser.getUserProfileImage().getUserProfileImageURL());
         String imgPaths = s3Service.upload(file, dirName);
         findUser.getUserProfileImage().userProfileImageModify(imgPaths);
         findUser.editProfile(request);
@@ -123,16 +120,13 @@ public class UserApiService {
         }
     }
 
-    private static void loginValidate(LoginRequest request, User user) throws NoSuchAlgorithmException {
-        if (!user.getEmail().equals(request.getEmail())) {
-            throw new APIError("InconsistencyLoginId", "아이디가 일치하지 않습니다.");
-        }
+    private void loginValidate(LoginRequest request, User user) throws NoSuchAlgorithmException {
         if (!user.getPassword().equals(EncryptUtils.encrypt(request.getPassword()))) {
             throw new APIError("InconsistencyPassword", "비밀번호가 일치하지 않습니다.");
         }
     }
 
-    private void editInputValidate(ProfileEditRequest request) {
+    private void editInputValidate(Long userId, Long loginUserId, ProfileEditRequest request) {
         if (2 > request.getUserName().length() || request.getUserName().length() > 10) {
             throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
         }
@@ -142,12 +136,12 @@ public class UserApiService {
         if (request.getContent().isEmpty() || request.getContent().length() > 150) {
             throw new APIError("InvalidContent", "소개를 150자 이하로 입력해주세요.");
         }
-    }
-
-    private void editValidate(ProfileEditRequest request, User user, User findUser) {
-        if (!user.equals(findUser)) {
+        if (!loginUserId.equals(userId)) {
             throw new APIError("NotRequest", "잘못된 요청입니다.");
         }
+    }
+
+    private void editValidate(ProfileEditRequest request, User findUser) {
         if (userRepository.existsUserByNickName(request.getNickName()) && !findUser.getNickName().equals(request.getNickName())) {
             throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }

@@ -9,15 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignupRequest {
 
-    private String userProfileImageURL;
     private String email;
     private String name;
     private String nickName;
     private String password;
 
     @Builder
-    public SignupRequest(String userProfileImageURL, String email, String name, String nickName, String password) {
-        this.userProfileImageURL = userProfileImageURL;
+    public SignupRequest(String email, String name, String nickName, String password) {
         this.email = email;
         this.name = name;
         this.nickName = nickName;

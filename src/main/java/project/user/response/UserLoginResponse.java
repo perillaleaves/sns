@@ -15,4 +15,5 @@ public class UserLoginResponse {
         this.userId = userId;
         this.accessToken = accessToken;
     }
+
 }

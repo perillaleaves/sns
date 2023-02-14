@@ -34,7 +34,7 @@ public class CommentRepositoryImpl {
                         comment.user.nickName,
                         comment.content,
                         comment.reCommentSize,
-                        comment.updatedAt))
+                        comment.createdAt))
                 .from(comment)
                 .where(
                         comment.post.id.eq(postId)

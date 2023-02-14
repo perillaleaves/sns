@@ -17,4 +17,5 @@ public class ProfileEditRequest {
         this.nickName = nickName;
         this.content = content;
     }
+
 }
