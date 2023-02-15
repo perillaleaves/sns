@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.common.response.Response;
 import project.follow.response.follower.FollowerListResponse;
@@ -26,10 +27,11 @@ public class FollowQueryController {
 
     @GetMapping("/user/{userId}/following")
     public Response<FollowingResponse> getFollowingList(@PathVariable(name = "userId") Long userId,
+                                                        @RequestParam(value = "followId", required = false) Long lastFollowId,
                                                         @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable,
                                                         HttpServletRequest httpServletRequest) {
-        Long myId = (Long) httpServletRequest.getAttribute("userId");
-        FollowingListResponse followingList = followQueryService.findFollowingList(userId, myId, pageable);
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        FollowingListResponse followingList = followQueryService.findFollowingList(lastFollowId, userId, loginUserId, pageable);
         return new Response<>(new FollowingResponse(followingList));
     }
 

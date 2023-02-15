@@ -1,7 +1,6 @@
 package project.follow.service;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import project.advice.exception.UserNotFoundException;
 import project.follow.repository.FollowRepository;
@@ -33,17 +32,17 @@ public class FollowQueryService {
         this.followRepositoryImpl = followRepositoryImpl;
     }
 
-    public FollowingListResponse findFollowingList(Long userId, Long myId, Pageable pageable) {
-        User findUser = userRepository.findById(myId)
+    public FollowingListResponse findFollowingList(Long lastFollowId, Long userId, Long loginUserId, Pageable pageable) {
+        User findUser = userRepository.findById(loginUserId)
                 .orElseThrow(UserNotFoundException::new);
         UserIsFollowingResponse userIsFollowingResponse = new UserIsFollowingResponse(
                 findUser.getId(),
                 s3Url + findUser.getUserProfileImage().getUserProfileImageURL(),
                 findUser.getName(),
                 findUser.getNickName(),
-                followRepository.existsFollowByFromUserIdAndToUserId(userId, myId));
+                followRepository.existsFollowByFromUserIdAndToUserId(userId, loginUserId));
 
-        Slice<FollowingUserListResponse> followingUserList = followRepositoryImpl.getFollowingUserList(userId, myId, pageable);
+        List<FollowingUserListResponse> followingUserList = followRepositoryImpl.findFollowingUserList(lastFollowId, userId, loginUserId, pageable);
         List<FollowingUserListDetaiResponse> followingUserListDetail = followingUserList.stream()
                 .map(f -> new FollowingUserListDetaiResponse(
                         f.getFollowId(),
@@ -51,23 +50,28 @@ public class FollowQueryService {
                         s3Url + f.getUserProfileImageUrl(),
                         f.getUserName(),
                         f.getNickName(),
-                        followRepository.existsFollowByFromUserIdAndToUserId(myId, f.getUserId())))
+                        followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, f.getUserId())))
                 .collect(Collectors.toList());
 
-        return new FollowingListResponse(userIsFollowingResponse, followingUserListDetail, followingUserList.hasNext());
+        boolean hasNext = false;
+        if (followingUserList.size() >= pageable.getPageSize()) {
+            hasNext = true;
+        }
+
+        return new FollowingListResponse(userIsFollowingResponse, followingUserListDetail, hasNext);
     }
 
-    public FollowerListResponse findFollowerList(Long userId, Long myId, Pageable pageable) {
-        User findUser = userRepository.findById(myId)
+    public FollowerListResponse findFollowerList(Long userId, Long loginUserId, Pageable pageable) {
+        User findUser = userRepository.findById(loginUserId)
                 .orElseThrow(UserNotFoundException::new);
         UserIsFollowingResponse userIsFollowingResponse = new UserIsFollowingResponse(
                 findUser.getId(),
                 "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + findUser.getUserProfileImage().getUserProfileImageURL(),
                 findUser.getName(),
                 findUser.getNickName(),
-                followRepository.existsFollowByFromUserIdAndToUserId(myId, userId));
+                followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, userId));
 
-        Slice<FollowerUserListResponse> followerUserList = followRepositoryImpl.getFollowerUserList(userId, myId, pageable);
+        List<FollowerUserListResponse> followerUserList = followRepositoryImpl.findFollowerUserList(userId, loginUserId, pageable);
         List<FollowerUserListDetailResponse> followerUserListDetail = followerUserList.stream()
                 .map(f -> new FollowerUserListDetailResponse(
                         f.getFollowId(),
@@ -75,10 +79,15 @@ public class FollowQueryService {
                         "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + f.getUserProfileImageUrl(),
                         f.getUserName(),
                         f.getNickName(),
-                        followRepository.existsFollowByFromUserIdAndToUserId(myId, f.getUserId())))
+                        followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, f.getUserId())))
                 .collect(Collectors.toList());
 
-        return new FollowerListResponse(userIsFollowingResponse, followerUserListDetail, followerUserList.hasNext());
+        boolean hasNext = false;
+        if (followerUserList.size() >= pageable.getPageSize()) {
+            hasNext = true;
+        }
+
+        return new FollowerListResponse(userIsFollowingResponse, followerUserListDetail, hasNext);
     }
 
 }

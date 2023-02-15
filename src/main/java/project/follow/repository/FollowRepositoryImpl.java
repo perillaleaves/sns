@@ -1,12 +1,9 @@
 package project.follow.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import project.follow.domain.Follow;
 import project.follow.response.follower.FollowerUserListResponse;
 import project.follow.response.follower.QFollowerUserListResponse;
 import project.follow.response.following.FollowingUserListResponse;
@@ -27,7 +24,7 @@ public class FollowRepositoryImpl {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Slice<FollowingUserListResponse> getFollowingUserList(Long userId, Long myId, Pageable pageable) {
+    public List<FollowingUserListResponse> findFollowingUserList(Long lastFollowId, Long userId, Long myId, Pageable pageable) {
         List<FollowingUserListResponse> content = queryFactory
                 .select(new QFollowingUserListResponse(
                         follow.id,
@@ -38,24 +35,18 @@ public class FollowRepositoryImpl {
                 .from(follow)
                 .leftJoin(follow.fromUser, user)
                 .where(
+                        ltFollowId(lastFollowId),
                         follow.toUser.id.eq(userId),
                         follow.fromUser.id.ne(myId)
                 )
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Follow> countQuery = queryFactory
-                .selectFrom(follow)
-                .where(
-                        follow.toUser.id.eq(userId),
-                        follow.fromUser.id.ne(myId)
-                );
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
+        return content;
     }
 
-    public Slice<FollowerUserListResponse> getFollowerUserList(Long userId, Long myId, Pageable pageable) {
+    public List<FollowerUserListResponse> findFollowerUserList(Long userId, Long myId, Pageable pageable) {
         List<FollowerUserListResponse> content = queryFactory
                 .select(new QFollowerUserListResponse(
                         follow.id,
@@ -79,14 +70,11 @@ public class FollowRepositoryImpl {
                 )
                 .fetch();
 
-        JPAQuery<Follow> countQuery = queryFactory
-                .selectFrom(follow)
-                .where(
-                        follow.fromUser.id.eq(userId),
-                        follow.toUser.id.ne(myId)
-                );
+        return content;
+    }
 
-        return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
+    private BooleanExpression ltFollowId(Long lastFollowId) {
+        return lastFollowId != null ? follow.id.lt(lastFollowId) : null;
     }
 
 }
