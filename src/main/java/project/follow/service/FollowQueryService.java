@@ -24,7 +24,7 @@ public class FollowQueryService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
     private final FollowRepositoryImpl followRepositoryImpl;
-    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/post/";
+    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
 
     public FollowQueryService(UserRepository userRepository, FollowRepository followRepository, FollowRepositoryImpl followRepositoryImpl) {
         this.userRepository = userRepository;
@@ -61,22 +61,22 @@ public class FollowQueryService {
         return new FollowingListResponse(userIsFollowingResponse, followingUserListDetail, hasNext);
     }
 
-    public FollowerListResponse findFollowerList(Long userId, Long loginUserId, Pageable pageable) {
+    public FollowerListResponse findFollowerList(Long lastFollowId, Long userId, Long loginUserId, Pageable pageable) {
         User findUser = userRepository.findById(loginUserId)
                 .orElseThrow(UserNotFoundException::new);
         UserIsFollowingResponse userIsFollowingResponse = new UserIsFollowingResponse(
                 findUser.getId(),
-                "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + findUser.getUserProfileImage().getUserProfileImageURL(),
+                s3Url + findUser.getUserProfileImage().getUserProfileImageURL(),
                 findUser.getName(),
                 findUser.getNickName(),
                 followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, userId));
 
-        List<FollowerUserListResponse> followerUserList = followRepositoryImpl.findFollowerUserList(userId, loginUserId, pageable);
+        List<FollowerUserListResponse> followerUserList = followRepositoryImpl.findFollowerUserList(lastFollowId, userId, loginUserId, pageable);
         List<FollowerUserListDetailResponse> followerUserListDetail = followerUserList.stream()
                 .map(f -> new FollowerUserListDetailResponse(
                         f.getFollowId(),
                         f.getUserId(),
-                        "https://s3.ap-northeast-2.amazonaws.com/mullae.com/" + f.getUserProfileImageUrl(),
+                        s3Url + f.getUserProfileImageUrl(),
                         f.getUserName(),
                         f.getNickName(),
                         followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, f.getUserId())))

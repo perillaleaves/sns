@@ -39,35 +39,31 @@ public class FollowRepositoryImpl {
                         follow.toUser.id.eq(userId),
                         follow.fromUser.id.ne(myId)
                 )
-                .offset(pageable.getOffset())
+                .orderBy(follow.id.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         return content;
     }
 
-    public List<FollowerUserListResponse> findFollowerUserList(Long userId, Long myId, Pageable pageable) {
+    public List<FollowerUserListResponse> findFollowerUserList(Long lastFollowId, Long userId, Long myId, Pageable pageable) {
         List<FollowerUserListResponse> content = queryFactory
                 .select(new QFollowerUserListResponse(
                         follow.id,
                         follow.toUser.id,
                         follow.toUser.userProfileImage.userProfileImageURL,
                         follow.toUser.name,
-                        follow.toUser.nickName,
-                        follow.fromUser.id.eq(myId)
+                        follow.toUser.nickName
                 ))
                 .from(follow)
                 .leftJoin(follow.toUser, user)
                 .where(
+                        ltFollowId(lastFollowId),
                         follow.fromUser.id.eq(userId),
                         follow.toUser.id.ne(myId)
                 )
                 .orderBy(follow.id.desc())
-                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(
-                        follow.id.desc()
-                )
                 .fetch();
 
         return content;

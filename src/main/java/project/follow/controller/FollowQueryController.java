@@ -37,10 +37,11 @@ public class FollowQueryController {
 
     @GetMapping("/user/{userId}/follower")
     public Response<FollowerResponse> getFollowerList(@PathVariable(name = "userId") Long userId,
+                                                      @RequestParam(value = "followId", required = false) Long lastFollowId,
                                                       @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable,
                                                       HttpServletRequest httpServletRequest) {
-        Long myId = (Long) httpServletRequest.getAttribute("userId");
-        FollowerListResponse followerList = followQueryService.findFollowerList(userId, myId, pageable);
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        FollowerListResponse followerList = followQueryService.findFollowerList(lastFollowId, userId, loginUserId, pageable);
         return new Response<>(new FollowerResponse(followerList));
     }
 
