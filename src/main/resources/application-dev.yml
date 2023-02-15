@@ -3,9 +3,9 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:mysql://perillaleaves.cxvfbpskmkd3.ap-northeast-2.rds.amazonaws.com:3306/sweethome
-    username: admin
-    password: 12341234
+    url: jdbc:mysql://sweethome.crgu4udnh0nv.ap-northeast-2.rds.amazonaws.com:3306/sweethomeDB
+    username: root
+    password: vw231429
 
   jpa:
     open-in-view: true
