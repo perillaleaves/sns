@@ -26,10 +26,11 @@ public class ReCommentQueryController {
 
     @GetMapping("/comment/{commentId}/recomments")
     public Response<ReCommentResponse> getReComments(@PathVariable("commentId") Long commentId,
+                                                     @RequestParam(value = "reCommentId", required = false) Long lastReCommentId,
                                                      @PageableDefault Pageable pageable,
                                                      HttpServletRequest httpServletRequest) {
-        Long userId = (Long) httpServletRequest.getAttribute("userId");
-        ReCommentListResponse reCommentList = reCommentQueryService.findReCommentList(commentId, userId, pageable);
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        ReCommentListResponse reCommentList = reCommentQueryService.findReCommentList(lastReCommentId, commentId, loginUserId, pageable);
         return new Response<>(new ReCommentResponse(reCommentList));
     }
 

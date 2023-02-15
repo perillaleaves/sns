@@ -1,7 +1,6 @@
 package project.reComment.service;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import project.reComment.repository.ReCommentRepository;
 import project.reComment.repository.ReCommentRepositoryImpl;
@@ -24,8 +23,8 @@ public class ReCommentQueryService {
         this.reCommentRepositoryImpl = reCommentRepositoryImpl;
     }
 
-    public ReCommentListResponse findReCommentList(Long commentId, Long userId, Pageable pageable) {
-        Slice<ReCommentSliceResponse> reCommentList = reCommentRepositoryImpl.findReCommentList(commentId, pageable);
+    public ReCommentListResponse findReCommentList(Long lastReCommentId, Long commentId, Long userId, Pageable pageable) {
+        List<ReCommentSliceResponse> reCommentList = reCommentRepositoryImpl.findReCommentList(lastReCommentId, commentId, pageable);
         List<ReCommentListDetailResponse> reCommentDetailList = reCommentList.stream()
                 .map(r -> new ReCommentListDetailResponse(
                         r.getReCommentId(),
@@ -38,7 +37,12 @@ public class ReCommentQueryService {
                         r.getUpdatedAt()))
                 .collect(Collectors.toList());
 
-        return new ReCommentListResponse(reCommentDetailList, reCommentList.hasNext());
+        boolean hasNext = false;
+        if (reCommentList.size() >= pageable.getPageSize()) {
+            hasNext = true;
+        }
+
+        return new ReCommentListResponse(reCommentDetailList, hasNext);
     }
 
 }

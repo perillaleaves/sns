@@ -1,13 +1,9 @@
 package project.reComment.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import project.reComment.domain.ReComment;
 import project.reComment.response.QReCommentSliceResponse;
 import project.reComment.response.ReCommentSliceResponse;
 
@@ -25,7 +21,7 @@ public class ReCommentRepositoryImpl {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Slice<ReCommentSliceResponse> findReCommentList(Long commentId, Pageable pageable) {
+    public List<ReCommentSliceResponse> findReCommentList(Long lastReCommentId, Long commentId, Pageable pageable) {
         List<ReCommentSliceResponse> content = queryFactory
                 .select(new QReCommentSliceResponse(
                         reComment.id,
@@ -37,29 +33,20 @@ public class ReCommentRepositoryImpl {
                         reComment.updatedAt))
                 .from(reComment)
                 .where(
+                        ltReCommentId(lastReCommentId),
                         reComment.comment.id.eq(commentId)
                 )
-                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(
                         reComment.id.desc()
                 )
                 .fetch();
 
-        JPAQuery<ReComment> countQuery = queryFactory
-                .selectFrom(reComment)
-                .where(
-                        reComment.comment.id.eq(commentId)
-                );
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
+        return content;
     }
 
-    private BooleanExpression ltReCommentId(Long reCommentId) {
-        if (reCommentId == null) {
-            return null;
-        }
-        return reComment.id.lt(reCommentId);
+    private BooleanExpression ltReCommentId(Long lastReCommentId) {
+        return lastReCommentId != null ? reComment.id.lt(lastReCommentId) : null;
     }
 
 }
