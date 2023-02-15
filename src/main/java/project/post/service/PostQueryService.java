@@ -1,7 +1,6 @@
 package project.post.service;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.PostNotFoundException;
@@ -32,7 +31,7 @@ public class PostQueryService {
         this.postRepositoryImpl = postRepositoryImpl;
     }
 
-    public PostDetailResponse findPostDetail(Long postId, Long userId) {
+    public PostDetailResponse findPostDetail(Long postId, Long loginUserId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
@@ -41,10 +40,10 @@ public class PostQueryService {
                 s3Url + post.getUser().getUserProfileImage().getUserProfileImageURL(),
                 post.getUser().getNickName(),
                 post.getContent(),
-                postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), userId),
+                postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), loginUserId),
                 post.getPostLikeSize(),
                 post.getCommentSize(),
-                postRepository.existsPostByIdAndUserId(post.getId(), userId),
+                postRepository.existsPostByIdAndUserId(post.getId(), loginUserId),
                 post.getUpdatedAt(),
                 s3Url + post.getPostImage().getPostImageUrl1(),
                 s3Url + post.getPostImage().getPostImageUrl2(),
@@ -58,8 +57,8 @@ public class PostQueryService {
                 s3Url + post.getPostImage().getPostImageUrl10());
     }
 
-    public NewsFeedListResponse findPostList(Long userId, Pageable pageable) {
-        Slice<PostListResponse> postList = postRepositoryImpl.getPostList(pageable);
+    public NewsFeedListResponse findPostList(Long lastPostId, Long loginUserId, Pageable pageable) {
+        List<PostListResponse> postList = postRepositoryImpl.getPostList(lastPostId, pageable);
         List<PostListDetailResponse> postListDetail = postList.stream()
                 .map(p -> new PostListDetailResponse(
                         p.getPostId(),
@@ -77,14 +76,19 @@ public class PostQueryService {
                         s3Url + p.getPostImageUrl8(),
                         s3Url + p.getPostImageUrl9(),
                         s3Url + p.getPostImageUrl10(),
-                        postLikeRepository.existsPostLikeByPostIdAndUserId(p.getPostId(), userId),
+                        postLikeRepository.existsPostLikeByPostIdAndUserId(p.getPostId(), loginUserId),
                         p.getContent(),
                         p.getPostLikeSize(),
                         p.getCommentSize(),
                         p.getUpdatedAt()))
                 .collect(Collectors.toList());
 
-        return new NewsFeedListResponse(postListDetail, postList.hasNext());
+        boolean hasNext = false;
+        if (postList.size() >= pageable.getPageSize()) {
+            hasNext = true;
+        }
+
+        return new NewsFeedListResponse(postListDetail, hasNext);
     }
 
 }

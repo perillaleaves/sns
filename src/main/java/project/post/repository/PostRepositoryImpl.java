@@ -1,18 +1,12 @@
 package project.post.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import project.post.domain.Post;
-import project.post.domain.QPostImage;
 import project.post.response.*;
 
 import javax.persistence.EntityManager;
-import java.util.Collection;
 import java.util.List;
 
 import static project.post.domain.QPost.post;
@@ -28,7 +22,7 @@ public class PostRepositoryImpl {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Slice<PostListResponse> getPostList(Pageable pageable) {
+    public List<PostListResponse> getPostList(Long lastPostId, Pageable pageable) {
         List<PostListResponse> content = queryFactory
                 .select(new QPostListResponse(
                         post.id,
@@ -52,17 +46,16 @@ public class PostRepositoryImpl {
                         post.updatedAt))
                 .from(post)
                 .leftJoin(post.user, user)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
+                .where(
+                        ltPostId(lastPostId)
+                )
+                .limit(pageable.getPageSize())
                 .orderBy(
                         post.id.desc()
                 )
                 .fetch();
 
-        JPAQuery<Post> countQuery = queryFactory
-                .selectFrom(post);
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
+        return content;
     }
 
     public List<ProfilePostListResponse> getProfilePostList(Long lastPostId, Long userId, Pageable pageable) {
