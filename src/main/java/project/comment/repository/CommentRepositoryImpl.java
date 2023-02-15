@@ -1,12 +1,9 @@
 package project.comment.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import project.comment.domain.Comment;
 import project.comment.response.CommentSliceResponse;
 import project.comment.response.QCommentSliceResponse;
 
@@ -25,7 +22,7 @@ public class CommentRepositoryImpl {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Slice<CommentSliceResponse> findCommentList(Long postId, Pageable pageable) {
+    public List<CommentSliceResponse> findCommentList(Long lastCommentId, Long postId, Pageable pageable) {
         List<CommentSliceResponse> content = queryFactory
                 .select(new QCommentSliceResponse(
                         comment.id,
@@ -37,22 +34,20 @@ public class CommentRepositoryImpl {
                         comment.createdAt))
                 .from(comment)
                 .where(
+                        ltCommentId(lastCommentId),
                         comment.post.id.eq(postId)
                 )
-                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(
                         comment.id.desc()
                 )
                 .fetch();
 
-        JPAQuery<Comment> countQuery = queryFactory
-                .selectFrom(comment)
-                .where(
-                        comment.post.id.eq(postId)
-                );
+        return content;
+    }
 
-        return PageableExecutionUtils.getPage(content, pageable, countQuery.fetch()::size);
+    private BooleanExpression ltCommentId(Long lastCommentId) {
+        return lastCommentId != null ? comment.id.lt(lastCommentId) : null;
     }
 
 }

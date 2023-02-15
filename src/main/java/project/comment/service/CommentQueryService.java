@@ -32,7 +32,7 @@ public class CommentQueryService {
         this.postRepository = postRepository;
     }
 
-    public CommentListResponse findCommentsByPost(Long postId, Long userId, Pageable pageable) {
+    public CommentListResponse findCommentsByPost(Long lastCommentId, Long postId, Long loginUserId, Pageable pageable) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         UserSimpleResponse userSimpleResponse = new UserSimpleResponse(
@@ -41,7 +41,7 @@ public class CommentQueryService {
                 post.getUser().getName(),
                 post.getUser().getNickName());
 
-        Slice<CommentSliceResponse> commentList = commentRepositoryImpl.findCommentList(postId, pageable);
+        List<CommentSliceResponse> commentList = commentRepositoryImpl.findCommentList(lastCommentId, postId, pageable);
         List<CommentListDetailResponse> commentDetailList = commentList.stream()
                 .map(c -> new CommentListDetailResponse(
                         c.getCommentId(),
@@ -50,12 +50,16 @@ public class CommentQueryService {
                         c.getNickName(),
                         c.getContent(),
                         c.getReCommentSize(),
-                        c.getReCommentSize() > 0,
-                        commentRepository.existsCommentByIdAndUserId(c.getCommentId(), userId),
+                        commentRepository.existsCommentByIdAndUserId(c.getCommentId(), loginUserId),
                         c.getUpdatedAt()))
                 .collect(Collectors.toList());
 
-        return new CommentListResponse(userSimpleResponse, commentDetailList, commentList.hasNext());
+        boolean hasNext = false;
+        if (commentList.size() >= pageable.getPageSize()) {
+            hasNext = true;
+        }
+
+        return new CommentListResponse(userSimpleResponse, commentDetailList, hasNext);
     }
 
 }
