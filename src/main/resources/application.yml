@@ -18,3 +18,13 @@ server:
       cookie:
         http-only: true
         same-site: none
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR
