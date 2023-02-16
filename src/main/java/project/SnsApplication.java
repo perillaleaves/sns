@@ -12,5 +12,4 @@ public class SnsApplication {
         SpringApplication.run(SnsApplication.class, args);
     }
 
-
 }
