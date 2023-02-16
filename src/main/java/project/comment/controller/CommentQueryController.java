@@ -25,7 +25,7 @@ public class CommentQueryController {
     @GetMapping("/post/{postId}/comments")
     public Response<CommentResponse> getComments(@PathVariable("postId") Long postId,
                                                  @RequestParam(value = "commentId", required = false) Long lastCommentId,
-                                                 @PageableDefault(size = 10) Pageable pageable,
+                                                 @PageableDefault Pageable pageable,
                                                  HttpServletRequest httpServletRequest) {
         Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
         CommentListResponse commentList = commentQueryService.findCommentsByPost(lastCommentId, postId, loginUserId, pageable);

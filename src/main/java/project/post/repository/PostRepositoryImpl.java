@@ -58,7 +58,7 @@ public class PostRepositoryImpl {
         return content;
     }
 
-    public List<ProfilePostListResponse> getProfilePostList(Long lastPostId, Long userId, Pageable pageable) {
+    public List<ProfilePostListResponse> getProfilePostList(Long lastPostId, Long loginUserId, Pageable pageable) {
         List<ProfilePostListResponse> content = queryFactory
                 .select(new QProfilePostListResponse(
                         post.id,
@@ -69,17 +69,17 @@ public class PostRepositoryImpl {
                 .leftJoin(post.postImage, postImage)
                 .where(
                         ltPostId(lastPostId),
-                        post.user.id.eq(userId)
+                        post.user.id.eq(loginUserId)
                 )
-                .orderBy(post.id.desc())
                 .limit(pageable.getPageSize())
+                .orderBy(post.id.desc())
                 .fetch();
 
         return content;
     }
 
-    private BooleanExpression ltPostId(Long postId) {
-        return postId != null ? post.id.lt(postId) : null;
+    private BooleanExpression ltPostId(Long lagtPostId) {
+        return lagtPostId != null ? post.id.lt(lagtPostId) : null;
     }
 
 }

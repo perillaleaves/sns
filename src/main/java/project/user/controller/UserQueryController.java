@@ -26,10 +26,10 @@ public class UserQueryController {
     @GetMapping("/user/{userId}")
     public Response<UserProfileResponse> getUserProfile(@PathVariable(name = "userId") Long userId,
                                                         @RequestParam(value = "postId", required = false) Long lastPostId,
-                                                        @PageableDefault(size = 12, direction = Sort.Direction.DESC) Pageable pageable,
+                                                        @PageableDefault(size = 12) Pageable pageable,
                                                         HttpServletRequest httpServletRequest) {
-        Long myId = (Long) httpServletRequest.getAttribute("userId");
-        ProfileResponse userProfile = userQueryService.findUserProfile(lastPostId, userId, myId, pageable);
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        ProfileResponse userProfile = userQueryService.findUserProfile(lastPostId, userId, loginUserId, pageable);
         return new Response<>(new UserProfileResponse(userProfile));
     }
 

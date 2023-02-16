@@ -38,7 +38,7 @@ public class UserQueryService {
         this.followRepository = followRepository;
     }
 
-    public ProfileResponse findUserProfile(Long lastPostId, Long userId, Long myId, Pageable pageable) {
+    public ProfileResponse findUserProfile(Long lastPostId, Long userId, Long loginUserId, Pageable pageable) {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
         UserDetailResponse userDetailResponse = new UserDetailResponse(
@@ -50,8 +50,8 @@ public class UserQueryService {
                 findUser.getPostSize(),
                 findUser.getFollowerSize(),
                 findUser.getFollowingSize(),
-                userId.equals(myId),
-                followRepository.existsFollowByFromUserIdAndToUserId(userId, myId));
+                userId.equals(loginUserId),
+                followRepository.existsFollowByFromUserIdAndToUserId(userId, loginUserId));
 
         List<ProfilePostListResponse> posts = postRepositoryImpl.getProfilePostList(lastPostId, userId, pageable);
         List<ProfilePostDetailListResponse> postDetailResponse = posts.stream()
