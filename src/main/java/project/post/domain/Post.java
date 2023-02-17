@@ -32,9 +32,8 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postImageId")
-    private PostImage postImage;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostImage> postImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -43,13 +42,13 @@ public class Post extends BaseEntity {
     private List<PostLike> PostLikes = new ArrayList<>();
 
     @Builder
-    public Post(Long id, String content, Long commentSize, Long postLikeSize, User user, PostImage postImage, List<Comment> comments, List<PostLike> postLikes) {
+    public Post(Long id, String content, Long commentSize, Long postLikeSize, User user, List<PostImage> postImages, List<Comment> comments, List<PostLike> postLikes) {
         this.id = id;
         this.content = content;
         this.commentSize = commentSize;
         this.postLikeSize = postLikeSize;
         this.user = user;
-        this.postImage = postImage;
+        this.postImages = postImages;
         this.comments = comments;
         this.PostLikes = postLikes;
     }

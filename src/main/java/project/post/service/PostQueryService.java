@@ -5,14 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.PostNotFoundException;
 import project.post.domain.Post;
+import project.post.domain.PostImage;
+import project.post.repository.PostImageRepository;
 import project.post.repository.PostRepository;
 import project.post.repository.PostRepositoryImpl;
-import project.post.response.NewsFeedListResponse;
-import project.post.response.PostDetailResponse;
-import project.post.response.PostListDetailResponse;
-import project.post.response.PostListResponse;
+import project.post.response.*;
 import project.postLike.reposiotry.PostLikeRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,17 +23,24 @@ public class PostQueryService {
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
     private final PostRepositoryImpl postRepositoryImpl;
+    private final PostImageRepository postImageRepository;
     private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
 
-    public PostQueryService(PostRepository postRepository, PostLikeRepository postLikeRepository, PostRepositoryImpl postRepositoryImpl) {
+    public PostQueryService(PostRepository postRepository, PostLikeRepository postLikeRepository, PostRepositoryImpl postRepositoryImpl, PostImageRepository postImageRepository) {
         this.postRepository = postRepository;
         this.postLikeRepository = postLikeRepository;
         this.postRepositoryImpl = postRepositoryImpl;
+        this.postImageRepository = postImageRepository;
     }
 
     public PostDetailResponse findPostDetail(Long postId, Long loginUserId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+
+        List<PostImage> postImages = postImageRepository.findByPostId(postId);
+        List<PostImagesResponse> postImageUrls = postImages.stream()
+                .map(p -> new PostImagesResponse(p.getId(), p.getPostImageUrl())).collect(Collectors.toList());
+
 
         return new PostDetailResponse(post.getId(),
                 post.getUser().getId(),
@@ -45,16 +52,7 @@ public class PostQueryService {
                 post.getCommentSize(),
                 postRepository.existsPostByIdAndUserId(post.getId(), loginUserId),
                 post.getUpdatedAt(),
-                s3Url + post.getPostImage().getPostImageUrl1(),
-                s3Url + post.getPostImage().getPostImageUrl2(),
-                s3Url + post.getPostImage().getPostImageUrl3(),
-                s3Url + post.getPostImage().getPostImageUrl4(),
-                s3Url + post.getPostImage().getPostImageUrl5(),
-                s3Url + post.getPostImage().getPostImageUrl6(),
-                s3Url + post.getPostImage().getPostImageUrl7(),
-                s3Url + post.getPostImage().getPostImageUrl8(),
-                s3Url + post.getPostImage().getPostImageUrl9(),
-                s3Url + post.getPostImage().getPostImageUrl10());
+                postImageUrls);
     }
 
     public NewsFeedListResponse findPostList(Long lastPostId, Long loginUserId, Pageable pageable) {

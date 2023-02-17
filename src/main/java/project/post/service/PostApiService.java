@@ -16,6 +16,7 @@ import project.user.domain.User;
 import project.user.repository.UserRepository;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,50 +39,26 @@ public class PostApiService {
 
     public void create(PostRequest request, Long userId, List<MultipartFile> files, String dirName) throws IOException {
         validation(request);
-
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-
-        List<String> s3UploadList = new ArrayList<>();
-        List<String> imageUrls = s3Service.multiUpload(files, dirName);
-        for (String img : imageUrls) {
-            s3UploadList.add(img);
-        }
-
-        s3UploadList.add(null);
-        s3UploadList.add(null);
-        s3UploadList.add(null);
-        s3UploadList.add(null);
-        s3UploadList.add(null);
-        s3UploadList.add(null);
-        s3UploadList.add(null);
-        s3UploadList.add(null);
-        s3UploadList.add(null);
-        s3UploadList.add(null);
-
-        PostImage postImage = PostImage.builder()
-                .postImageUrl1(s3UploadList.get(0))
-                .postImageUrl2(s3UploadList.get(1))
-                .postImageUrl3(s3UploadList.get(2))
-                .postImageUrl4(s3UploadList.get(3))
-                .postImageUrl5(s3UploadList.get(4))
-                .postImageUrl6(s3UploadList.get(5))
-                .postImageUrl7(s3UploadList.get(6))
-                .postImageUrl8(s3UploadList.get(7))
-                .postImageUrl9(s3UploadList.get(8))
-                .postImageUrl10(s3UploadList.get(9))
-                .build();
-        postImageRepository.save(postImage);
 
         Post post = Post.builder()
                 .content(request.getContent())
                 .commentSize(0L)
                 .postLikeSize(0L)
                 .user(user)
-                .postImage(postImage)
                 .build();
         user.increasePostSize(user.getPostSize());
         postRepository.save(post);
+
+        List<String> imageUrls = s3Service.multiUpload(files, dirName);
+        for (String imageUrl : imageUrls) {
+            PostImage postImage = PostImage.builder()
+                    .postImageUrl(imageUrl)
+                    .post(post)
+                    .build();
+            postImageRepository.save(postImage);
+        }
     }
 
     public void update(Long postId, PostRequest request, Long userId) {
