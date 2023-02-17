@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.comment.domain.Comment;
+import project.common.CreatedAtEntity;
 import project.user.domain.User;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentLike {
+public class CommentLike extends CreatedAtEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
