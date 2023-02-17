@@ -7,6 +7,7 @@ import project.reComment.repository.ReCommentRepositoryImpl;
 import project.reComment.response.ReCommentListDetailResponse;
 import project.reComment.response.ReCommentListResponse;
 import project.reComment.response.ReCommentSliceResponse;
+import project.reCommentLike.repository.ReCommentLikeRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,14 +17,16 @@ public class ReCommentQueryService {
 
     private final ReCommentRepository reCommentRepository;
     private final ReCommentRepositoryImpl reCommentRepositoryImpl;
+    private final ReCommentLikeRepository reCommentLikeRepository;
     private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
 
-    public ReCommentQueryService(ReCommentRepository reCommentRepository, ReCommentRepositoryImpl reCommentRepositoryImpl) {
+    public ReCommentQueryService(ReCommentRepository reCommentRepository, ReCommentRepositoryImpl reCommentRepositoryImpl, ReCommentLikeRepository reCommentLikeRepository) {
         this.reCommentRepository = reCommentRepository;
         this.reCommentRepositoryImpl = reCommentRepositoryImpl;
+        this.reCommentLikeRepository = reCommentLikeRepository;
     }
 
-    public ReCommentListResponse findReCommentList(Long lastReCommentId, Long commentId, Long userId, Pageable pageable) {
+    public ReCommentListResponse findReCommentList(Long lastReCommentId, Long commentId, Long loginUserId, Pageable pageable) {
         List<ReCommentSliceResponse> reCommentList = reCommentRepositoryImpl.findReCommentList(lastReCommentId, commentId, pageable);
         List<ReCommentListDetailResponse> reCommentDetailList = reCommentList.stream()
                 .map(r -> new ReCommentListDetailResponse(
@@ -33,7 +36,8 @@ public class ReCommentQueryService {
                         r.getNickName(),
                         r.getContent(),
                         r.getReCommentLikeSize(),
-                        reCommentRepository.existsReCommentByIdAndUserId(r.getReCommentId(), userId),
+                        reCommentLikeRepository.existsReCommentLikeByReCommentIdAndUserId(r.getReCommentId(), loginUserId),
+                        reCommentRepository.existsReCommentByIdAndUserId(r.getReCommentId(), loginUserId),
                         r.getUpdatedAt()))
                 .collect(Collectors.toList());
 

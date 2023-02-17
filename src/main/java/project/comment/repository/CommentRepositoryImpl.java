@@ -30,6 +30,7 @@ public class CommentRepositoryImpl {
                         comment.user.name,
                         comment.user.nickName,
                         comment.content,
+                        comment.commentLikeSize,
                         comment.reCommentSize,
                         comment.createdAt))
                 .from(comment)
