@@ -16,17 +16,20 @@ public class ReCommentListDetailResponse {
     private String nickName;
     private String content;
     private Long reCommentLikeSize;
+    private Boolean isReCommentLike;
     private Boolean isReCommentOwner;
     private LocalDateTime updatedAt;
 
-    public ReCommentListDetailResponse(Long reCommentId, String userProfileImageUrl, String userName, String nickName, String content, Long reCommentLikeSize, Boolean isReCommentOwner, LocalDateTime updatedAt) {
+    public ReCommentListDetailResponse(Long reCommentId, String userProfileImageUrl, String userName, String nickName, String content, Long reCommentLikeSize, Boolean isReCommentLike, Boolean isReCommentOwner, LocalDateTime updatedAt) {
         this.reCommentId = reCommentId;
         this.userProfileImageUrl = userProfileImageUrl;
         this.userName = userName;
         this.nickName = nickName;
         this.content = content;
         this.reCommentLikeSize = reCommentLikeSize;
+        this.isReCommentLike = isReCommentLike;
         this.isReCommentOwner = isReCommentOwner;
         this.updatedAt = updatedAt;
     }
+
 }
