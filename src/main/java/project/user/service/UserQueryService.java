@@ -1,23 +1,22 @@
 package project.user.service;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.advice.exception.UserNotFoundException;
 import project.follow.repository.FollowRepository;
-import project.post.domain.Post;
+import project.post.domain.PostImage;
+import project.post.repository.PostImageRepository;
 import project.post.repository.PostRepository;
 import project.post.repository.PostRepositoryImpl;
+import project.post.response.PostImagesResponse;
 import project.post.response.ProfilePostDetailListResponse;
 import project.post.response.ProfilePostListResponse;
 import project.user.domain.User;
 import project.user.repository.UserRepository;
 import project.user.response.ProfileResponse;
 import project.user.response.UserDetailResponse;
-import project.user.response.UserPostListResponse;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,16 +25,17 @@ import java.util.stream.Collectors;
 public class UserQueryService {
 
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
     private final PostRepositoryImpl postRepositoryImpl;
     private final FollowRepository followRepository;
     private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
+    private final PostImageRepository postImageRepository;
 
-    public UserQueryService(UserRepository userRepository, PostRepository postRepository, PostRepositoryImpl postRepositoryImpl, FollowRepository followRepository) {
+    public UserQueryService(UserRepository userRepository, PostRepositoryImpl postRepositoryImpl, FollowRepository followRepository,
+                            PostImageRepository postImageRepository) {
         this.userRepository = userRepository;
-        this.postRepository = postRepository;
         this.postRepositoryImpl = postRepositoryImpl;
         this.followRepository = followRepository;
+        this.postImageRepository = postImageRepository;
     }
 
     public ProfileResponse findUserProfile(Long lastPostId, Long userId, Long loginUserId, Pageable pageable) {
@@ -53,13 +53,17 @@ public class UserQueryService {
                 userId.equals(loginUserId),
                 followRepository.existsFollowByFromUserIdAndToUserId(userId, loginUserId));
 
-        List<ProfilePostListResponse> posts = postRepositoryImpl.getProfilePostList(lastPostId, userId, pageable);
-        List<ProfilePostDetailListResponse> postDetailResponse = posts.stream()
-                .map(p -> new ProfilePostDetailListResponse(
-                        p.getPostId(),
-                        p.getPostImageId(),
-                        s3Url + p.getPostImageUrl()))
-                .collect(Collectors.toList());
+        List<ProfilePostListResponse> postList = postRepositoryImpl.getProfilePostList(lastPostId, userId, pageable);
+        List<ProfilePostDetailListResponse> postDetailResponse = postList.stream()
+                .map(p -> {
+                    List<PostImage> postImages = postImageRepository.findByPostId(p.getPostId());
+                    List<PostImagesResponse> postImageList = postImages.stream()
+                            .map(pi -> new PostImagesResponse(pi.getId(), pi.getPostImageUrl())).collect(Collectors.toList());
+
+                    return new ProfilePostDetailListResponse(
+                            p.getPostId(),
+                            postImageList);
+                }).collect(Collectors.toList());
 
         boolean hasNext = false;
         if (postDetailResponse.size() >= pageable.getPageSize()) {

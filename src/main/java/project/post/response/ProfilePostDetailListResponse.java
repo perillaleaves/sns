@@ -4,18 +4,17 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProfilePostDetailListResponse {
 
     private Long postId;
-    private Long postImageId;
-    private String postImageUrl;
+    private List<PostImagesResponse> postImageUrls;
 
-    public ProfilePostDetailListResponse(Long postId, Long postImageId, String postImageUrl) {
+    public ProfilePostDetailListResponse(Long postId, List<PostImagesResponse> postImageUrls) {
         this.postId = postId;
-        this.postImageId = postImageId;
-        this.postImageUrl = postImageUrl;
+        this.postImageUrls = postImageUrls;
     }
-
 }

@@ -4,13 +4,13 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import project.post.domain.QPostImage;
 import project.post.response.*;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 import static project.post.domain.QPost.post;
-import static project.post.domain.QPostImage.postImage;
 import static project.user.domain.QUser.user;
 
 @Repository
@@ -30,16 +30,6 @@ public class PostRepositoryImpl {
                         post.user.userProfileImage.userProfileImageURL,
                         post.user.name,
                         post.user.nickName,
-                        post.postImage.postImageUrl1,
-                        post.postImage.postImageUrl2,
-                        post.postImage.postImageUrl3,
-                        post.postImage.postImageUrl4,
-                        post.postImage.postImageUrl5,
-                        post.postImage.postImageUrl6,
-                        post.postImage.postImageUrl7,
-                        post.postImage.postImageUrl8,
-                        post.postImage.postImageUrl9,
-                        post.postImage.postImageUrl10,
                         post.content,
                         post.postLikeSize,
                         post.commentSize,
@@ -61,12 +51,10 @@ public class PostRepositoryImpl {
     public List<ProfilePostListResponse> getProfilePostList(Long lastPostId, Long loginUserId, Pageable pageable) {
         List<ProfilePostListResponse> content = queryFactory
                 .select(new QProfilePostListResponse(
-                        post.id,
-                        post.postImage.id,
-                        post.postImage.postImageUrl1
+                        post.id
                 ))
                 .from(post)
-                .leftJoin(post.postImage, postImage)
+                .leftJoin(post)
                 .where(
                         ltPostId(lastPostId),
                         post.user.id.eq(loginUserId)
@@ -78,8 +66,8 @@ public class PostRepositoryImpl {
         return content;
     }
 
-    private BooleanExpression ltPostId(Long lagtPostId) {
-        return lagtPostId != null ? post.id.lt(lagtPostId) : null;
+    private BooleanExpression ltPostId(Long lastPostId) {
+        return lastPostId != null ? post.id.lt(lastPostId) : null;
     }
 
 }

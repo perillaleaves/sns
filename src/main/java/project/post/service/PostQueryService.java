@@ -57,29 +57,28 @@ public class PostQueryService {
 
     public NewsFeedListResponse findPostList(Long lastPostId, Long loginUserId, Pageable pageable) {
         List<PostListResponse> postList = postRepositoryImpl.getPostList(lastPostId, pageable);
+
         List<PostListDetailResponse> postListDetail = postList.stream()
-                .map(p -> new PostListDetailResponse(
-                        p.getPostId(),
-                        p.getUserId(),
-                        s3Url + p.getUserProfileImageUrl(),
-                        p.getUsername(),
-                        p.getNickName(),
-                        s3Url + p.getPostImageUrl1(),
-                        s3Url + p.getPostImageUrl2(),
-                        s3Url + p.getPostImageUrl3(),
-                        s3Url + p.getPostImageUrl4(),
-                        s3Url + p.getPostImageUrl5(),
-                        s3Url + p.getPostImageUrl6(),
-                        s3Url + p.getPostImageUrl7(),
-                        s3Url + p.getPostImageUrl8(),
-                        s3Url + p.getPostImageUrl9(),
-                        s3Url + p.getPostImageUrl10(),
-                        postLikeRepository.existsPostLikeByPostIdAndUserId(p.getPostId(), loginUserId),
-                        p.getContent(),
-                        p.getPostLikeSize(),
-                        p.getCommentSize(),
-                        p.getUpdatedAt()))
-                .collect(Collectors.toList());
+                .map(p -> {
+                    List<PostImage> postImages = postImageRepository.findByPostId(p.getPostId());
+                    List<PostImagesResponse> postImageList = postImages.stream()
+                            .map(pi -> new PostImagesResponse(pi.getId(), pi.getPostImageUrl())).collect(Collectors.toList());
+
+                    return new PostListDetailResponse(
+                            p.getPostId(),
+                            p.getUserId(),
+                            s3Url + p.getUserProfileImageUrl(),
+                            p.getUsername(),
+                            p.getNickName(),
+                            postImageList,
+                            postLikeRepository.existsPostLikeByPostIdAndUserId(p.getPostId(), loginUserId),
+                            p.getContent(),
+                            p.getPostLikeSize(),
+                            p.getCommentSize(),
+                            postRepository.existsPostByIdAndUserId(p.getPostId(), loginUserId),
+                            p.getUpdatedAt());
+
+                }).collect(Collectors.toList());
 
         boolean hasNext = false;
         if (postList.size() >= pageable.getPageSize()) {

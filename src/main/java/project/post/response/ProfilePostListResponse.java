@@ -10,14 +10,10 @@ import lombok.NoArgsConstructor;
 public class ProfilePostListResponse {
 
     private Long postId;
-    private Long postImageId;
-    private String postImageUrl;
 
     @QueryProjection
-    public ProfilePostListResponse(Long postId, Long postImageId, String postImageUrl) {
+    public ProfilePostListResponse(Long postId) {
         this.postId = postId;
-        this.postImageId = postImageId;
-        this.postImageUrl = postImageUrl;
     }
 
 }
