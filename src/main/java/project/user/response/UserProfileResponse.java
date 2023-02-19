@@ -13,4 +13,5 @@ public class UserProfileResponse {
     public UserProfileResponse(ProfileResponse profileResponse) {
         this.profileResponse = profileResponse;
     }
+
 }

@@ -13,9 +13,9 @@ public class ProfileResponse {
 
     private UserDetailResponse userDetailResponse;
     private List<ProfilePostDetailListResponse>  postSlice;
-    private boolean hasNext;
+    private Boolean hasNext;
 
-    public ProfileResponse(UserDetailResponse userDetailResponse, List<ProfilePostDetailListResponse>  postSlice, boolean hasNext) {
+    public ProfileResponse(UserDetailResponse userDetailResponse, List<ProfilePostDetailListResponse>  postSlice, Boolean hasNext) {
         this.userDetailResponse = userDetailResponse;
         this.postSlice = postSlice;
         this.hasNext = hasNext;

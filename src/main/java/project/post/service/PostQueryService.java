@@ -41,7 +41,6 @@ public class PostQueryService {
         List<PostImagesResponse> postImageUrls = postImages.stream()
                 .map(p -> new PostImagesResponse(p.getId(), p.getPostImageUrl())).collect(Collectors.toList());
 
-
         return new PostDetailResponse(post.getId(),
                 post.getUser().getId(),
                 s3Url + post.getUser().getUserProfileImage().getUserProfileImageURL(),

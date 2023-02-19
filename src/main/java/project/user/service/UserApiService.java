@@ -80,14 +80,14 @@ public class UserApiService {
     @Transactional
     public void edit(Long userId, Long loginUserId, ProfileEditRequest request, MultipartFile file, String dirName) throws IOException {
         editInputValidate(userId, loginUserId, request);
-        User findUser = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        editValidate(request, findUser);
+        editValidate(request, user);
 
 //        s3Service.fileDelete(findUser.getUserProfileImage().getUserProfileImageURL());
         String imgPaths = s3Service.upload(file, dirName);
-        findUser.getUserProfileImage().userProfileImageModify(imgPaths);
-        findUser.editProfile(request);
+        user.getUserProfileImage().userProfileImageModify(imgPaths);
+        user.editProfile(request);
     }
 
     private void postBlankCheck(MultipartFile imgPaths) {
@@ -141,8 +141,8 @@ public class UserApiService {
         }
     }
 
-    private void editValidate(ProfileEditRequest request, User findUser) {
-        if (userRepository.existsUserByNickName(request.getNickName()) && !findUser.getNickName().equals(request.getNickName())) {
+    private void editValidate(ProfileEditRequest request, User user) {
+        if (userRepository.existsUserByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
             throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
     }

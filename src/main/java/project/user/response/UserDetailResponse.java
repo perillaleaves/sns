@@ -31,4 +31,5 @@ public class UserDetailResponse {
         this.isProfileOwner = isProfileOwner;
         this.isFollowing = isFollowing;
     }
+
 }

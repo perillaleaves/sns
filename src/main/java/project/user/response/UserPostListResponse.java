@@ -17,4 +17,5 @@ public class UserPostListResponse {
         this.postImageId = postImageId;
         this.postImageUrl = postImageUrl;
     }
+
 }

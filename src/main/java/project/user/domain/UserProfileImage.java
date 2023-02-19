@@ -19,7 +19,7 @@ public class UserProfileImage {
 
     private String userProfileImageURL;
 
-    @OneToOne(mappedBy = "userProfileImage", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "userProfileImage", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
     @Builder
@@ -32,4 +32,5 @@ public class UserProfileImage {
     public void userProfileImageModify(String userProfileImageURL) {
         this.userProfileImageURL = userProfileImageURL;
     }
+
 }

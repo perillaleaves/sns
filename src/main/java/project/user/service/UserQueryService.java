@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 public class UserQueryService {
 
     private final UserRepository userRepository;
-    private final PostRepositoryImpl postRepositoryImpl;
     private final FollowRepository followRepository;
-    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
+    private final PostRepositoryImpl postRepositoryImpl;
     private final PostImageRepository postImageRepository;
+    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
 
     public UserQueryService(UserRepository userRepository, PostRepositoryImpl postRepositoryImpl, FollowRepository followRepository,
                             PostImageRepository postImageRepository) {
@@ -39,17 +39,17 @@ public class UserQueryService {
     }
 
     public ProfileResponse findUserProfile(Long lastPostId, Long userId, Long loginUserId, Pageable pageable) {
-        User findUser = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
         UserDetailResponse userDetailResponse = new UserDetailResponse(
-                findUser.getId(),
-                s3Url + findUser.getUserProfileImage().getUserProfileImageURL(),
-                findUser.getName(),
-                findUser.getNickName(),
-                findUser.getContent(),
-                findUser.getPostSize(),
-                findUser.getFollowerSize(),
-                findUser.getFollowingSize(),
+                user.getId(),
+                s3Url + user.getUserProfileImage().getUserProfileImageURL(),
+                user.getName(),
+                user.getNickName(),
+                user.getContent(),
+                user.getPostSize(),
+                user.getFollowerSize(),
+                user.getFollowingSize(),
                 userId.equals(loginUserId),
                 followRepository.existsFollowByFromUserIdAndToUserId(userId, loginUserId));
 
