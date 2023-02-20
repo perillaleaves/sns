@@ -41,22 +41,6 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
-ext.profile = (!project.hasProperty('profile') || !profile) ? 'dev' : profile
-
-sourceSets {
-    main {
-        resources {
-            srcDirs "src/main/resources", "src/main/resources/${profile}"
-        }
-    }
-}
-
-task {
-    processResources {
-        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
-    }
-}
-
 tasks.named('test') {
     useJUnitPlatform()
 }
