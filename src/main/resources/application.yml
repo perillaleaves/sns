@@ -2,8 +2,22 @@ spring:
   profiles:
     active: local
     include: aws
+  datasource:
+    username: root
+    password: vw231429
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://sweethome.crgu4udnh0nv.ap-northeast-2.rds.amazonaws.com:3306/sweethomeDB
 
   jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+    show-sql: true
     defer-datasource-initialization: true
 
 server:
