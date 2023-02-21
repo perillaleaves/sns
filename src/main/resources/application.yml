@@ -38,3 +38,12 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: ERROR
+
+cloud:
+  aws:
+    s3:
+      bucket: sweeethome
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
