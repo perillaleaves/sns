@@ -84,7 +84,6 @@ public class UserApiService {
                 .orElseThrow(UserNotFoundException::new);
         editValidate(request, user);
 
-//        s3Service.fileDelete(findUser.getUserProfileImage().getUserProfileImageURL());
         String imgPaths = s3Service.upload(file, dirName);
         user.getUserProfileImage().userProfileImageModify(imgPaths);
         user.editProfile(request);

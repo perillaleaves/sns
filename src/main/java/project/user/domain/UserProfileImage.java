@@ -23,8 +23,7 @@ public class UserProfileImage {
     private User user;
 
     @Builder
-    public UserProfileImage(Long id, String userProfileImageURL, User user) {
-        this.id = id;
+    public UserProfileImage(String userProfileImageURL, User user) {
         this.userProfileImageURL = userProfileImageURL;
         this.user = user;
     }

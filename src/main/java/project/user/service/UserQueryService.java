@@ -7,7 +7,6 @@ import project.advice.exception.UserNotFoundException;
 import project.follow.repository.FollowRepository;
 import project.post.domain.PostImage;
 import project.post.repository.PostImageRepository;
-import project.post.repository.PostRepository;
 import project.post.repository.PostRepositoryImpl;
 import project.post.response.PostImagesResponse;
 import project.post.response.ProfilePostDetailListResponse;

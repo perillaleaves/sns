@@ -20,4 +20,5 @@ public class ProfileResponse {
         this.postSlice = postSlice;
         this.hasNext = hasNext;
     }
+
 }

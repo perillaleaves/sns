@@ -14,7 +14,6 @@ public class SignupRequest {
     private String nickName;
     private String password;
 
-    @Builder
     public SignupRequest(String email, String name, String nickName, String password) {
         this.email = email;
         this.name = name;
