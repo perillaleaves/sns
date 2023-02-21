@@ -3,9 +3,6 @@ spring:
     active: local
     include: aws
 
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
   jpa:
     hibernate:
       ddl-auto: none
