@@ -33,4 +33,5 @@ public class ReCommentLike extends CreatedAtEntity {
         this.reComment = reComment;
         this.user = user;
     }
+
 }

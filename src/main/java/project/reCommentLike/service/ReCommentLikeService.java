@@ -23,13 +23,13 @@ public class ReCommentLikeService {
         this.reCommentLikeRepository = reCommentLikeRepository;
     }
 
-    public void addLike(Long reCommentId, User user) {
-        existsValidate(reCommentId, user);
+    public void addLike(Long reCommentId, User loginUser) {
+        existsValidate(reCommentId, loginUser);
         ReComment reComment = reCommentRepository.findById(reCommentId)
                 .orElseThrow(ReCommentNotFoundException::new);
 
         ReCommentLike reCommentLike = ReCommentLike.builder()
-                .user(user)
+                .user(loginUser)
                 .reComment(reComment)
                 .build();
 
@@ -37,16 +37,16 @@ public class ReCommentLikeService {
         reCommentLikeRepository.save(reCommentLike);
     }
 
-    public void removeLike(Long reCommentId, User user) {
-        ReCommentLike reCommentLike = reCommentLikeRepository.findByReCommentIdAndUserId(reCommentId, user.getId())
+    public void removeLike(Long reCommentId, User loginUser) {
+        ReCommentLike reCommentLike = reCommentLikeRepository.findByReCommentIdAndUserId(reCommentId, loginUser.getId())
                 .orElseThrow(ReCommentLikeNotFoundException::new);
 
         reCommentLike.getReComment().decreaseReCommentLikeSize(reCommentLike.getReComment().getReCommentLikeSize());
         reCommentLikeRepository.delete(reCommentLike);
     }
 
-    private void existsValidate(Long reCommentId, User user) {
-        if (reCommentLikeRepository.existsReCommentLikeByReCommentIdAndUserId(reCommentId, user.getId())) {
+    private void existsValidate(Long reCommentId, User loginUser) {
+        if (reCommentLikeRepository.existsReCommentLikeByReCommentIdAndUserId(reCommentId, loginUser.getId())) {
             throw new APIError("AlreadyExist", "이미 존재합니다");
         }
     }

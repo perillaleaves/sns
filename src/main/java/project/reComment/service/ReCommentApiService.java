@@ -24,7 +24,7 @@ public class ReCommentApiService {
         this.reCommentRepository = reCommentRepository;
     }
 
-    public void create(Long commentId, ReCommentRequest request, User user) {
+    public void create(Long commentId, ReCommentRequest request, User loginUser) {
         validation(request);
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
@@ -32,7 +32,7 @@ public class ReCommentApiService {
         ReComment reComment = ReComment.builder()
                 .content(request.getContent())
                 .reCommentLikeSize(0L)
-                .user(user)
+                .user(loginUser)
                 .comment(comment)
                 .build();
 
@@ -41,19 +41,19 @@ public class ReCommentApiService {
         reCommentRepository.save(reComment);
     }
 
-    public void update(Long reCommentId, ReCommentRequest request, Long userId) {
+    public void update(Long reCommentId, ReCommentRequest request, Long loginUserId) {
         validation(request);
         ReComment reComment = reCommentRepository.findById(reCommentId)
                 .orElseThrow(ReCommentNotFoundException::new);
-        loginValidate(userId, reComment);
+        loginValidate(loginUserId, reComment);
 
         reComment.update(request.getContent());
     }
 
-    public void delete(Long reCommentId, Long userId) {
+    public void delete(Long reCommentId, Long loginUserId) {
         ReComment reComment = reCommentRepository.findById(reCommentId)
                 .orElseThrow(ReCommentNotFoundException::new);
-        loginValidate(userId, reComment);
+        loginValidate(loginUserId, reComment);
 
         reComment.getComment().decreaseReCommentSize(reComment.getComment().getReCommentSize());
         reComment.getComment().getPost().decreaseCommentSize(reComment.getComment().getPost().getCommentSize());
@@ -67,8 +67,8 @@ public class ReCommentApiService {
         }
     }
 
-    private static void loginValidate(Long userId, ReComment reComment) {
-        if (!reComment.getUser().getId().equals(userId)) {
+    private static void loginValidate(Long loginUserId, ReComment reComment) {
+        if (!reComment.getUser().getId().equals(loginUserId)) {
             throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
     }
