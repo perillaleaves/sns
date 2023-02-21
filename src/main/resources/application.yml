@@ -1,11 +1,9 @@
 spring:
   profiles:
-    active: local
+    active: dev
     include: aws
 
   jpa:
-    hibernate:
-      ddl-auto: none
     defer-datasource-initialization: true
 
 server:

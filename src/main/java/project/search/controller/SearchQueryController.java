@@ -24,10 +24,10 @@ public class SearchQueryController {
 
     @GetMapping("/nickname/search")
     public Response<SearchResponse> searchUserListByName(
-            @RequestParam(value = "userId", required = false) Long lastUserId,
-            SearchRequest request,
-            @PageableDefault Pageable pageable,
-            HttpServletRequest httpServletRequest) {
+                                                    @RequestParam(value = "userId", required = false) Long lastUserId,
+                                                    SearchRequest request,
+                                                    @PageableDefault Pageable pageable,
+                                                    HttpServletRequest httpServletRequest) {
         Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
         SearchListResponse searchList = searchQueryService.findUserListByName(lastUserId, loginUserId, request, pageable);
         return new Response<>(new SearchResponse(searchList));
@@ -35,9 +35,9 @@ public class SearchQueryController {
 
     @GetMapping("/search")
     public Response<SearchResponse> searchUserList(
-            @RequestParam(value = "userId", required = false) Long lastUserId,
-            @PageableDefault Pageable pageable,
-            HttpServletRequest httpServletRequest) {
+                                                @RequestParam(value = "userId", required = false) Long lastUserId,
+                                                @PageableDefault Pageable pageable,
+                                                HttpServletRequest httpServletRequest) {
         Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
         SearchListResponse searchList = searchQueryService.findUserList(lastUserId, loginUserId, pageable);
         return new Response<>(new SearchResponse(searchList));
