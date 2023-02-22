@@ -19,4 +19,5 @@ public class FollowingListResponse {
         this.followingUserListResponseList = followingUserListResponseList;
         this.hasNext = hasNext;
     }
+
 }

@@ -23,4 +23,5 @@ public class FollowerUserListResponse {
         this.userName = userName;
         this.nickName = nickName;
     }
+
 }

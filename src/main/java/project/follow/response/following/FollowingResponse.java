@@ -13,4 +13,5 @@ public class FollowingResponse {
     public FollowingResponse(FollowingListResponse followingListResponse) {
         this.followingListResponse = followingListResponse;
     }
+
 }

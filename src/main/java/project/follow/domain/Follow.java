@@ -33,4 +33,5 @@ public class Follow extends CreatedAtEntity {
         this.fromUser = fromUser;
         this.toUser = toUser;
     }
+
 }
