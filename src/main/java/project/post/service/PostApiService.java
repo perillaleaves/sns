@@ -16,8 +16,6 @@ import project.user.domain.User;
 import project.user.repository.UserRepository;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,9 +35,9 @@ public class PostApiService {
         this.s3Service = s3Service;
     }
 
-    public void create(PostRequest request, Long userId, List<MultipartFile> files, String dirName) throws IOException {
+    public void create(Long loginUserID, PostRequest request, List<MultipartFile> files, String dirName) throws IOException {
         validation(request);
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(loginUserID)
                 .orElseThrow(UserNotFoundException::new);
 
         Post post = Post.builder()
@@ -61,21 +59,21 @@ public class PostApiService {
         }
     }
 
-    public void update(Long postId, PostRequest request, Long userId) {
+    public void update(Long postId, Long loginUserId, PostRequest request) {
         validation(request);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        loginValidate(userId, post);
+        loginValidate(loginUserId, post);
 
         post.updatePostContent(request.getContent());
     }
 
-    public void delete(Long postId, Long userId) {
-        User user = userRepository.findById(userId)
+    public void delete(Long postId, Long loginUserID) {
+        User user = userRepository.findById(loginUserID)
                 .orElseThrow(UserNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        loginValidate(userId, post);
+        loginValidate(loginUserID, post);
 
         user.decreasePostSize(user.getPostSize());
         postRepository.delete(post);
@@ -87,8 +85,8 @@ public class PostApiService {
         }
     }
 
-    private static void loginValidate(Long userId, Post post) {
-        if (!post.getUser().getId().equals(userId)) {
+    private static void loginValidate(Long loginUserId, Post post) {
+        if (!post.getUser().getId().equals(loginUserId)) {
             throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
     }

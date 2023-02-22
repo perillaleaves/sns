@@ -37,4 +37,5 @@ public class PostDetailResponse {
         this.updatedAt = updatedAt;
         this.postImageUrls = postImageUrls;
     }
+
 }

@@ -13,4 +13,5 @@ public class NewsFeedResponse {
     public NewsFeedResponse(NewsFeedListResponse newsFeedListResponse) {
         this.newsFeedListResponse = newsFeedListResponse;
     }
+
 }

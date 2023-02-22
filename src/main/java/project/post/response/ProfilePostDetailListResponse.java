@@ -17,4 +17,5 @@ public class ProfilePostDetailListResponse {
         this.postId = postId;
         this.postImageUrls = postImageUrls;
     }
+
 }
