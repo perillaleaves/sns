@@ -23,13 +23,13 @@ public class CommentLikeApiService {
         this.commentLikeRepository = commentLikeRepository;
     }
 
-    public void addLike(Long commentId, User user) {
-        existsValidate(commentId, user);
+    public void addLike(Long commentId, User loginUser) {
+        existsValidate(commentId, loginUser);
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
         CommentLike commentLike = CommentLike.builder()
-                .user(user)
+                .user(loginUser)
                 .comment(comment)
                 .build();
 
@@ -37,8 +37,8 @@ public class CommentLikeApiService {
         commentLikeRepository.save(commentLike);
     }
 
-    public void removeLike(Long commentId, User user) {
-        CommentLike commentLike = commentLikeRepository.findByCommentIdAndUserId(commentId, user.getId())
+    public void removeLike(Long commentId, User loginUser) {
+        CommentLike commentLike = commentLikeRepository.findByCommentIdAndUserId(commentId, loginUser.getId())
                 .orElseThrow(CommentLikeNotFoundException::new);
 
         commentLike.getComment().decreaseCommentLikeSize(commentLike.getComment().getCommentLikeSize());

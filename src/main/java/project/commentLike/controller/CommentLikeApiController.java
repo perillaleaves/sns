@@ -22,15 +22,15 @@ public class CommentLikeApiController {
 
     @PostMapping("/comment/{commentId}/like")
     public Response<ValidationResponse> like(@PathVariable("commentId") Long commentId, HttpServletRequest httpServletRequest) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        commentLikeApiService.addLike(commentId, user);
+        User loginUser = (User) httpServletRequest.getAttribute("user");
+        commentLikeApiService.addLike(commentId, loginUser);
         return new Response<>(new ValidationResponse("Like", "좋아요"));
     }
 
     @DeleteMapping("/comment/{commentId}/unlike")
     public Response<ValidationResponse> unLike(@PathVariable("commentId") Long commentId, HttpServletRequest httpServletRequest) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        commentLikeApiService.removeLike(commentId, user);
+        User loginUser = (User) httpServletRequest.getAttribute("user");
+        commentLikeApiService.removeLike(commentId, loginUser);
         return new Response<>(new ValidationResponse("UnLike", "좋아요 취소"));
     }
 
