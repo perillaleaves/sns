@@ -61,7 +61,9 @@ public class PostQueryService {
                 .map(p -> {
                     List<PostImage> postImages = postImageRepository.findByPostId(p.getPostId());
                     List<PostImagesResponse> postImageList = postImages.stream()
-                            .map(pi -> new PostImagesResponse(pi.getId(), pi.getPostImageUrl())).collect(Collectors.toList());
+                            .map(pi -> new PostImagesResponse(
+                                    pi.getId(),
+                                    s3Url + pi.getPostImageUrl())).collect(Collectors.toList());
 
                     return new PostListDetailResponse(
                             p.getPostId(),
