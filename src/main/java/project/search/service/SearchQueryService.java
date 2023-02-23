@@ -10,7 +10,6 @@ import project.search.response.SearchListResponse;
 import project.search.response.SearchUserListDetailResponse;
 import project.search.response.SearchUserListResponse;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +19,7 @@ public class SearchQueryService {
 
     private final SearchRepositoryImpl searchRepositoryImpl;
     private final FollowRepository followRepository;
+    private final String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullaepro.com/";
 
     public SearchQueryService(SearchRepositoryImpl searchRepositoryImpl, FollowRepository followRepository) {
         this.searchRepositoryImpl = searchRepositoryImpl;
@@ -31,7 +31,7 @@ public class SearchQueryService {
         List<SearchUserListDetailResponse> searchList = searchUserList.stream()
                 .map(s -> new SearchUserListDetailResponse(
                         s.getUserId(),
-                        s.getUserProfileImageUrl(),
+                        s3Url + s.getUserProfileImageUrl(),
                         s.getUserName(),
                         s.getNickName(),
                         s.getFollowerSize(),
@@ -51,7 +51,7 @@ public class SearchQueryService {
         List<SearchUserListDetailResponse> searchList = searchUserList.stream()
                 .map(s -> new SearchUserListDetailResponse(
                         s.getUserId(),
-                        s.getUserProfileImageUrl(),
+                        s3Url + s.getUserProfileImageUrl(),
                         s.getUserName(),
                         s.getNickName(),
                         s.getFollowerSize(),

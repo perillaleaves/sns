@@ -18,7 +18,7 @@ public class ReCommentQueryService {
     private final ReCommentRepository reCommentRepository;
     private final ReCommentRepositoryImpl reCommentRepositoryImpl;
     private final ReCommentLikeRepository reCommentLikeRepository;
-    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
+    private final String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullaepro.com/";
 
     public ReCommentQueryService(ReCommentRepository reCommentRepository, ReCommentRepositoryImpl reCommentRepositoryImpl, ReCommentLikeRepository reCommentLikeRepository) {
         this.reCommentRepository = reCommentRepository;

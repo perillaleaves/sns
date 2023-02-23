@@ -27,7 +27,7 @@ public class UserQueryService {
     private final FollowRepository followRepository;
     private final PostRepositoryImpl postRepositoryImpl;
     private final PostImageRepository postImageRepository;
-    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
+    private final String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullaepro.com/";
 
     public UserQueryService(UserRepository userRepository, PostRepositoryImpl postRepositoryImpl, FollowRepository followRepository,
                             PostImageRepository postImageRepository) {

@@ -24,7 +24,7 @@ public class FollowQueryService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
     private final FollowRepositoryImpl followRepositoryImpl;
-    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
+    private final String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullaepro.com/";
 
     public FollowQueryService(UserRepository userRepository, FollowRepository followRepository, FollowRepositoryImpl followRepositoryImpl) {
         this.userRepository = userRepository;

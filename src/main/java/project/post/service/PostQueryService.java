@@ -24,7 +24,7 @@ public class PostQueryService {
     private final PostLikeRepository postLikeRepository;
     private final PostRepositoryImpl postRepositoryImpl;
     private final PostImageRepository postImageRepository;
-    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
+    private final String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullaepro.com/";
 
     public PostQueryService(PostRepository postRepository, PostLikeRepository postLikeRepository, PostRepositoryImpl postRepositoryImpl, PostImageRepository postImageRepository) {
         this.postRepository = postRepository;

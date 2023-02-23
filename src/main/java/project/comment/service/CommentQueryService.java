@@ -25,7 +25,7 @@ public class CommentQueryService {
     private final CommentRepositoryImpl commentRepositoryImpl;
     private final CommentLikeRepository commentLikeRepository;
     private final PostRepository postRepository;
-    private final String s3Url = "https://sweeethome.s3.ap-northeast-2.amazonaws.com/";
+    private final String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullaepro.com/";
 
     public CommentQueryService(CommentRepository commentRepository, CommentRepositoryImpl commentRepositoryImpl, CommentLikeRepository commentLikeRepository, PostRepository postRepository) {
         this.commentRepository = commentRepository;
