@@ -51,6 +51,7 @@ public class CommentQueryService {
                         c.getUserName(),
                         c.getNickName(),
                         c.getContent(),
+                        c.getCommentLikeSize(),
                         c.getReCommentSize(),
                         commentLikeRepository.existsCommentLikeByCommentIdAndUserId(c.getCommentId(), loginUserId),
                         commentRepository.existsCommentByIdAndUserId(c.getCommentId(), loginUserId),

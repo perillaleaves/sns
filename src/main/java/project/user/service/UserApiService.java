@@ -30,6 +30,7 @@ public class UserApiService {
     private final TokenRepository tokenRepository;
     private final UserProfileImageRepository userProfileImageRepository;
     private final S3Service s3Service;
+    private final String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullaepro.com/";
 
     public UserApiService(UserRepository userRepository, TokenRepository tokenRepository, UserProfileImageRepository userProfileImageRepository, S3Service s3Service) {
         this.userRepository = userRepository;
@@ -74,7 +75,10 @@ public class UserApiService {
                 .accessToken(GenerateToken.generatedToken(user, request.getEmail()))
                 .build();
         tokenRepository.save(token);
-        return new UserLoginResponse(user.getId(), token.getAccessToken());
+        return new UserLoginResponse(user.getId(),
+                s3Url + user.getUserProfileImage().getUserProfileImageURL(),
+                user.getNickName(),
+                token.getAccessToken());
     }
 
     @Transactional

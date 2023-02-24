@@ -19,12 +19,12 @@ public class PostListDetailResponse {
     private List<PostImagesResponse> postImageUrls;
     private Boolean isPostLike;
     private String content;
-    private Long postListSize;
+    private Long postLikeSize;
     private Long commentSize;
     private Boolean isPostOwner;
     private LocalDateTime updatedAt;
 
-    public PostListDetailResponse(Long postId, Long userId, String userProfileImageUrl, String username, String nickName, List<PostImagesResponse> postImageUrls, Boolean isPostLike, String content, Long postListSize, Long commentSize, Boolean isPostOwner, LocalDateTime updatedAt) {
+    public PostListDetailResponse(Long postId, Long userId, String userProfileImageUrl, String username, String nickName, List<PostImagesResponse> postImageUrls, Boolean isPostLike, String content, Long postLikeSize, Long commentSize, Boolean isPostOwner, LocalDateTime updatedAt) {
         this.postId = postId;
         this.userId = userId;
         this.userProfileImageUrl = userProfileImageUrl;
@@ -33,7 +33,7 @@ public class PostListDetailResponse {
         this.postImageUrls = postImageUrls;
         this.isPostLike = isPostLike;
         this.content = content;
-        this.postListSize = postListSize;
+        this.postLikeSize = postLikeSize;
         this.commentSize = commentSize;
         this.isPostOwner = isPostOwner;
         this.updatedAt = updatedAt;
