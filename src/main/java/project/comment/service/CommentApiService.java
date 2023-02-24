@@ -24,7 +24,7 @@ public class CommentApiService {
         this.postRepository = postRepository;
     }
 
-    public void create(Long postId, CommentRequest request, User user) {
+    public void create(Long postId, CommentRequest request, User loginUser) {
         validation(request);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -33,7 +33,7 @@ public class CommentApiService {
                 .content(request.getContent())
                 .commentLikeSize(0L)
                 .reCommentSize(0L)
-                .user(user)
+                .user(loginUser)
                 .post(post)
                 .build();
 
@@ -41,19 +41,19 @@ public class CommentApiService {
         commentRepository.save(comment);
     }
 
-    public void update(Long commentId, CommentRequest request, Long userId) {
+    public void update(Long commentId, CommentRequest request, Long loginUserId) {
         validation(request);
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        loginValidate(userId, comment);
+        loginValidate(loginUserId, comment);
 
         comment.update(request.getContent());
     }
 
-    public void delete(Long commentId, Long userId) {
+    public void delete(Long commentId, Long loginUserId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        loginValidate(userId, comment);
+        loginValidate(loginUserId, comment);
 
         comment.getPost().decreaseCommentSize(comment.getPost().getCommentSize());
         commentRepository.delete(comment);
@@ -65,8 +65,8 @@ public class CommentApiService {
         }
     }
 
-    private static void loginValidate(Long userId, Comment comment) {
-        if (!comment.getUser().getId().equals(userId)) {
+    private static void loginValidate(Long loginUserId, Comment comment) {
+        if (!comment.getUser().getId().equals(loginUserId)) {
             throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
     }
