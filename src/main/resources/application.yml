@@ -2,16 +2,9 @@ spring:
   profiles:
     active: local
     include: aws
-  datasource:
-    username: root
-    password: vw231429
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://sweethome.crgu4udnh0nv.ap-northeast-2.rds.amazonaws.com:3306/sweethomeDB
 
   jpa:
     open-in-view: true
-    hibernate:
-      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
