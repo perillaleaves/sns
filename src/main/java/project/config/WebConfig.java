@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final LoginInterceptor interceptor;
 
-    private final String[] EXCLUDE_PATHS = {"/api/error", "/signup", "/login"};
+    private final String[] EXCLUDE_PATHS = {"/api/error", "/signup", "/login", "/start"};
 
     public WebConfig(LoginInterceptor interceptor) {
         this.interceptor = interceptor;
