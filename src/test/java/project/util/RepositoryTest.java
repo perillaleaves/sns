@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import project.config.JPAConfig;
 import project.token.domain.UserToken;
 import project.token.repository.TokenRepository;
 import project.user.domain.User;
@@ -17,7 +16,6 @@ import java.security.NoSuchAlgorithmException;
 import static project.common.EncryptUtils.encrypt;
 
 @DataJpaTest
-@Import(JPAConfig.class)
 public class RepositoryTest {
 
     @Autowired
