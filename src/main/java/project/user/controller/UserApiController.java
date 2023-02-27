@@ -51,12 +51,12 @@ public class UserApiController {
     @PutMapping("/user/profile/{userId}")
     public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestBody ProfileEditRequest request, HttpServletRequest httpServletRequest) {
         Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
-        userApiService.edit(userId, loginUserId, request);
+        userApiService.editProfile(userId, loginUserId, request);
         return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
 
     @PutMapping("/user/profileimage/{userId}")
-    public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile file, HttpServletRequest httpServletRequest) throws IOException {
+    public Response<ValidationResponse> profileImageEdit(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile file, HttpServletRequest httpServletRequest) throws IOException {
         Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
         userApiService.editProfileImage(userId, loginUserId, file, "profile");
         return new Response<>(new ValidationResponse("Update", "수정 완료"));

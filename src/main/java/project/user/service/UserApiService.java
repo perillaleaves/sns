@@ -82,7 +82,7 @@ public class UserApiService {
     }
 
     @Transactional
-    public void edit(Long userId, Long loginUserId, ProfileEditRequest request) {
+    public void editProfile(Long userId, Long loginUserId, ProfileEditRequest request) {
         editInputValidate(userId, loginUserId, request);
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
