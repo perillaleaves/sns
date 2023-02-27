@@ -82,19 +82,27 @@ public class UserApiService {
     }
 
     @Transactional
-    public void edit(Long userId, Long loginUserId, ProfileEditRequest request, MultipartFile file, String dirName) throws IOException {
+    public void edit(Long userId, Long loginUserId, ProfileEditRequest request) {
         editInputValidate(userId, loginUserId, request);
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
         editValidate(request, user);
 
-        String imgPaths = s3Service.upload(file, dirName);
-        user.getUserProfileImage().userProfileImageModify(imgPaths);
         user.editProfile(request);
     }
 
-    private void postBlankCheck(MultipartFile imgPaths) {
-        if (imgPaths == null || imgPaths.isEmpty()) {
+    @Transactional
+    public void editProfileImage(Long userId, Long loginUserId, MultipartFile file, String dirName) throws IOException {
+        editProfileImageInputValidate(userId, loginUserId, file);
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        String imgPaths = s3Service.upload(file, dirName);
+        user.getUserProfileImage().userProfileImageModify(imgPaths);
+    }
+
+    private void postBlankCheck(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
             throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
         }
     }
@@ -147,6 +155,15 @@ public class UserApiService {
     private void editValidate(ProfileEditRequest request, User user) {
         if (userRepository.existsUserByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
             throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
+        }
+    }
+
+    private void editProfileImageInputValidate(Long userId, Long loginUserId, MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
+        }
+        if (!loginUserId.equals(userId)) {
+            throw new APIError("NotRequest", "잘못된 요청입니다.");
         }
     }
 

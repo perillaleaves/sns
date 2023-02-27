@@ -48,10 +48,17 @@ public class UserApiController {
         return new Response<>(new ValidationResponse("Logout", "로그아웃"));
     }
 
-    @PutMapping("/user/{userId}")
-    public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile file, ProfileEditRequest request, HttpServletRequest httpServletRequest) throws IOException {
+    @PutMapping("/user/profile/{userId}")
+    public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestBody ProfileEditRequest request, HttpServletRequest httpServletRequest) {
         Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
-        userApiService.edit(userId, loginUserId, request, file, "profile");
+        userApiService.edit(userId, loginUserId, request);
+        return new Response<>(new ValidationResponse("Update", "수정 완료"));
+    }
+
+    @PutMapping("/user/profileimage/{userId}")
+    public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile file, HttpServletRequest httpServletRequest) throws IOException {
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        userApiService.editProfileImage(userId, loginUserId, file, "profile");
         return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
 

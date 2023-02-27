@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    username: root
+    password: 419914
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/testhome
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    open-in-view: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+    show-sql: true
+    defer-datasource-initialization: true
+
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: false
+    context-path: /api
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR
