@@ -27,7 +27,7 @@ public class SearchQueryService {
     }
 
     public SearchListResponse findUserListByName(Long lastUserId, Long loginUserId, SearchRequest request, Pageable pageable) {
-        List<SearchUserListResponse> searchUserList = searchRepositoryImpl.findUserListByNickName(lastUserId, request, pageable);
+        List<SearchUserListResponse> searchUserList = searchRepositoryImpl.findUserListByNickName(lastUserId, loginUserId, request, pageable);
         List<SearchUserListDetailResponse> searchList = searchUserList.stream()
                 .map(s -> new SearchUserListDetailResponse(
                         s.getUserId(),
@@ -47,7 +47,7 @@ public class SearchQueryService {
     }
 
     public SearchListResponse findUserList(Long lastUserId, Long loginUserId, Pageable pageable) {
-        List<SearchUserListResponse> searchUserList = searchRepositoryImpl.findUserList(lastUserId, pageable);
+        List<SearchUserListResponse> searchUserList = searchRepositoryImpl.findUserList(lastUserId, loginUserId, pageable);
         List<SearchUserListDetailResponse> searchList = searchUserList.stream()
                 .map(s -> new SearchUserListDetailResponse(
                         s.getUserId(),

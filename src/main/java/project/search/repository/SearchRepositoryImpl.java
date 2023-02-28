@@ -23,7 +23,7 @@ public class SearchRepositoryImpl {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public List<SearchUserListResponse> findUserListByNickName(Long lastUserId, SearchRequest request, Pageable pageable) {
+    public List<SearchUserListResponse> findUserListByNickName(Long lastUserId, Long loginUserId, SearchRequest request, Pageable pageable) {
         List<SearchUserListResponse> content = queryFactory
                 .select(new QSearchUserListResponse(
                         user.id,
@@ -34,7 +34,8 @@ public class SearchRepositoryImpl {
                 .from(user)
                 .where(
                         ltUserId(lastUserId),
-                        nickNameContains(request.getNickName())
+                        nickNameContains(request.getNickName()),
+                        user.id.ne(loginUserId)
                 )
                 .limit(pageable.getPageSize())
                 .orderBy(
@@ -45,7 +46,7 @@ public class SearchRepositoryImpl {
         return content;
     }
 
-    public List<SearchUserListResponse> findUserList(Long lastUserId, Pageable pageable) {
+    public List<SearchUserListResponse> findUserList(Long lastUserId, Long loginUserId, Pageable pageable) {
         List<SearchUserListResponse> content = queryFactory
                 .select(new QSearchUserListResponse(
                         user.id,
@@ -55,7 +56,8 @@ public class SearchRepositoryImpl {
                         user.followerSize))
                 .from(user)
                 .where(
-                        ltUserId(lastUserId)
+                        ltUserId(lastUserId),
+                        user.id.ne(loginUserId)
                 )
                 .limit(pageable.getPageSize())
                 .orderBy(
