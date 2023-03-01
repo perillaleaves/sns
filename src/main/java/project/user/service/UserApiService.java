@@ -39,13 +39,11 @@ public class UserApiService {
     }
 
     @Transactional
-    public void create(SignupRequest request, MultipartFile file, String dirName) throws NoSuchAlgorithmException, IOException {
-        postBlankCheck(file);
+    public void signup(SignupRequest request) throws NoSuchAlgorithmException {
         validate(request);
 
-        String imgPaths = s3Service.upload(file, dirName);
         UserProfileImage userProfileImage = UserProfileImage.builder()
-                .userProfileImageURL(imgPaths)
+                .userProfileImageURL(null)
                 .build();
         userProfileImageRepository.save(userProfileImage);
 
@@ -99,12 +97,6 @@ public class UserApiService {
 
         String imgPaths = s3Service.upload(file, dirName);
         user.getUserProfileImage().userProfileImageModify(imgPaths);
-    }
-
-    private void postBlankCheck(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
-        }
     }
 
     private void validate(SignupRequest request) {

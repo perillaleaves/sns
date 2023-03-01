@@ -1,39 +1,51 @@
 package project.user.repository;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.UserNotFoundException;
+import project.common.EncryptUtils;
 import project.user.domain.User;
+import project.user.domain.UserProfileImage;
 import project.util.RepositoryTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.security.NoSuchAlgorithmException;
+
+import static org.assertj.core.api.Assertions.*;
+import static project.util.Constants.*;
 
 class UserRepositoryTest extends RepositoryTest {
 
-    @Autowired
-    private UserRepository userRepository;
+    private User sweet;
 
-    @Test
-    void existsUserByEmail() {
-        boolean exist = userRepository.existsUserByEmail(user.getEmail());
+    @BeforeEach
+    void setUp() throws NoSuchAlgorithmException {
+        UserProfileImage userProfileImage = UserProfileImage.builder()
+                .userProfileImageURL(USERPROFILEIMG)
+                .build();
 
-        assertThat(exist).isEqualTo(true);
+        sweet = User.builder()
+                .userProfileImage(userProfileImage)
+                .email(EMAIL)
+                .name(USERNAME)
+                .nickName(NICKNAME)
+                .password(EncryptUtils.encrypt(PASSWORD))
+                .content(CONTENT)
+                .postSize(POSTSIZE)
+                .followerSize(FOLLOEWRSIZE)
+                .followingSize(FOLLOWINGSIZE)
+                .build();
     }
 
     @Test
-    void existsUserByNickName() {
-        boolean exist = userRepository.existsUserByNickName(user.getNickName());
+    @DisplayName("회원가입 API - Repository")
+    void signup() {
+        // given
+        User savedUser = userRepository.save(sweet);
+        // when
 
-        assertThat(exist).isEqualTo(true);
+        // then
+        assertThat(savedUser.getId()).isNotNull();
+        assertThat(savedUser).isEqualTo(sweet);
     }
-
-    @Test
-    void findByEmail() {
-        User findUser = userRepository.findByEmail(user.getEmail()).orElseThrow(UserNotFoundException::new);
-
-        assertThat(findUser).isEqualTo(user);
-    }
-
 
 }

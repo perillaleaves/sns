@@ -1,62 +1,23 @@
 package project.util;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import project.token.domain.UserToken;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Repository;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import project.token.repository.TokenRepository;
-import project.user.domain.User;
-import project.user.domain.UserProfileImage;
 import project.user.repository.UserRepository;
 
-import java.security.NoSuchAlgorithmException;
-
-import static project.common.EncryptUtils.encrypt;
-
-@DataJpaTest
+@SpringBootTest
+@Repository
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@ActiveProfiles("test")
 public class RepositoryTest {
 
     @Autowired
     protected UserRepository userRepository;
-    protected User user;
 
     @Autowired
-    protected TokenRepository tokenRepository;
-    protected UserToken userToken;
-
-    protected UserProfileImage userProfileImage;
-
-    @BeforeEach
-    void inputData() throws NoSuchAlgorithmException {
-        userProfileImage = UserProfileImage.builder()
-                .userProfileImageURL("url")
-                .build();
-
-        user = User.builder()
-                .userProfileImage(userProfileImage)
-                .email("sweethome@gmail.com")
-                .name("sweet")
-                .nickName("home")
-                .password(encrypt("123123"))
-                .content("^^")
-                .postSize(0L)
-                .followingSize(0L)
-                .followerSize(0L)
-                .build();
-        userRepository.save(user);
-
-        userToken = UserToken.builder()
-                .accessToken("123456789")
-                .build();
-        tokenRepository.save(userToken);
-    }
-
-    @AfterEach
-    void cleanUp() {
-        userRepository.delete(user);
-        tokenRepository.delete(userToken);
-    }
+    private TokenRepository tokenRepository;
 
 }

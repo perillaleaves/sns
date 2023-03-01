@@ -29,8 +29,8 @@ public class UserApiController {
     }
 
     @PostMapping("/signup")
-    public Response<ValidationResponse> signup(@RequestParam(value = "image") MultipartFile images, SignupRequest request) throws NoSuchAlgorithmException, IOException {
-        userApiService.create(request, images, "profile");
+    public Response<ValidationResponse> signup(@RequestBody SignupRequest request) throws NoSuchAlgorithmException {
+        userApiService.signup(request);
         return new Response<>(new ValidationResponse("SignUp", "회원가입"));
     }
 

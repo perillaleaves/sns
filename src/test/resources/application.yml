@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: aws
   datasource:
     username: root
     password: 419914
@@ -17,13 +19,6 @@ spring:
     show-sql: true
     defer-datasource-initialization: true
 
-server:
-  servlet:
-    session:
-      cookie:
-        http-only: false
-    context-path: /api
-
 logging:
   level:
     org:
@@ -32,4 +27,11 @@ logging:
     com:
       amazonaws:
         util:
-          EC2MetadataUtils: ERROR
+          EC2MetadataUtils: error
+
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: false
+    context-path: /api
