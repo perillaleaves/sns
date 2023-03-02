@@ -31,7 +31,7 @@
 
 ---
 
-### Back-end (참고용)
+### Back-end
 
 <p>
   <img src="https://www.svgrepo.com/show/354380/spring-icon.svg" alt="Spring" width="120px">
