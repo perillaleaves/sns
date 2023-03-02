@@ -3,21 +3,15 @@ package project.user.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.UserNotFoundException;
 import project.common.EncryptUtils;
 import project.token.domain.UserToken;
 import project.user.domain.User;
 import project.user.domain.UserProfileImage;
-import project.user.repository.UserRepository;
 import project.user.request.SignupRequest;
 import project.util.ServiceTest;
 
 import java.security.NoSuchAlgorithmException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static project.util.Constants.*;
 
 class UserApiServiceTest extends ServiceTest {
@@ -51,10 +45,9 @@ class UserApiServiceTest extends ServiceTest {
 
     @Test
     @DisplayName("회원가입 API - Service")
-    public void saveUser() {
-        User save = userRepository.save(sweet);
-
+    public void saveUser() throws NoSuchAlgorithmException {
         SignupRequest signupRequest = new SignupRequest(EMAIL, USERNAME, NICKNAME, PASSWORD);
+        userApiService.signup(signupRequest);
     }
 
     @Test

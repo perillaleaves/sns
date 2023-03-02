@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BasicDetailResponse {
 
-    private String Logo;
+    private String logo;
     private String basicImage;
 
     public BasicDetailResponse(String logo, String basicImage) {
-        Logo = logo;
+        this.logo = logo;
         this.basicImage = basicImage;
     }
 

@@ -3,7 +3,6 @@ package project.basic.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.basic.response.BasicDetailResponse;
-import project.post.repository.PostImageRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -13,8 +12,8 @@ public class BasicQueryService {
 
     public BasicDetailResponse getBasicItem() {
         BasicDetailResponse basicDetailResponse = new BasicDetailResponse(
-                s3Url + "post/logo.png",
-                s3Url + "post/default_profile (1).png"
+                s3Url + "logo/logo.png",
+                s3Url + "logo/default_profile.png"
         );
         return basicDetailResponse;
     }

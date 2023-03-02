@@ -43,7 +43,7 @@ public class UserApiService {
         validate(request);
 
         UserProfileImage userProfileImage = UserProfileImage.builder()
-                .userProfileImageURL(null)
+                .userProfileImageURL("logo/default_profile.png")
                 .build();
         userProfileImageRepository.save(userProfileImage);
 
