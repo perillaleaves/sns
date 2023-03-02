@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,15 +28,15 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile file, String dirName) throws IOException {
-        File uploadFile = convert(file)
+    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+        File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File 전환 실패"));
         return upload(uploadFile, dirName);
     }
 
     public List<String> multiUpload(List<MultipartFile> files, String dirName) throws IOException {
-        List<String> fileList = new ArrayList<>();
         List<File> convertFiles = multiConvert(files);
+        List<String> fileList = new ArrayList<>();
         for (File convertFile : convertFiles) {
             fileList.add(upload(convertFile, dirName));
         }
@@ -45,8 +44,8 @@ public class S3Service {
     }
 
     private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + uploadFile.getPath();
-        String uploadImageUrl = putS3(uploadFile, fileName);
+        String fileName = dirName + "/" + uploadFile.getName();
+        putS3(uploadFile, fileName);
 
         removeNewFile(uploadFile);
         return fileName;
@@ -75,16 +74,16 @@ public class S3Service {
         return Optional.empty();
     }
 
-    private List<File> multiConvert(List<MultipartFile> file) throws IOException {
-        List<File> fileList = file.stream().map(f -> new File(f.getOriginalFilename())).collect(Collectors.toList());
+    private List<File> multiConvert(List<MultipartFile> multipartFiles) throws IOException {
         List<File> convertFiles = new ArrayList<>();
-        for (File files : fileList) {
-            if (files.createNewFile()) {
-                try (FileOutputStream fos = new FileOutputStream(files)) {
-                    fos.write(files.getPath().getBytes());
+        for (MultipartFile file : multipartFiles) {
+            File convertFile = new File(file.getOriginalFilename());
+            if (convertFile.createNewFile()) {
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+                    fos.write(file.getBytes());
                 }
             }
-            convertFiles.add(files);
+            convertFiles.add(convertFile);
         }
         return convertFiles;
     }

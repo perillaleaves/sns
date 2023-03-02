@@ -22,22 +22,22 @@ public class PostApiController {
 
     @PostMapping("/post")
     public Response<ValidationResponse> create(@RequestParam(value = "image") List<MultipartFile> images, PostRequest request, HttpServletRequest httpServletRequest) throws IOException {
-        Long userId = (Long) httpServletRequest.getAttribute("userId");
-        postApiService.create(request, userId, images, "images");
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        postApiService.create(loginUserId, request, images, "post");
         return new Response<>(new ValidationResponse("Create", "게시글 작성"));
     }
 
     @PutMapping("/post/{postId}")
     public Response<ValidationResponse> update(@PathVariable("postId") Long postId, @RequestBody PostRequest request, HttpServletRequest httpServletRequest) {
-        Long userId = (Long) httpServletRequest.getAttribute("userId");
-        postApiService.update(postId, request, userId);
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        postApiService.update(postId, loginUserId, request);
         return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
 
     @DeleteMapping("/post/{postId}")
     public Response<ValidationResponse> delete(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
-        Long userId = (Long) httpServletRequest.getAttribute("userId");
-        postApiService.delete(postId, userId);
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        postApiService.delete(postId, loginUserId);
         return new Response<>(new ValidationResponse("Delete", "게시글 삭제"));
     }
 }

@@ -8,6 +8,8 @@ import project.token.service.TokenApiService;
 import project.user.request.LoginRequest;
 import project.user.request.ProfileEditRequest;
 import project.user.request.SignupRequest;
+import project.user.response.LoginResponse;
+import project.user.response.UserLoginResponse;
 import project.user.service.UserApiService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,16 +29,16 @@ public class UserApiController {
     }
 
     @PostMapping("/signup")
-    public Response<ValidationResponse> signup(@RequestParam(value = "image") MultipartFile images, SignupRequest request) throws NoSuchAlgorithmException, IOException {
-        userApiService.create(request, images, "profile");
+    public Response<ValidationResponse> signup(@RequestBody SignupRequest request) throws NoSuchAlgorithmException {
+        userApiService.signup(request);
         return new Response<>(new ValidationResponse("SignUp", "회원가입"));
     }
 
     @PostMapping("/login")
-    public Response<ValidationResponse> login(@RequestBody LoginRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
-        String token = userApiService.login(request);
-        response.setHeader("token", token);
-        return new Response<>(new ValidationResponse("Login", "로그인"));
+    public Response<LoginResponse> login(@RequestBody LoginRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
+        UserLoginResponse login = userApiService.login(request);
+        response.setHeader("token", login.getAccessToken());
+        return new Response<>(new LoginResponse(login));
     }
 
     @PostMapping("/logout")
@@ -46,10 +48,17 @@ public class UserApiController {
         return new Response<>(new ValidationResponse("Logout", "로그아웃"));
     }
 
-    @PutMapping("/user/{userId}")
-    public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile file, ProfileEditRequest request, HttpServletRequest httpServletRequest) throws IOException {
-        Long user = (Long) httpServletRequest.getAttribute("userId");
-        userApiService.edit(userId, request, user, file, "profile");
+    @PutMapping("/user/profile/{userId}")
+    public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestBody ProfileEditRequest request, HttpServletRequest httpServletRequest) {
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        userApiService.editProfile(userId, loginUserId, request);
+        return new Response<>(new ValidationResponse("Update", "수정 완료"));
+    }
+
+    @PutMapping("/user/profileimage/{userId}")
+    public Response<ValidationResponse> profileImageEdit(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile file, HttpServletRequest httpServletRequest) throws IOException {
+        Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
+        userApiService.editProfileImage(userId, loginUserId, file, "profile");
         return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
 

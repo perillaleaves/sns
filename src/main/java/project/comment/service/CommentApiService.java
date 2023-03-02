@@ -2,7 +2,7 @@ package project.comment.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.APIError;
+import project.advice.error.APIError;
 import project.advice.exception.CommentNotFoundException;
 import project.advice.exception.PostNotFoundException;
 import project.comment.domain.Comment;
@@ -24,35 +24,38 @@ public class CommentApiService {
         this.postRepository = postRepository;
     }
 
-    public void create(Long postId, CommentRequest request, User user) {
+    public void create(Long postId, CommentRequest request, User loginUser) {
         validation(request);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
         Comment comment = Comment.builder()
                 .content(request.getContent())
-                .user(user)
+                .commentLikeSize(0L)
+                .reCommentSize(0L)
+                .user(loginUser)
                 .post(post)
                 .build();
-        post.addCommentSize(post.getCommentSize());
+
+        post.increaseCommentSize(post.getCommentSize());
         commentRepository.save(comment);
     }
 
-    public void update(Long commentId, CommentRequest request, Long userId) {
+    public void update(Long commentId, CommentRequest request, Long loginUserId) {
         validation(request);
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        loginValidate(userId, comment);
+        loginValidate(loginUserId, comment);
 
         comment.update(request.getContent());
     }
 
-    public void delete(Long commentId, Long userId) {
+    public void delete(Long commentId, Long loginUserId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        loginValidate(userId, comment);
+        loginValidate(loginUserId, comment);
 
-        comment.getPost().removeCommentSize(comment.getPost().getCommentSize());
+        comment.getPost().decreaseCommentSize(comment.getPost().getCommentSize());
         commentRepository.delete(comment);
     }
 
@@ -62,8 +65,8 @@ public class CommentApiService {
         }
     }
 
-    private static void loginValidate(Long userId, Comment comment) {
-        if (!comment.getUser().getId().equals(userId)) {
+    private static void loginValidate(Long loginUserId, Comment comment) {
+        if (!comment.getUser().getId().equals(loginUserId)) {
             throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
     }

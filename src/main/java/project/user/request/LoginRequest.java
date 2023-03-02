@@ -12,4 +12,10 @@ public class LoginRequest {
     private String email;
     private String password;
 
+    public LoginRequest(String accessToken, String email, String password) {
+        this.accessToken = accessToken;
+        this.email = email;
+        this.password = password;
+    }
+
 }

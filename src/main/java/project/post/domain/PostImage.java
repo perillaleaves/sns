@@ -4,14 +4,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.common.BaseEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostImage extends BaseEntity {
+public class PostImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

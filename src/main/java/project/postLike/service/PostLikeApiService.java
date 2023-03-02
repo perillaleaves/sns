@@ -2,7 +2,7 @@ package project.postLike.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.APIError;
+import project.advice.error.APIError;
 import project.advice.exception.PostLikeNotFoundException;
 import project.advice.exception.PostNotFoundException;
 import project.post.domain.Post;
@@ -24,15 +24,15 @@ public class PostLikeApiService {
     }
 
     public void addLike(Long postId, User user) {
+        existValidate(user, postId);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        existValidate(user, post);
 
         PostLike postLike = PostLike.builder()
                 .post(post)
                 .user(user)
                 .build();
-        post.addPostLikeSize(post.getPostLikeSize());
+        post.increasePostLikeSize(post.getPostLikeSize());
         postLikeRepository.save(postLike);
     }
 
@@ -40,12 +40,12 @@ public class PostLikeApiService {
         PostLike postLike = postLikeRepository.findByPostIdAndUserId(postId, user.getId())
                 .orElseThrow(PostLikeNotFoundException::new);
 
-        postLike.getPost().removePostLikeSize(postLike.getPost().getPostLikeSize());
+        postLike.getPost().decreasePostLikeSize(postLike.getPost().getPostLikeSize());
         postLikeRepository.delete(postLike);
     }
 
-    private void existValidate(User user, Post post) {
-        if (postLikeRepository.existsPostLikeByPostIdAndUserId(post.getId(), user.getId())) {
+    private void existValidate(User user, Long postId) {
+        if (postLikeRepository.existsPostLikeByPostIdAndUserId(postId, user.getId())) {
             throw new APIError("AlreadyExist", "이미 존재합니다");
         }
     }

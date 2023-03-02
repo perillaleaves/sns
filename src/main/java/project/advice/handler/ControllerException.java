@@ -2,6 +2,7 @@ package project.advice.handler;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import project.advice.error.APIError;
 import project.advice.exception.*;
 import project.common.response.ErrorResponse;
 import project.common.response.Response;
@@ -42,6 +43,21 @@ public class ControllerException {
     @ExceptionHandler(PostLikeNotFoundException.class)
     public Response<ErrorResponse> handlePostLikeNotFoundException(PostLikeNotFoundException ple) {
         return new Response<>(new ErrorResponse(ple.getCode(), ple.getMessage()));
+    }
+
+    @ExceptionHandler(ReCommentNotFoundException.class)
+    public Response<ErrorResponse> handleReCommentNotFoundException(ReCommentNotFoundException rce) {
+        return new Response<>(new ErrorResponse(rce.getCode(), rce.getMessage()));
+    }
+
+    @ExceptionHandler(ReCommentLikeNotFoundException.class)
+    public Response<ErrorResponse> handleReCommentLikeNotFoundException(ReCommentLikeNotFoundException re) {
+        return new Response<>(new ErrorResponse(re.getCode(), re.getMessage()));
+    }
+
+    @ExceptionHandler(CommentLikeNotFoundException.class)
+    public Response<ErrorResponse> handleCommentLikeNotFoundException(CommentLikeNotFoundException ce) {
+        return new Response<>(new ErrorResponse(ce.getCode(), ce.getMessage()));
     }
 
 }

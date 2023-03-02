@@ -1,7 +1,6 @@
 package project.post.request;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.post.response.PostImagesResponse;
@@ -29,7 +28,6 @@ public class PostDetailRequest {
 
     private LocalDateTime updatedAt;
 
-    @Builder
     public PostDetailRequest(Long postId, Long userId, UserProfileImage profileImage, String nickName, List<PostImagesResponse> postImages, String content, boolean isLike, Long postLikeSize, Long commentSize, LocalDateTime updatedAt) {
         this.userId = userId;
         this.profileImage = profileImage;
@@ -41,4 +39,5 @@ public class PostDetailRequest {
         this.commentSize = commentSize;
         this.updatedAt = updatedAt;
     }
+
 }

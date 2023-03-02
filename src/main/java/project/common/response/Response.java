@@ -16,5 +16,4 @@ public class Response<T> {
         this.error = error;
     }
 
-
 }

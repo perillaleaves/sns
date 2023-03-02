@@ -3,7 +3,7 @@ package project.post.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.advice.exception.APIError;
+import project.advice.error.APIError;
 import project.advice.exception.PostNotFoundException;
 import project.advice.exception.UserNotFoundException;
 import project.post.domain.Post;
@@ -35,10 +35,9 @@ public class PostApiService {
         this.s3Service = s3Service;
     }
 
-    public void create(PostRequest request, Long userId, List<MultipartFile> imgPaths, String dirName) throws IOException {
-        postBlankCheck(imgPaths);
+    public void create(Long loginUserID, PostRequest request, List<MultipartFile> files, String dirName) throws IOException {
         validation(request);
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(loginUserID)
                 .orElseThrow(UserNotFoundException::new);
 
         Post post = Post.builder()
@@ -47,43 +46,37 @@ public class PostApiService {
                 .postLikeSize(0L)
                 .user(user)
                 .build();
-        user.addPostSize(user.getPostSize());
+        user.increasePostSize(user.getPostSize());
         postRepository.save(post);
 
-        List<String> upload = s3Service.multiUpload(imgPaths, dirName);
-        for (String img : upload) {
+        List<String> imageUrls = s3Service.multiUpload(files, dirName);
+        for (String imageUrl : imageUrls) {
             PostImage postImage = PostImage.builder()
-                    .postImageUrl(img)
+                    .postImageUrl(imageUrl)
                     .post(post)
                     .build();
             postImageRepository.save(postImage);
         }
     }
 
-    public void update(Long postId, PostRequest request, Long userId) {
+    public void update(Long postId, Long loginUserId, PostRequest request) {
         validation(request);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        loginValidate(userId, post);
+        loginValidate(loginUserId, post);
 
         post.updatePostContent(request.getContent());
     }
 
-    public void delete(Long postId, Long userId) {
-        User user = userRepository.findById(userId)
+    public void delete(Long postId, Long loginUserID) {
+        User user = userRepository.findById(loginUserID)
                 .orElseThrow(UserNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        loginValidate(userId, post);
+        loginValidate(loginUserID, post);
 
-        user.removePostSize(user.getPostSize());
+        user.decreasePostSize(user.getPostSize());
         postRepository.delete(post);
-    }
-
-    private void postBlankCheck(List<MultipartFile> imgPaths) {
-        if (imgPaths == null || imgPaths.isEmpty()) {
-            throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
-        }
     }
 
     private static void validation(PostRequest request) {
@@ -92,8 +85,8 @@ public class PostApiService {
         }
     }
 
-    private static void loginValidate(Long userId, Post post) {
-        if (!post.getUser().getId().equals(userId)) {
+    private static void loginValidate(Long loginUserId, Post post) {
+        if (!post.getUser().getId().equals(loginUserId)) {
             throw new APIError("NotLogin", "로그인 권한이 있는 유저의 요청이 아닙니다.");
         }
     }

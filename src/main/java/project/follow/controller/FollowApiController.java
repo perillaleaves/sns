@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import project.common.response.Response;
 import project.common.response.ValidationResponse;
 import project.follow.service.FollowApiService;
-import project.token.repository.TokenRepository;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,11 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 public class FollowApiController {
 
     private final FollowApiService followApiService;
-    private final TokenRepository tokenRepository;
 
-    public FollowApiController(FollowApiService followApiService, TokenRepository tokenRepository) {
+    public FollowApiController(FollowApiService followApiService) {
         this.followApiService = followApiService;
-        this.tokenRepository = tokenRepository;
     }
 
     @PostMapping("/{userId}/follow")

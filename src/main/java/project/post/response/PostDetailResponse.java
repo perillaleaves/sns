@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,28 +15,27 @@ public class PostDetailResponse {
     private Long userId;
     private String userProfileImageURL;
     private String nickName;
-
-    private Set<PostImagesResponse> postImages = new HashSet<>();
-
     private String content;
-    private boolean isLike;
+    private Boolean isLike;
     private Long postLikeSize;
     private Long commentSize;
-    private boolean isPostEdit;
-
+    private Boolean isPostEdit;
     private LocalDateTime updatedAt;
 
-    public PostDetailResponse(Long postId, Long userId, String userProfileImageURL, String nickName, Set<PostImagesResponse> postImages, String content, boolean isLike, Long postLikeSize, Long commentSize, boolean isPostEdit, LocalDateTime updatedAt) {
+    private List<PostImagesResponse> postImageUrls;
+
+    public PostDetailResponse(Long postId, Long userId, String userProfileImageURL, String nickName, String content, Boolean isLike, Long postLikeSize, Long commentSize, Boolean isPostEdit, LocalDateTime updatedAt, List<PostImagesResponse> postImageUrls) {
         this.postId = postId;
         this.userId = userId;
         this.userProfileImageURL = userProfileImageURL;
         this.nickName = nickName;
-        this.postImages = postImages;
         this.content = content;
         this.isLike = isLike;
         this.postLikeSize = postLikeSize;
         this.commentSize = commentSize;
         this.isPostEdit = isPostEdit;
         this.updatedAt = updatedAt;
+        this.postImageUrls = postImageUrls;
     }
+
 }

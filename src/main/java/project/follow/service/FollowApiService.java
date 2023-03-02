@@ -2,7 +2,7 @@ package project.follow.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.advice.exception.APIError;
+import project.advice.error.APIError;
 import project.advice.exception.FollowNotFoundException;
 import project.advice.exception.UserNotFoundException;
 import project.follow.domain.Follow;
@@ -25,18 +25,18 @@ public class FollowApiService {
     }
 
     public void follow(Long fromUserId, Long toUserId) {
+        requestAndExistValidate(fromUserId, toUserId);
         User fromUser = userRepository.findById(fromUserId)
                 .orElseThrow(UserNotFoundException::new);
         User toUser = userRepository.findById(toUserId)
                 .orElseThrow(UserNotFoundException::new);
-        requestAndExistValidate(fromUserId, toUser);
 
         Follow follow = Follow.builder()
                 .fromUser(fromUser)
                 .toUser(toUser)
                 .build();
-        fromUser.addFollowingSize(fromUser.getFollowingSize());
-        toUser.addFollowerSize(toUser.getFollowerSize());
+        fromUser.increaseFollowingSize(fromUser.getFollowingSize());
+        toUser.increaseFollowerSize(toUser.getFollowerSize());
         followRepository.save(follow);
     }
 
@@ -44,16 +44,16 @@ public class FollowApiService {
         Follow follow = followRepository.findByFromUserIdAndToUserId(fromUserId, toUserId)
                 .orElseThrow(FollowNotFoundException::new);
 
-        follow.getFromUser().removeFollowingSize(follow.getFromUser().getFollowingSize());
-        follow.getToUser().removeFollowerSize(follow.getToUser().getFollowerSize());
+        follow.getFromUser().decreaseFollowingSize(follow.getFromUser().getFollowingSize());
+        follow.getToUser().decreaseFollowerSize(follow.getToUser().getFollowerSize());
         followRepository.delete(follow);
     }
 
-    private void requestAndExistValidate(Long fromUserId, User toUser) {
-        if (fromUserId.equals(toUser.getId())) {
+    private void requestAndExistValidate(Long fromUserId, Long toUserId) {
+        if (fromUserId.equals(toUserId)) {
             throw new APIError("NotRequest", "잘못된 요청입니다.");
         }
-        Optional<Follow> findFollow = followRepository.findByFromUserIdAndToUserId(fromUserId, toUser.getId());
+        Optional<Follow> findFollow = followRepository.findByFromUserIdAndToUserId(fromUserId, toUserId);
         if (findFollow.isPresent()) {
             throw new APIError("AlreadyExist", "이미 존재합니다");
         }

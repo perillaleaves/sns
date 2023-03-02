@@ -1,6 +1,5 @@
 package project.user.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import project.user.domain.User;
@@ -14,8 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsUserByNickName(String nickName);
 
     Optional<User> findByEmail(@Param("email") String email);
-
-    @EntityGraph(attributePaths = {"userProfileImage"})
-    Optional<User> findById(Long id);
 
 }

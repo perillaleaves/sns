@@ -20,14 +20,14 @@ public class PostLikeApiController {
         this.postLikeApiService = postLikeApiService;
     }
 
-    @PostMapping("/{postId}/like")
+    @PostMapping("/post/{postId}/like")
     public Response<ValidationResponse> like(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         postLikeApiService.addLike(postId, user);
         return new Response<>(new ValidationResponse("Like", "좋아요"));
     }
 
-    @DeleteMapping("/{postId}/unlike")
+    @DeleteMapping("/post/{postId}/unlike")
     public Response<ValidationResponse> unLike(@PathVariable("postId") Long postId, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         postLikeApiService.removeLike(postId, user);

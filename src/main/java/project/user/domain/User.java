@@ -55,27 +55,27 @@ public class User extends BaseEntity {
         this.userTokens = userTokens;
     }
 
-    public void addPostSize(Long postSize) {
+    public void increasePostSize(Long postSize) {
         this.postSize = ++postSize;
     }
 
-    public void removePostSize(Long postSize) {
+    public void decreasePostSize(Long postSize) {
         this.postSize = --postSize;
     }
 
-    public void addFollowingSize(Long followingSize) {
+    public void increaseFollowingSize(Long followingSize) {
         this.followingSize = ++followingSize;
     }
 
-    public void addFollowerSize(Long followerSize) {
+    public void increaseFollowerSize(Long followerSize) {
         this.followerSize = ++followerSize;
     }
 
-    public void removeFollowingSize(Long followingSize) {
+    public void decreaseFollowingSize(Long followingSize) {
         this.followingSize = --followingSize;
     }
 
-    public void removeFollowerSize(Long followerSize) {
+    public void decreaseFollowerSize(Long followerSize) {
         this.followerSize = --followerSize;
     }
 

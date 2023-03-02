@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
 
-    @EntityGraph(attributePaths = {"post", "user"})
+    @EntityGraph(attributePaths = {"post"})
     Optional<PostLike> findByPostIdAndUserId(Long postId, Long userId);
 
     boolean existsPostLikeByPostIdAndUserId(Long postId, Long userId);
