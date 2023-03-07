@@ -5,6 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 import project.token.repository.TokenRepository;
+import project.user.repository.UserProfileImageRepository;
 import project.user.repository.UserRepository;
 import project.user.service.UserApiService;
 import project.user.service.UserQueryService;
@@ -15,6 +16,9 @@ public class ServiceTest {
 
     @MockBean
     protected UserRepository userRepository;
+
+    @MockBean
+    protected UserProfileImageRepository userProfileImageRepository;
 
     @MockBean
     protected TokenRepository tokenRepository;

@@ -1,21 +1,22 @@
 package project.util;
 
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Repository;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import project.token.repository.TokenRepository;
+import project.user.repository.UserProfileImageRepository;
 import project.user.repository.UserRepository;
 
-@SpringBootTest
-@Repository
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@ActiveProfiles("test")
+@DataJpaTest
+@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 public class RepositoryTest {
 
     @Autowired
     protected UserRepository userRepository;
+
+    @Autowired
+    protected UserProfileImageRepository userProfileImageRepository;
 
     @Autowired
     private TokenRepository tokenRepository;

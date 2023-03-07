@@ -1,11 +1,10 @@
 package project.util;
 
-import org.springframework.web.multipart.MultipartFile;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Constants {
-
-    private Constants() {
-    }
 
     public static final String USERPROFILEIMG = "SWEET.jpg";
 
@@ -17,5 +16,7 @@ public class Constants {
     public static final Long POSTSIZE = 10L;
     public static final Long FOLLOEWRSIZE = 10L;
     public static final Long FOLLOWINGSIZE = 10L;
+
+    public static final String USERTOKEN = "123123123123";
 
 }
