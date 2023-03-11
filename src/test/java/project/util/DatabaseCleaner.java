@@ -1,6 +1,7 @@
 package project.util;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +13,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
-@ActiveProfiles("test")
+@Profile("test")
 public class DatabaseCleaner implements InitializingBean {
-
     @PersistenceContext
     private EntityManager entityManager;
 

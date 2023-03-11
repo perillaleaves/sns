@@ -26,7 +26,8 @@ public class UserToken extends CreatedAtEntity {
     private String accessToken;
 
     @Builder
-    public UserToken(User user, String accessToken) {
+    public UserToken(Long id, User user, String accessToken) {
+        this.id = id;
         this.user = user;
         this.accessToken = accessToken;
     }
