@@ -8,14 +8,14 @@ import project.token.repository.TokenRepository;
 @Transactional
 public class TokenApiService {
 
-    public void deleteToken(String token) {
-        tokenRepository.deleteByAccessToken(token);
-    }
-
     private final TokenRepository tokenRepository;
 
     public TokenApiService(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
+    }
+
+    public void deleteToken(String token) {
+        tokenRepository.deleteByAccessToken(token);
     }
 
 }

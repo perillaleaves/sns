@@ -24,6 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
 @Service
+@Transactional
 public class UserApiService {
 
     private final UserRepository userRepository;
@@ -38,7 +39,6 @@ public class UserApiService {
         this.s3Service = s3Service;
     }
 
-    @Transactional
     public void signup(SignupRequest request) throws NoSuchAlgorithmException {
         validate(request);
 
@@ -61,7 +61,6 @@ public class UserApiService {
         userRepository.save(user);
     }
 
-    @Transactional
     public UserLoginResponse login(LoginRequest request) throws NoSuchAlgorithmException {
         String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullaepro.com/";
         User user = userRepository.findByEmail(request.getEmail())
@@ -79,7 +78,6 @@ public class UserApiService {
                 token.getAccessToken());
     }
 
-    @Transactional
     public void editProfile(Long userId, Long loginUserId, ProfileEditRequest request) {
         editInputValidate(userId, loginUserId, request);
         User user = userRepository.findById(userId)
@@ -89,7 +87,6 @@ public class UserApiService {
         user.editProfile(request);
     }
 
-    @Transactional
     public void editProfileImage(Long userId, Long loginUserId, MultipartFile file, String dirName) throws IOException {
         editProfileImageInputValidate(userId, loginUserId, file);
         User user = userRepository.findById(userId)

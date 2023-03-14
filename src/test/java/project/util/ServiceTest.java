@@ -8,6 +8,7 @@ import project.follow.repository.FollowRepository;
 import project.post.repository.PostRepositoryImpl;
 import project.s3.S3Service;
 import project.token.repository.TokenRepository;
+import project.token.service.TokenApiService;
 import project.user.repository.UserProfileImageRepository;
 import project.user.repository.UserRepository;
 import project.user.service.UserApiService;
@@ -40,5 +41,8 @@ public class ServiceTest {
 
     @Autowired
     protected S3Service s3Service;
+
+    @Autowired
+    protected TokenApiService tokenApiService;
 
 }
