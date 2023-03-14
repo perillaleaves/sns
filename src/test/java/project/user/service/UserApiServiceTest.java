@@ -119,13 +119,13 @@ class UserApiServiceTest extends ServiceTest {
         User findUserByEmail = userRepository.findByEmail(user.getEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("testfile.png", new FileInputStream("/Users/taegyun/Downloads/blanc.jpeg"));
-        given(s3Service.convert(any(MultipartFile.class)));
-        given(s3Service.upload(mockMultipartFile, IMAMGEDIRNAME));
-
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("image", "test.jpeg", "imgae/jpeg", new FileInputStream("/Users/taegyun/Downloads/cat1.jpeg"));
         String upload = s3Service.upload(mockMultipartFile, IMAMGEDIRNAME);
+        findUserById.getUserProfileImage().userProfileImageModify(upload);
 
         userApiService.editProfileImage(findUserById.getId(), findUserByEmail.getId(), mockMultipartFile, IMAMGEDIRNAME);
+
+        assertThat(findUserById.getUserProfileImage().getUserProfileImageURL()).isEqualTo(findUserByEmail.getUserProfileImage().getUserProfileImageURL());
     }
 
 }
