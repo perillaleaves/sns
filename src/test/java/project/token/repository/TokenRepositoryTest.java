@@ -1,9 +1,9 @@
-package project.user.repository;
+package project.token.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import project.advice.exception.UserNotFoundException;
+import project.advice.exception.AccessTokenNotFoundException;
 import project.common.EncryptUtils;
 import project.token.domain.UserToken;
 import project.user.domain.User;
@@ -14,9 +14,8 @@ import java.security.NoSuchAlgorithmException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static project.util.Constants.*;
-import static project.util.Constants.EMAIL;
 
-class UserRepositoryTest extends RepositoryTest{
+class TokenRepositoryTest extends RepositoryTest {
 
     private User user;
     private UserProfileImage userProfileImg;
@@ -50,30 +49,24 @@ class UserRepositoryTest extends RepositoryTest{
     }
 
     @Test
-    @DisplayName("특정 이메일을 가진 유저가 있는지 확인")
-    void existsByEmail() {
-        userRepository.save(user);
+    @DisplayName("토큰 삭제 확인")
+    void deleteByAccessToken() {
+        UserToken savedToken = tokenRepository.save(userToken);
 
-        assertThat(userRepository.existsUserByEmail(user.getEmail())).isTrue();
+        tokenRepository.deleteByAccessToken(savedToken.getAccessToken());
+
+        assertThat(tokenRepository.findByAccessToken(savedToken.getAccessToken())).isEmpty();
     }
 
     @Test
-    @DisplayName("특정 닉네임을 가진 유저가 있는지 확인")
-    void existsByNickName() {
-        userRepository.save(user);
+    @DisplayName("저장된 토큰을 토큰 번호를 통해 확인할 수 있다")
+    void findByAccessToken() {
+        UserToken savedToken = tokenRepository.save(userToken);
 
-        assertThat(userRepository.existsUserByNickName(user.getNickName())).isTrue();
-    }
+        UserToken findToken = tokenRepository.findByAccessToken(savedToken.getAccessToken())
+                .orElseThrow(AccessTokenNotFoundException::new);
 
-    @Test
-    @DisplayName("저장된 유저를 이메일을 통해 확인할 수 있다.")
-    void findByEmail() {
-        User savedUser = userRepository.save(user);
-
-        User findUser = userRepository.findByEmail(savedUser.getEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        assertThat(findUser).isEqualTo(savedUser);
+        assertThat(findToken).isEqualTo(savedToken);
     }
 
 }

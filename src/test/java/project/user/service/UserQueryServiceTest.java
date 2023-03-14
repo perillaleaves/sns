@@ -1,4 +1,4 @@
-package project.user.repository;
+package project.user.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,15 +8,16 @@ import project.common.EncryptUtils;
 import project.token.domain.UserToken;
 import project.user.domain.User;
 import project.user.domain.UserProfileImage;
-import project.util.RepositoryTest;
+import project.user.response.UserDetailResponse;
+import project.util.ServiceTest;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static project.util.Constants.*;
-import static project.util.Constants.EMAIL;
 
-class UserRepositoryTest extends RepositoryTest{
+class UserQueryServiceTest extends ServiceTest {
 
     private User user;
     private UserProfileImage userProfileImg;
@@ -50,30 +51,31 @@ class UserRepositoryTest extends RepositoryTest{
     }
 
     @Test
-    @DisplayName("특정 이메일을 가진 유저가 있는지 확인")
-    void existsByEmail() {
-        userRepository.save(user);
-
-        assertThat(userRepository.existsUserByEmail(user.getEmail())).isTrue();
-    }
-
-    @Test
-    @DisplayName("특정 닉네임을 가진 유저가 있는지 확인")
-    void existsByNickName() {
-        userRepository.save(user);
-
-        assertThat(userRepository.existsUserByNickName(user.getNickName())).isTrue();
-    }
-
-    @Test
-    @DisplayName("저장된 유저를 이메일을 통해 확인할 수 있다.")
-    void findByEmail() {
-        User savedUser = userRepository.save(user);
-
-        User findUser = userRepository.findByEmail(savedUser.getEmail())
+    @DisplayName("User Profile 찾기 Query - Service")
+    void findUserProfile() {
+        given(userRepository.findById(user.getId()))
+                .willReturn(Optional.of(user));
+        User findUserById = userRepository.findById(user.getId())
                 .orElseThrow(UserNotFoundException::new);
 
-        assertThat(findUser).isEqualTo(savedUser);
+        given(userRepository.findByEmail(user.getEmail()))
+                .willReturn(Optional.of(user));
+        User findUserByEmail = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        UserDetailResponse userDetailResponse = new UserDetailResponse(
+                USERID,
+                USERPROFILEIMG,
+                USERNAME,
+                NICKNAME,
+                CONTENT,
+                POSTSIZE,
+                FOLLOEWRSIZE,
+                FOLLOWINGSIZE,
+                true,
+                followRepository.existsFollowByFromUserIdAndToUserId(findUserById.getId(), findUserByEmail.getId()));
+
+
     }
 
 }

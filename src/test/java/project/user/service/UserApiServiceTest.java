@@ -4,11 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.util.ResourceUtils;
-import org.springframework.web.multipart.MultipartFile;
 import project.advice.exception.UserNotFoundException;
 import project.common.EncryptUtils;
-import project.s3.S3Service;
 import project.token.domain.UserToken;
 import project.user.domain.User;
 import project.user.domain.UserProfileImage;
@@ -17,14 +14,12 @@ import project.user.request.ProfileEditRequest;
 import project.user.request.SignupRequest;
 import project.util.ServiceTest;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static project.util.Constants.*;
 

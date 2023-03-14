@@ -18,6 +18,6 @@ public class RepositoryTest {
     protected UserProfileImageRepository userProfileImageRepository;
 
     @Autowired
-    private TokenRepository tokenRepository;
+    protected TokenRepository tokenRepository;
 
 }

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
+import project.follow.repository.FollowRepository;
+import project.post.repository.PostRepositoryImpl;
 import project.s3.S3Service;
 import project.token.repository.TokenRepository;
 import project.user.repository.UserProfileImageRepository;
@@ -23,6 +25,12 @@ public class ServiceTest {
 
     @MockBean
     protected TokenRepository tokenRepository;
+
+    @MockBean
+    protected FollowRepository followRepository;
+
+    @MockBean
+    protected PostRepositoryImpl postRepositoryImpl;
 
     @Autowired
     protected UserApiService userApiService;
