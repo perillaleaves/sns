@@ -29,7 +29,7 @@ public class UserProfileImage {
         this.user = user;
     }
 
-    public void userProfileImageModify(String userProfileImageURL) {
+    public void updateUserProfileImageUrl(String userProfileImageURL) {
         this.userProfileImageURL = userProfileImageURL;
     }
 

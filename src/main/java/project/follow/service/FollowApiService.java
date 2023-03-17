@@ -35,8 +35,8 @@ public class FollowApiService {
                 .fromUser(fromUser)
                 .toUser(toUser)
                 .build();
-        fromUser.increaseFollowingSize(fromUser.getFollowingSize());
-        toUser.increaseFollowerSize(toUser.getFollowerSize());
+        fromUser.increaseFollowingSize(fromUser.getFollowingCount());
+        toUser.increaseFollowerSize(toUser.getFollowerCount());
         followRepository.save(follow);
     }
 
@@ -44,8 +44,8 @@ public class FollowApiService {
         Follow follow = followRepository.findByFromUserIdAndToUserId(fromUserId, toUserId)
                 .orElseThrow(FollowNotFoundException::new);
 
-        follow.getFromUser().decreaseFollowingSize(follow.getFromUser().getFollowingSize());
-        follow.getToUser().decreaseFollowerSize(follow.getToUser().getFollowerSize());
+        follow.getFromUser().decreaseFollowingSize(follow.getFromUser().getFollowingCount());
+        follow.getToUser().decreaseFollowerSize(follow.getToUser().getFollowerCount());
         followRepository.delete(follow);
     }
 

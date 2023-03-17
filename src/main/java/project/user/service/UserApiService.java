@@ -53,18 +53,18 @@ public class UserApiService {
                 .name(request.getName())
                 .nickName(request.getNickName())
                 .password(EncryptUtils.encrypt(request.getPassword()))
-                .content("")
-                .postSize(0L)
-                .followerSize(0L)
-                .followingSize(0L)
+                .profileContent("")
+                .postCount(0L)
+                .followerCount(0L)
+                .followingCount(0L)
                 .build();
+
         userRepository.save(user);
     }
 
     public UserLoginResponse login(LoginRequest request) throws NoSuchAlgorithmException {
         String s3Url = "https://s3.ap-northeast-2.amazonaws.com/mullaepro.com/";
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(UserNotFoundException::new);
+        User user = findUserByEmail(request);
         loginValidate(request, user);
 
         UserToken token = UserToken.builder()
@@ -72,28 +72,29 @@ public class UserApiService {
                 .accessToken(GenerateToken.generatedToken(user, request.getEmail()))
                 .build();
         tokenRepository.save(token);
+
         return new UserLoginResponse(user.getId(),
                 s3Url + user.getUserProfileImage().getUserProfileImageURL(),
                 user.getNickName(),
                 token.getAccessToken());
     }
 
-    public void editProfile(Long userId, Long loginUserId, ProfileEditRequest request) {
-        editInputValidate(userId, loginUserId, request);
-        User user = userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
-        editValidate(request, user);
-
-        user.editProfile(request);
+    public void updateUserProfile(Long userId, Long loginUserId, ProfileEditRequest request) {
+        validateInput(userId, loginUserId, request);
+        User user = findUserById(userId);
+        validateUserProfileEdit(request, user);
+        updateUserProfile(request, user);
     }
 
     public void editProfileImage(Long userId, Long loginUserId, MultipartFile file, String dirName) throws IOException {
-        editProfileImageInputValidate(userId, loginUserId, file);
-        User user = userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
+        validateImageInput(userId, loginUserId, file);
+        User user = findUserById(userId);
+        String imageUrl = uploadUserProfileImage(file, dirName);
+        updateUserProfileImageUrl(user, imageUrl);
+    }
 
-        String imgPaths = s3Service.upload(file, dirName);
-        user.getUserProfileImage().userProfileImageModify(imgPaths);
+    private String uploadUserProfileImage(MultipartFile file, String dirName) throws IOException {
+        return s3Service.upload(file, dirName);
     }
 
     private void validate(SignupRequest request) {
@@ -102,22 +103,27 @@ public class UserApiService {
             throw new APIError("InvalidEmail", "이메일을 양식에 맞게 입력해주세요.");
         }
 
-        if (2 > request.getName().length() || request.getName().length() > 10) {
+        if (request.getName().length() < 2 || request.getName().length() > 10) {
             throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
         }
-        if (2 > request.getNickName().length() || request.getNickName().length() > 10) {
+        if (request.getNickName().length() < 2 || request.getNickName().length() > 10) {
             throw new APIError("InvalidNickName", "닉네임을 2자 이상 10자 이하로 입력해주세요.");
         }
-        if (5 > request.getPassword().length() || request.getPassword().length() > 10) {
+        if (request.getPassword().length() < 5 || request.getPassword().length() > 10) {
             throw new APIError("InvalidPassword", "패스워드를 5자 이상 10자 이하로 입력해주세요.");
         }
 
-        if (userRepository.existsUserByEmail(request.getEmail())) {
-            throw new APIError("DuplicatedEmail", "중복된 이메일입니다.");
+        if (userRepository.isEmailExists(request.getEmail())) {
+            throw new APIError("DuplicatedEmail", "이미 존재하는 이메일입니다..");
         }
-        if (userRepository.existsUserByNickName(request.getNickName())) {
-            throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
+        if (userRepository.isNickNameExists(request.getNickName())) {
+            throw new APIError("DuplicatedNickName", "이미 존재하는 닉네임입니다.");
         }
+    }
+
+    private User findUserByEmail(LoginRequest request) {
+        return userRepository.findByEmail(request.getEmail())
+                .orElseThrow(UserNotFoundException::new);
     }
 
     private void loginValidate(LoginRequest request, User user) throws NoSuchAlgorithmException {
@@ -126,11 +132,11 @@ public class UserApiService {
         }
     }
 
-    private void editInputValidate(Long userId, Long loginUserId, ProfileEditRequest request) {
-        if (2 > request.getUserName().length() || request.getUserName().length() > 10) {
+    private void validateInput(Long userId, Long loginUserId, ProfileEditRequest request) {
+        if (request.getUserName().length() < 2 || request.getUserName().length() > 10) {
             throw new APIError("InvalidName", "이름을 2자 이상 10자 이하로 입력해주세요.");
         }
-        if (2 > request.getNickName().length() || request.getNickName().length() > 10) {
+        if (request.getNickName().length() < 2 || request.getNickName().length() > 10) {
             throw new APIError("InvalidNickName", "닉네임을 2자 이상 10자 이하로 입력해주세요.");
         }
         if (request.getContent().isEmpty() || request.getContent().length() > 150) {
@@ -141,19 +147,32 @@ public class UserApiService {
         }
     }
 
-    private void editValidate(ProfileEditRequest request, User user) {
-        if (userRepository.existsUserByNickName(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    private void validateUserProfileEdit(ProfileEditRequest request, User user) {
+        if (userRepository.isNickNameExists(request.getNickName()) && !user.getNickName().equals(request.getNickName())) {
             throw new APIError("DuplicatedNickName", "중복된 닉네임입니다.");
         }
     }
 
-    private void editProfileImageInputValidate(Long userId, Long loginUserId, MultipartFile file) {
+    private void updateUserProfile(ProfileEditRequest request, User user) {
+        user.editProfile(request);
+    }
+
+    private void validateImageInput(Long userId, Long loginUserId, MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new APIError("EmptyPostImage", "최소 1개 이상의 사진을 업로드 해주세요.");
         }
         if (!loginUserId.equals(userId)) {
             throw new APIError("NotRequest", "잘못된 요청입니다.");
         }
+    }
+
+    private void updateUserProfileImageUrl(User user, String imageUrl) {
+        user.getUserProfileImage().updateUserProfileImageUrl(imageUrl);
     }
 
 }

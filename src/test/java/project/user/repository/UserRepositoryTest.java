@@ -54,7 +54,7 @@ class UserRepositoryTest extends RepositoryTest{
     void existsByEmail() {
         userRepository.save(user);
 
-        assertThat(userRepository.existsUserByEmail(user.getEmail())).isTrue();
+        assertThat(userRepository.isEmailExists(user.getEmail())).isTrue();
     }
 
     @Test
@@ -62,7 +62,7 @@ class UserRepositoryTest extends RepositoryTest{
     void existsByNickName() {
         userRepository.save(user);
 
-        assertThat(userRepository.existsUserByNickName(user.getNickName())).isTrue();
+        assertThat(userRepository.isNickNameExists(user.getNickName())).isTrue();
     }
 
     @Test

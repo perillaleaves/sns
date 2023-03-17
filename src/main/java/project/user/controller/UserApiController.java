@@ -51,7 +51,7 @@ public class UserApiController {
     @PutMapping("/user/profile/{userId}")
     public Response<ValidationResponse> profileEdit(@PathVariable("userId") Long userId, @RequestBody ProfileEditRequest request, HttpServletRequest httpServletRequest) {
         Long loginUserId = (Long) httpServletRequest.getAttribute("userId");
-        userApiService.editProfile(userId, loginUserId, request);
+        userApiService.updateUserProfile(userId, loginUserId, request);
         return new Response<>(new ValidationResponse("Update", "수정 완료"));
     }
 

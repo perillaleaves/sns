@@ -46,7 +46,7 @@ public class PostApiService {
                 .postLikeSize(0L)
                 .user(user)
                 .build();
-        user.increasePostSize(user.getPostSize());
+        user.increasePostSize(user.getPostCount());
         postRepository.save(post);
 
         List<String> imageUrls = s3Service.multiUpload(files, dirName);
@@ -75,7 +75,7 @@ public class PostApiService {
                 .orElseThrow(PostNotFoundException::new);
         loginValidate(loginUserID, post);
 
-        user.decreasePostSize(user.getPostSize());
+        user.decreasePostSize(user.getPostCount());
         postRepository.delete(post);
     }
 

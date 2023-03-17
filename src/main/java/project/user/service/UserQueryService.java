@@ -45,10 +45,10 @@ public class UserQueryService {
                 s3Url + user.getUserProfileImage().getUserProfileImageURL(),
                 user.getName(),
                 user.getNickName(),
-                user.getContent(),
-                user.getPostSize(),
-                user.getFollowerSize(),
-                user.getFollowingSize(),
+                user.getProfileContent(),
+                user.getPostCount(),
+                user.getFollowerCount(),
+                user.getFollowingCount(),
                 userId.equals(loginUserId),
                 followRepository.existsFollowByFromUserIdAndToUserId(userId, loginUserId));
 

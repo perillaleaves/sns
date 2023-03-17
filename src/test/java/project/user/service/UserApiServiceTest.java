@@ -96,7 +96,7 @@ class UserApiServiceTest extends ServiceTest {
                 .orElseThrow(UserNotFoundException::new);
 
         ProfileEditRequest profileEditRequest = new ProfileEditRequest("taegyun", "gyunny", "lee");
-        userApiService.editProfile(findUserByEmail.getId(), findUserById.getId(), profileEditRequest);
+        userApiService.updateUserProfile(findUserByEmail.getId(), findUserById.getId(), profileEditRequest);
 
         assertThat(userRepository.findByEmail(EMAIL).orElseThrow().getName()).isEqualTo("taegyun");
     }
@@ -116,7 +116,7 @@ class UserApiServiceTest extends ServiceTest {
 
         MockMultipartFile mockMultipartFile = new MockMultipartFile("image", "test.jpeg", "imgae/jpeg", new FileInputStream("/Users/taegyun/Downloads/cat1.jpeg"));
         String upload = s3Service.upload(mockMultipartFile, IMAMGEDIRNAME);
-        findUserById.getUserProfileImage().userProfileImageModify(upload);
+        findUserById.getUserProfileImage().updateUserProfileImageUrl(upload);
 
         userApiService.editProfileImage(findUserById.getId(), findUserByEmail.getId(), mockMultipartFile, IMAMGEDIRNAME);
 

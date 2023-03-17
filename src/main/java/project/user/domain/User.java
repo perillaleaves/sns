@@ -30,61 +30,57 @@ public class User extends BaseEntity {
     private String name;
     private String nickName;
     private String password;
-
-    private String content;
-
-    private Long postSize;
-    private Long followingSize;
-    private Long followerSize;
+    private String profileContent;
+    private Long postCount;
+    private Long followingCount;
+    private Long followerCount;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserToken> userTokens = new ArrayList<>();
 
     @Builder
-    public User(Long id, UserProfileImage userProfileImage, String email, String name, String nickName, String password, String content, Long postSize, Long followingSize, Long followerSize, List<UserToken> userTokens) {
+    public User(Long id, UserProfileImage userProfileImage, String email, String name, String nickName, String password, String profileContent, Long postCount, Long followingCount, Long followerCount, List<UserToken> userTokens) {
         this.id = id;
         this.userProfileImage = userProfileImage;
         this.email = email;
         this.name = name;
         this.nickName = nickName;
         this.password = password;
-        this.content = content;
-        this.postSize = postSize;
-        this.followingSize = followingSize;
-        this.followerSize = followerSize;
+        this.profileContent = profileContent;
+        this.postCount = postCount;
+        this.followingCount = followingCount;
+        this.followerCount = followerCount;
         this.userTokens = userTokens;
     }
 
     public void increasePostSize(Long postSize) {
-        this.postSize = ++postSize;
+        this.postCount = ++postSize;
     }
 
     public void decreasePostSize(Long postSize) {
-        this.postSize = --postSize;
+        this.postCount = --postSize;
     }
 
     public void increaseFollowingSize(Long followingSize) {
-        this.followingSize = ++followingSize;
+        this.followingCount = ++followingSize;
     }
 
     public void increaseFollowerSize(Long followerSize) {
-        this.followerSize = ++followerSize;
+        this.followerCount = ++followerSize;
     }
 
     public void decreaseFollowingSize(Long followingSize) {
-        this.followingSize = --followingSize;
+        this.followingCount = --followingSize;
     }
 
     public void decreaseFollowerSize(Long followerSize) {
-        this.followerSize = --followerSize;
+        this.followerCount = --followerSize;
     }
 
     public void editProfile(ProfileEditRequest request) {
         this.name = request.getUserName();
         this.nickName = request.getNickName();
-        this.content = request.getContent();
+        this.profileContent = request.getContent();
     }
-
-
 
 }
