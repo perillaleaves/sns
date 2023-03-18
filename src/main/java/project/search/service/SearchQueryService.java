@@ -35,7 +35,7 @@ public class SearchQueryService {
                         s.getUserName(),
                         s.getNickName(),
                         s.getFollowerSize(),
-                        followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, s.getUserId())))
+                        followRepository.isFollowExistsByFromUserIdAndToUserId(loginUserId, s.getUserId())))
                 .collect(Collectors.toList());
 
         boolean hasNext = false;
@@ -55,7 +55,7 @@ public class SearchQueryService {
                         s.getUserName(),
                         s.getNickName(),
                         s.getFollowerSize(),
-                        followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, s.getUserId())))
+                        followRepository.isFollowExistsByFromUserIdAndToUserId(loginUserId, s.getUserId())))
                 .collect(Collectors.toList());
 
         boolean hasNext = false;

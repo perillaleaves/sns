@@ -23,9 +23,9 @@ public class UserProfileImage {
     private User user;
 
     @Builder
-    public UserProfileImage(Long id, String userProfileImageURL, User user) {
+    public UserProfileImage(Long id, String userProfileImageUrl, User user) {
         this.id = id;
-        this.userProfileImageURL = userProfileImageURL;
+        this.userProfileImageURL = userProfileImageUrl;
         this.user = user;
     }
 

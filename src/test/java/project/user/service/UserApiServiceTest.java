@@ -62,7 +62,7 @@ class UserApiServiceTest extends ServiceTest {
         SignupRequest signupRequest = new SignupRequest(EMAIL, USERNAME, NICKNAME, PASSWORD);
         userApiService.signup(signupRequest);
 
-        assertThat(signupRequest.getName()).isEqualTo(user.getName());
+        assertThat(signupRequest.getUserName()).isEqualTo(user.getName());
     }
 
     @Test
@@ -77,7 +77,7 @@ class UserApiServiceTest extends ServiceTest {
                 .willReturn(Optional.of(userProfileImg));
 
         LoginRequest loginRequest = new LoginRequest(USERTOKEN, EMAIL, PASSWORD);
-        userApiService.login(loginRequest);
+        userApiService.authenticateUser(loginRequest);
 
         assertThat(loginRequest.getEmail()).isEqualTo(findUserByEmail.getEmail());
     }

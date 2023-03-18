@@ -73,7 +73,7 @@ class UserQueryServiceTest extends ServiceTest {
                 FOLLOEWRSIZE,
                 FOLLOWINGSIZE,
                 true,
-                followRepository.existsFollowByFromUserIdAndToUserId(findUserById.getId(), findUserByEmail.getId()));
+                followRepository.isFollowExistsByFromUserIdAndToUserId(findUserById.getId(), findUserByEmail.getId()));
 
 
     }

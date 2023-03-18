@@ -40,7 +40,7 @@ public class FollowQueryService {
                 s3Url + findUser.getUserProfileImage().getUserProfileImageURL(),
                 findUser.getName(),
                 findUser.getNickName(),
-                followRepository.existsFollowByFromUserIdAndToUserId(userId, loginUserId));
+                followRepository.isFollowExistsByFromUserIdAndToUserId(userId, loginUserId));
 
         List<FollowingUserListResponse> followingUserList = followRepositoryImpl.findFollowingUserList(lastFollowId, userId, loginUserId, pageable);
         List<FollowingUserListDetaiResponse> followingUserListDetail = followingUserList.stream()
@@ -50,7 +50,7 @@ public class FollowQueryService {
                         s3Url + f.getUserProfileImageUrl(),
                         f.getUserName(),
                         f.getNickName(),
-                        followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, f.getUserId())))
+                        followRepository.isFollowExistsByFromUserIdAndToUserId(loginUserId, f.getUserId())))
                 .collect(Collectors.toList());
 
         boolean hasNext = false;
@@ -69,7 +69,7 @@ public class FollowQueryService {
                 s3Url + findUser.getUserProfileImage().getUserProfileImageURL(),
                 findUser.getName(),
                 findUser.getNickName(),
-                followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, userId));
+                followRepository.isFollowExistsByFromUserIdAndToUserId(loginUserId, userId));
 
         List<FollowerUserListResponse> followerUserList = followRepositoryImpl.findFollowerUserList(lastFollowId, userId, loginUserId, pageable);
         List<FollowerUserListDetailResponse> followerUserListDetail = followerUserList.stream()
@@ -79,7 +79,7 @@ public class FollowQueryService {
                         s3Url + f.getUserProfileImageUrl(),
                         f.getUserName(),
                         f.getNickName(),
-                        followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, f.getUserId())))
+                        followRepository.isFollowExistsByFromUserIdAndToUserId(loginUserId, f.getUserId())))
                 .collect(Collectors.toList());
 
         boolean hasNext = false;

@@ -12,6 +12,7 @@ import project.user.response.LoginResponse;
 import project.user.response.UserLoginResponse;
 import project.user.service.UserApiService;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,15 +37,37 @@ public class UserApiController {
 
     @PostMapping("/login")
     public Response<LoginResponse> login(@RequestBody LoginRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
-        UserLoginResponse login = userApiService.login(request);
-        response.setHeader("token", login.getAccessToken());
+        UserLoginResponse login = userApiService.authenticateUser(request);
+        Cookie cookie = new Cookie("token", login.getAccessToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
         return new Response<>(new LoginResponse(login));
     }
 
     @PostMapping("/logout")
-    public Response<ValidationResponse> logout(HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("token");
-        tokenService.deleteToken(token);
+    public Response<ValidationResponse> logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        String token = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("token")) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token != null) {
+            tokenService.deleteToken(token);
+            Cookie cookie = new Cookie("token", null);
+            cookie.setMaxAge(0);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
+
         return new Response<>(new ValidationResponse("Logout", "로그아웃"));
     }
 

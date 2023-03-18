@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 public class SignupRequest {
 
     private String email;
-    private String name;
+    private String userName;
     private String nickName;
     private String password;
 
-    public SignupRequest(String email, String name, String nickName, String password) {
+    public SignupRequest(String email, String userName, String nickName, String password) {
         this.email = email;
-        this.name = name;
+        this.userName = userName;
         this.nickName = nickName;
         this.password = password;
     }

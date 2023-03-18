@@ -50,26 +50,22 @@ public class UserQueryService {
                 user.getFollowerCount(),
                 user.getFollowingCount(),
                 userId.equals(loginUserId),
-                followRepository.existsFollowByFromUserIdAndToUserId(userId, loginUserId));
+                followRepository.isFollowExistsByFromUserIdAndToUserId(userId, loginUserId));
 
         List<ProfilePostListResponse> postList = postRepositoryImpl.getProfilePostList(lastPostId, userId, pageable);
         List<ProfilePostDetailListResponse> postDetailResponse = postList.stream()
                 .map(p -> {
                     List<PostImage> postImages = postImageRepository.findByPostId(p.getPostId());
                     List<PostImagesResponse> postImageList = postImages.stream()
-                            .map(pi -> new PostImagesResponse(
-                                    pi.getId(),
-                                    s3Url + pi.getPostImageUrl())).collect(Collectors.toList());
+                            .map(pi -> new PostImagesResponse(pi.getId(), s3Url + pi.getPostImageUrl()))
+                            .collect(Collectors.toList());
 
                     return new ProfilePostDetailListResponse(
                             p.getPostId(),
                             postImageList);
                 }).collect(Collectors.toList());
 
-        boolean hasNext = false;
-        if (postDetailResponse.size() >= pageable.getPageSize()) {
-            hasNext = true;
-        }
+        boolean hasNext = postDetailResponse.size() >= pageable.getPageSize();
 
         return new ProfileResponse(userDetailResponse, postDetailResponse, hasNext);
     }
