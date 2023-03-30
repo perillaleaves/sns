@@ -46,27 +46,9 @@ public class UserApiController {
     }
 
     @PostMapping("/logout")
-    public Response<ValidationResponse> logout(HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
-        String token = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    token = cookie.getValue();
-                    break;
-                }
-            }
-        }
-
-        if (token != null) {
-            tokenService.deleteToken(token);
-            Cookie cookie = new Cookie("token", null);
-            cookie.setMaxAge(0);
-            cookie.setHttpOnly(true);
-            cookie.setSecure(true);
-            cookie.setPath("/");
-            response.addCookie(cookie);
-        }
+    public Response<ValidationResponse> logout(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        tokenService.deleteToken(token);
 
         return new Response<>(new ValidationResponse("Logout", "로그아웃"));
     }

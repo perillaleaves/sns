@@ -28,12 +28,14 @@ public class PostLikeApiService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        PostLike postLike = PostLike.builder()
-                .post(post)
-                .user(user)
-                .build();
-        post.increasePostLikeSize(post.getPostLikeSize());
-        postLikeRepository.save(postLike);
+        synchronized (post) {
+            PostLike postLike = PostLike.builder()
+                    .post(post)
+                    .user(user)
+                    .build();
+            post.increasePostLikeSize(post.getPostLikeSize());
+            postLikeRepository.save(postLike);
+        }
     }
 
     public void removeLike(Long postId, User user) {

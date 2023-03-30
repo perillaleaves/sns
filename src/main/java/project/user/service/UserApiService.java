@@ -1,6 +1,5 @@
 package project.user.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,7 +45,7 @@ public class UserApiService {
         validate(request);
 
         UserProfileImage userProfileImage = UserProfileImage.builder()
-                .userProfileImageURL("logo/default_profile.png")
+                .userProfileImageUrl("logo/default_profile.png")
                 .build();
         userProfileImageRepository.save(userProfileImage);
 
