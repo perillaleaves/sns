@@ -8,7 +8,6 @@ import project.comment.response.CommentSliceResponse;
 import project.comment.response.QCommentSliceResponse;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static project.comment.domain.QComment.comment;

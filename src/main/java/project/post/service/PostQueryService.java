@@ -12,7 +12,6 @@ import project.post.repository.PostRepositoryImpl;
 import project.post.response.*;
 import project.postLike.reposiotry.PostLikeRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,10 +81,7 @@ public class PostQueryService {
 
                 }).collect(Collectors.toList());
 
-        boolean hasNext = false;
-        if (postList.size() >= pageable.getPageSize()) {
-            hasNext = true;
-        }
+        boolean hasNext = postList.size() >= pageable.getPageSize();
 
         return new NewsFeedListResponse(postListDetail, hasNext);
     }

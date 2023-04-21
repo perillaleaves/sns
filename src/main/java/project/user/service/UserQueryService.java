@@ -66,10 +66,7 @@ public class UserQueryService {
                             postImageList);
                 }).collect(Collectors.toList());
 
-        boolean hasNext = false;
-        if (postDetailResponse.size() >= pageable.getPageSize()) {
-            hasNext = true;
-        }
+        boolean hasNext = postDetailResponse.size() >= pageable.getPageSize();
 
         return new ProfileResponse(userDetailResponse, postDetailResponse, hasNext);
     }

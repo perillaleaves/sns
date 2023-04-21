@@ -4,8 +4,10 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import project.post.domain.QPostImage;
-import project.post.response.*;
+import project.post.response.PostListResponse;
+import project.post.response.ProfilePostListResponse;
+import project.post.response.QPostListResponse;
+import project.post.response.QProfilePostListResponse;
 
 import javax.persistence.EntityManager;
 import java.util.List;

@@ -41,10 +41,7 @@ public class ReCommentQueryService {
                         r.getUpdatedAt()))
                 .collect(Collectors.toList());
 
-        boolean hasNext = false;
-        if (reCommentList.size() >= pageable.getPageSize()) {
-            hasNext = true;
-        }
+        boolean hasNext = reCommentList.size() >= pageable.getPageSize();
 
         return new ReCommentListResponse(reCommentDetailList, hasNext);
     }

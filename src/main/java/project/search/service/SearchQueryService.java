@@ -38,10 +38,7 @@ public class SearchQueryService {
                         followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, s.getUserId())))
                 .collect(Collectors.toList());
 
-        boolean hasNext = false;
-        if (searchUserList.size() >= pageable.getPageSize()) {
-            hasNext = true;
-        }
+        boolean hasNext = searchUserList.size() >= pageable.getPageSize();
 
         return new SearchListResponse(searchList, hasNext);
     }
@@ -58,10 +55,7 @@ public class SearchQueryService {
                         followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, s.getUserId())))
                 .collect(Collectors.toList());
 
-        boolean hasNext = false;
-        if (searchUserList.size() >= pageable.getPageSize()) {
-            hasNext = true;
-        }
+        boolean hasNext = searchUserList.size() >= pageable.getPageSize();
 
         return new SearchListResponse(searchList, hasNext);
     }

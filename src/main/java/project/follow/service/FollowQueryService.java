@@ -53,10 +53,7 @@ public class FollowQueryService {
                         followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, f.getUserId())))
                 .collect(Collectors.toList());
 
-        boolean hasNext = false;
-        if (followingUserList.size() >= pageable.getPageSize()) {
-            hasNext = true;
-        }
+        boolean hasNext = followingUserList.size() >= pageable.getPageSize();
 
         return new FollowingListResponse(userIsFollowingResponse, followingUserListDetail, hasNext);
     }
@@ -82,10 +79,7 @@ public class FollowQueryService {
                         followRepository.existsFollowByFromUserIdAndToUserId(loginUserId, f.getUserId())))
                 .collect(Collectors.toList());
 
-        boolean hasNext = false;
-        if (followerUserList.size() >= pageable.getPageSize()) {
-            hasNext = true;
-        }
+        boolean hasNext = followerUserList.size() >= pageable.getPageSize();
 
         return new FollowerListResponse(userIsFollowingResponse, followerUserListDetail, hasNext);
     }

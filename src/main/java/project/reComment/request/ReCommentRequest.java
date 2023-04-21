@@ -13,5 +13,5 @@ public class ReCommentRequest {
     public ReCommentRequest(String content) {
         this.content = content;
     }
-    
+
 }

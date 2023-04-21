@@ -58,10 +58,7 @@ public class CommentQueryService {
                         c.getUpdatedAt()))
                 .collect(Collectors.toList());
 
-        boolean hasNext = false;
-        if (commentList.size() >= pageable.getPageSize()) {
-            hasNext = true;
-        }
+        boolean hasNext = commentList.size() >= pageable.getPageSize();
         return new CommentListResponse(userSimpleResponse, commentDetailList, hasNext);
     }
 
