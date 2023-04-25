@@ -38,7 +38,7 @@ public class PostApiService {
     public void create(Long loginUserID, PostRequest request, List<MultipartFile> files, String dirName) throws IOException {
         validation(request);
         User user = userRepository.findById(loginUserID)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new UserNotFoundException());
 
         Post post = Post.builder()
                 .content(request.getContent())
